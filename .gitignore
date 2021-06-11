@@ -1,0 +1,9 @@
+
+/bin/*
+.idea
+.idea/*
+.vscode
+.vscode/*
+test.log
+pid.txt
+.DS_Store

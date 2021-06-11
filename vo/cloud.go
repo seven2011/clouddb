@@ -1,0 +1,121 @@
+package vo
+
+import (
+	"time"
+)
+
+//前端传参过来的参数  查询列表信息
+
+type CloudFindListParams struct {
+	//Name string
+	Token    string `json:"token"`
+	ParentId string `json:"parentId"`
+}
+
+//file
+type CloudAddFileParams struct {
+	Id string `json:"id"`
+	//UserId     string    `json:"userId"`
+	FileName string `json:"fileName"`
+	ParentId string `json:"parentId"`
+	FileCid  string `json:"fileCid"`
+	FileSize int64  `json:"fileSize"`
+	FileType int64  `json:"fileType"`
+	Token    string `json:"token"`
+}
+
+//folder
+type CloudAddFolderParams struct {
+	Id       string `json:"id"`
+	FileName string `json:"fileName"`
+	ParentId string `json:"parentId"`
+	Token    string `json:"token"`
+}
+
+//file list
+type CloudFileListParams struct {
+	ParentId string `json:"parentId"`
+}
+
+//folder list
+type CloudFolderListParams struct {
+	Token    string `json:"token"`
+	ParentId string `json:"parentId"`
+}
+
+//删除文件和文件夹
+
+type CloudDeleteParams struct {
+	Ids   []string `json:"ids"`
+	Token string   `json:"token"`
+}
+
+//transferadd
+
+type TransferAdd struct {
+	Id           string `json:"id"`
+	FileName     string `json:"fileName"`
+	FileCid      string `json:"fileCid"`
+	FileSize     int64  `json:"fileSize"`
+	FilePath     string `json:"filePath"`
+	FileType     int64  `json:"fileType"`
+	TransferType int64  `json:"transferType"`
+	Token        string `json:"token"`
+
+	//1 上传    2 下载
+}
+
+//文件进行分类
+
+type FileCategoryParams struct {
+	Token    string `json:"token"`
+	FileType int64  `json:"fileType"`
+}
+
+//删除传输列表
+
+type TransferDelParams struct {
+	Token string   `json:"token"`
+	Ids   []string `json:"ids"`
+}
+
+//获取 传输 记录
+
+type TransferListParams struct {
+	Token string `json:"token"`
+}
+
+// 复制文件
+
+type FileParam struct {
+	Id       string    `json:"id"`
+	UserId   string    `json:"userId"`
+	FileName string    `json:"fileName"`
+	ParentId string    `json:"parentId"`
+	FileCid  string    `json:"fileCid"`
+	FileSize int64     `json:"fileSize"`
+	FileType int64     `json:"fileType"`
+	IsFolder int64     `json:"isFolder"`
+	Ptime    time.Time `json:"-`
+}
+type CopyFileParams struct {
+	Token    string   `json:"token"`
+	ParentId string   `json:"parentId"`
+	Ids      []string `json:"ids"`
+}
+
+//移动文件
+
+type MoveFileParams struct {
+	Token    string   `json:"token"`
+	ParentId string   `json:"parentId"`
+	Ids      []string `json:"ids"`
+}
+
+
+// 查询文件
+
+type SearchFileParams struct {
+	Token    string   `json:"token"`
+	Content  string `json:"content"`
+}
