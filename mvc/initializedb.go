@@ -1,8 +1,8 @@
 package mvc
 
 import (
-	"github.com/cosmopolitann/clouddb/sugar"
 	"database/sql"
+	"github.com/cosmopolitann/clouddb/sugar"
 )
 type Sql struct {
 	DB *sql.DB
@@ -18,8 +18,11 @@ func Newdb(path string) Sql {
 func InitDB(path string)(*sql.DB){
 	//
 	//mvc, err := sql.Open("sqlite3", path)
+	if path==""{
+		path="../tables/foo.db"
+	}
 	sugar.Log.Info("Start Open Sqlite3 Database.")
-	db, err := sql.Open("sqlite3", "/Users/apple/winter/D-cloud/tables/foo.db")
+	db, err := sql.Open("sqlite3", path)
 	checkErr(err)
 	sugar.Log.Info("Open Sqlite3 is ok.")
 	sugar.Log.Info("Db value is ",db)
