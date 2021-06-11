@@ -6,15 +6,32 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func main() {
+type Cloud struct {
+	d mvc.Sql
+}
+
+
+func tt() (*Cloud,error){
 	//日志运行
 	sugar.InitLogger()
 	sugar.Log.Info("~~~~  Connecting to the sqlite3 database. ~~~~")
-	d := mvc.Newdb("")
+	d := mvc.Newdb("/Users/apple/winter/D-cloud/tables/foo.db")
 	e := d.Ping()
-	sugar.Log.Info(" 这是 Ping 的 err", e)
+	if e!=nil{
+		sugar.Log.Info(" 这是 Ping 的 err", e)
+		return &Cloud{d:d},e
+	}
 	sugar.Log.Info("创建数据库 完成")
-	d.DB.Close()
+	return &Cloud{d:d},nil
 }
 
+
+
+func main(){
+
+	d:=mvc.NTestNode("")
+	err:=d.Add()
+	sugar.Log.Info("创建数据库 失败 err",err)
+
+}
 

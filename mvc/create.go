@@ -1,22 +1,30 @@
 package mvc
 
 import (
-	"github.com/cosmopolitann/clouddb/sugar"
-	"github.com/cosmopolitann/clouddb/vo"
 	"encoding/json"
 	"fmt"
+	"github.com/cosmopolitann/clouddb/sugar"
+	"github.com/cosmopolitann/clouddb/vo"
 )
+//
+
+
+
+
+
+
 //------------------------------------------------//-
 // 初始化数据库                                      //|
 
 func (db *Sql) Ping() error {                      //|
 	err := db.DB.Ping()                            //|
 	if err != nil {                                //|
-		sugar.Log.Error("Ping is Failed.")  //|
+		sugar.Log.Error("Ping is Failed.",err)  //|
 	}                                              //|
 	return err                                     //|
 }                                                  //|
 //-------------------------------------------------|-
+
 
 
 
