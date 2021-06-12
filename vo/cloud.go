@@ -60,6 +60,8 @@ type TransferAdd struct {
 	FilePath     string `json:"filePath"`
 	FileType     int64  `json:"fileType"`
 	TransferType int64  `json:"transferType"`
+	UploadParentId string `json:"uploadParentId"`
+	UploadFileId string `json:"uploadFileId"`
 	Token        string `json:"token"`
 
 	//1 上传    2 下载
@@ -118,4 +120,13 @@ type MoveFileParams struct {
 type SearchFileParams struct {
 	Token    string   `json:"token"`
 	Content  string `json:"content"`
+}
+
+// 文章查询
+
+type ArticleSearchParams struct {
+	PageSize       int64  `json:"pageSize"`    // 一次多少条
+	PageNum        int64  `json:"pageNum"`    // 第几页
+	//Token    string   `json:"token"`
+	Title  string `json:"title"`
 }

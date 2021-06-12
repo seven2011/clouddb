@@ -21,11 +21,11 @@ func TestChatMsgList(t *testing.T) {
 	sugar.Log.Info("Db value is ",d)
 	e:=d.Ping()
 	fmt.Println(" Ping is failed,err:=",e)
-//	ss:= Testdb(d)
-//	value:=`{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI0MDkzMzAyMDIxNjY5NTYwMzIiLCJleHAiOjE2MjU4ODk0NzZ9.OzEFVuB2FcRYurZiii1fpiAqX2KcesfS5arJfVJZQOI","pageSize":3,"pageNum":0,"recordId":"409393120371806208"}
-//`
-//	resp:= ss.ChatMsgList(value)
+	ss:= Testdb(d)
+	value:=`{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI0MDkzMzAyMDIxNjY5NTYwMzIiLCJleHAiOjE2MjU4ODk0NzZ9.OzEFVuB2FcRYurZiii1fpiAqX2KcesfS5arJfVJZQOI","pageSize":3,"pageNum":0,"recordId":"409393120371806208"}
+`
+	resp:= ss.ChatMsgList(value)
 
-	//t.Log("获取返回的数据 :=  ",resp)
+	t.Log("获取返回的数据 :=  ",resp)
 
 }

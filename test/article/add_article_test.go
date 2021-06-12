@@ -1,10 +1,10 @@
 package article
 
 import (
-	"github.com/cosmopolitann/clouddb/mvc"
-	"github.com/cosmopolitann/clouddb/sugar"
 	"database/sql"
 	"fmt"
+	"github.com/cosmopolitann/clouddb/mvc"
+	"github.com/cosmopolitann/clouddb/sugar"
 	"testing"
 )
 
@@ -23,9 +23,10 @@ func TestAddArticle(t *testing.T) {
 	fmt.Println(" Ping is failed,err:=",e)
 	ss:= Testdb2(d)
 
-	value:=`{"id":"4324","userId":"124","accesstory":"20","accesstoryType":1,"text":"1","tag":"1","playNum":3,"title":"成都",shareNum":4}
+	value:=`{"id":"4324","userId":"123","accesstory":"20","accesstoryType":1,"text":"1","tag":"1","playNum":3,"title":"成都2","shareNum":4,"thumbnail":"刘亦菲3"}
 `
-	ss.ArticleAdd("")
+
+	ss.ArticleAdd(value)
 
 	resp:= (value)
 	fmt.Println("这是返回的数据 =",resp)

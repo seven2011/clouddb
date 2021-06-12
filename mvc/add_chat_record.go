@@ -19,14 +19,14 @@ func AddChatRecord(db *Sql, value string) error {
 	sugar.Log.Info("Marshal data is  ", msg)
 	id := utils.SnowId()
 	t := time.Now().Format("2006-01-02 15:04:05")
-	stmt, err := db.DB.Prepare("INSERT INTO chat_record values(?,?,?,?,?,?,?)")
+	stmt, err := db.DB.Prepare("INSERT INTO chat_record values(?,?,?,?,?,?,?,?)")
 	if err != nil {
 		sugar.Log.Error("Insert into chat_record table is failed.", err)
 		return err
 	}
 	sid := strconv.FormatInt(id, 10)
 	stmt.QueryRow()
-	res, err := stmt.Exec(sid,msg.RecordName,msg.RecordTalker,msg.RecordImg,msg.CreateBy,t,msg.LastMsg )
+	res, err := stmt.Exec(sid,msg.Name,msg.Toid,msg.Img,msg.FromId,t,msg.LastMsg )
 	if err != nil {
 		sugar.Log.Error("Insert into chat_record  is Failed.", err)
 		return err

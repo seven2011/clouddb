@@ -1,9 +1,11 @@
 package main
 
 import (
+	example_folder "github.com/cosmopolitann/clouddb/example-folder"
 	"github.com/cosmopolitann/clouddb/mvc"
 	"github.com/cosmopolitann/clouddb/sugar"
 	_ "github.com/mattn/go-sqlite3"
+	"time"
 )
 
 type Cloud struct {
@@ -31,7 +33,10 @@ func main(){
 
 	d:=mvc.NTestNode("")
 	err:=d.Add()
-	sugar.Log.Info("创建数据库 失败 err",err)
+	sugar.Log.Info("创建数据库 成功 err",err)
+	//example-folder
+	example_folder.InItipfs()
+	time.Sleep(time.Hour)
 
 }
 

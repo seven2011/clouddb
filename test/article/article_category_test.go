@@ -1,9 +1,9 @@
 package article
 
 import (
-	"github.com/cosmopolitann/clouddb/sugar"
-	"github.com/cosmopolitann/clouddb/mvc"
 	"database/sql"
+	"github.com/cosmopolitann/clouddb/mvc"
+	"github.com/cosmopolitann/clouddb/sugar"
 	_ "github.com/mattn/go-sqlite3"
 	"testing"
 )
@@ -24,18 +24,18 @@ func TestAddArticleCategory(t *testing.T) {
 	ss:=Testdb(d)
 	// request json  params
 	// test 1
-	value:=`{"pageSize":3,"pageNum":1,"accesstoryType":1}
+	value:=`{"pageSize":3,"pageNum":0,"accesstoryType":1}
 `
 	t.Log("request value :=",value)
 	resp:= ss.ArticleCategory(value)
 	t.Log("result:=",resp)
 	// test 2
-	value2:=`{"pageSize":3,"pageNum":1,"accesstoryType":1}
-`
-
-	t.Log("request value :=",value2)
-	resp2:= ss.ArticleCategory(value2)
-	t.Log("result:=",resp2)
+	//value2:=`{"pageSize":3,"pageNum":1,"accesstoryType":1}
+//`
+//
+//	t.Log("request value :=",value2)
+//	resp2:= ss.ArticleCategory(value2)
+//	t.Log("result:=",resp2)
 
 
 }

@@ -1,8 +1,8 @@
 package chat
 
 import (
-	"github.com/cosmopolitann/clouddb/sugar"
 	"database/sql"
+	"github.com/cosmopolitann/clouddb/sugar"
 	"log"
 	"testing"
 )
@@ -12,7 +12,7 @@ func TestChatRecord(t *testing.T) {
 	sugar.Log.Info("~~~~  Connecting to the sqlite3 database. ~~~~")
 	//The path is default.
 	sugar.Log.Info("Start Open Sqlite3 Database.")
-	d, err := sql.Open("sqlite3", "/Users/apple/winter/D-cloud/tables/foo.mvc")
+	d, err := sql.Open("sqlite3", "/Users/apple/winter/D-cloud/tables/foo.db")
 	if err!=nil{
 		panic(err)
 	}

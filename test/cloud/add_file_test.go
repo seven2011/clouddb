@@ -1,12 +1,12 @@
 package cloud
 
 import (
-	"github.com/cosmopolitann/clouddb/mvc"
-	"github.com/cosmopolitann/clouddb/sugar"
-	"github.com/cosmopolitann/clouddb/vo"
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"github.com/cosmopolitann/clouddb/mvc"
+	"github.com/cosmopolitann/clouddb/sugar"
+	"github.com/cosmopolitann/clouddb/vo"
 	_ "github.com/mattn/go-sqlite3"
 	"testing"
 )
@@ -28,7 +28,7 @@ func TestAddFile(t *testing.T) {
 	//插入数据
 	var fi = vo.CloudAddFileParams{
 		Id:         "409054047794892800",
-		FileName:   "三国演义",
+		FileName:   "三国演义12345",
 		ParentId:   "1",
 		FileCid:    "Qmcid12312",
 		FileSize:   100,

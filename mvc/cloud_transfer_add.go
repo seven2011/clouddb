@@ -1,12 +1,12 @@
 package mvc
 
 import (
+	"encoding/json"
+	"errors"
 	"github.com/cosmopolitann/clouddb/jwt"
 	"github.com/cosmopolitann/clouddb/sugar"
 	"github.com/cosmopolitann/clouddb/utils"
 	"github.com/cosmopolitann/clouddb/vo"
-	"encoding/json"
-	"errors"
 	"strconv"
 	"time"
 )
@@ -29,14 +29,14 @@ func DownLoadFile(db *Sql,value string)(e error){
 
 
 	t:=time.Now().Format("2006-01-02 15:04:05")
-	stmt, err := db.DB.Prepare("INSERT INTO cloud_transfer values(?,?,?,?,?,?,?,?,?)")
+	stmt, err := db.DB.Prepare("INSERT INTO cloud_transfer values(?,?,?,?,?,?,?,?,?,?,?)")
 	if err != nil {
 		sugar.Log.Error("Insert into cloud_down table is failed.",err)
 		return errors.New("插入cloud_down 表 数据失败")
 	}
 
 	sid := strconv.FormatInt(id, 10)
-	res, err := stmt.Exec(sid,claim["UserId"].(string),d.FileName,t,d.FileCid,d.FileSize,d.FilePath,d.FileType,d.TransferType)
+	res, err := stmt.Exec(sid,claim["UserId"].(string),d.FileName,t,d.FileCid,d.FileSize,d.FilePath,d.FileType,d.TransferType,d.UploadParentId,d.UploadFileId)
 
 	if err != nil {
 		sugar.Log.Error("Insert into cloud_down  is Failed.",err)

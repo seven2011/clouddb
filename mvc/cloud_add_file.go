@@ -1,17 +1,17 @@
 package mvc
 
 import (
-	"github.com/cosmopolitann/clouddb/sugar"
-	"github.com/cosmopolitann/clouddb/jwt"
-	"github.com/cosmopolitann/clouddb/utils"
-	"github.com/cosmopolitann/clouddb/vo"
 	"encoding/json"
 	"errors"
+	"github.com/cosmopolitann/clouddb/jwt"
+	"github.com/cosmopolitann/clouddb/sugar"
+	"github.com/cosmopolitann/clouddb/utils"
+	"github.com/cosmopolitann/clouddb/vo"
 	"strconv"
 	"time"
 )
 
-func AddFile(db *Sql,value string)error{
+func AddFile(db *Sql,value string)(string,error){
     //add file
 	var f vo.CloudAddFileParams
 
@@ -24,7 +24,7 @@ func AddFile(db *Sql,value string)error{
 	sugar.Log.Info("解析数据  是 ",f)
 	if err != nil {
 		sugar.Log.Error("Decode is failed.",err)
-		return errors.New("decode is failed")
+		return "",errors.New("decode is failed")
 	}
 	//c,_:= FindOneFileIsExist(mvc,f1,f)
 	//if c!=0{
@@ -35,7 +35,7 @@ func AddFile(db *Sql,value string)error{
 	//token verify
 	claim,b:=jwt.JwtVeriyToken(f.Token)
 	if !b{
-		return err
+		return "",err
 	}
 
 	sugar.Log.Info("claim := ", claim)
@@ -46,20 +46,23 @@ func AddFile(db *Sql,value string)error{
 	stmt, err := db.DB.Prepare("INSERT INTO cloud_file values(?,?,?,?,?,?,?,?,?)")
 	if err != nil {
 		sugar.Log.Error("Insert into cloud_file table is failed.",err)
-		return err
+		return "",err
 	}
 	sid := strconv.FormatInt(id, 10)
 	res, err := stmt.Exec(sid,userId ,f.FileName, f.ParentId,t ,f.FileCid,f.FileSize,f.FileType,0)
 	if err != nil {
 		sugar.Log.Error("Insert into file  is Failed.",err)
-		return err
+		return "",err
 	}
 	sugar.Log.Info("Insert into file  is successful.")
 	l,_:=res.RowsAffected()
 	if l==0{
-		return err
+		return "",err
 	}
-	return nil
+
+	sugar.Log.Info("fileId is ",sid)
+
+	return sid, nil
 
 }
 func  FindOneFileIsExist(db *Sql,ff map[string]interface{},f File)(int64,error){

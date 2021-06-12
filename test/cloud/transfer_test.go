@@ -2,10 +2,10 @@
 package cloud
 
 import (
-"github.com/cosmopolitann/clouddb/sugar"
-"database/sql"
-"log"
-"testing"
+	"database/sql"
+	"github.com/cosmopolitann/clouddb/sugar"
+	"log"
+	"testing"
 )
 
 func TestTransferAdd(t *testing.T) {
@@ -33,6 +33,8 @@ func TestTransferAdd(t *testing.T) {
 "downPath":"23/123",
 "fileType":1,
 "transferType":1,
+"uploadParentId":"0",
+"uploadFileId":"410131661494161408",
 "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI0MDkzMzAyMDIxNjY5NTYwMzIiLCJleHAiOjE2MjU4ODk0NzZ9.OzEFVuB2FcRYurZiii1fpiAqX2KcesfS5arJfVJZQOI"
 }`
 	resp:= ss.TransferAdd(v)

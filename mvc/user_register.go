@@ -1,10 +1,10 @@
 package mvc
 
 import (
-	"github.com/cosmopolitann/clouddb/sugar"
-	"github.com/cosmopolitann/clouddb/utils"
 	"encoding/json"
 	"errors"
+	"github.com/cosmopolitann/clouddb/sugar"
+	"github.com/cosmopolitann/clouddb/utils"
 	"strconv"
 	"time"
 )
@@ -32,10 +32,12 @@ func AddUser(db *Sql,value string)(error){
 		sugar.Log.Error("user is exist.")
 		return errors.New("user is exist.")
 	}
-	sugar.Log.Error("-----------2")
 
 
 	//inExist insert into sys_user.
+
+	sugar.Log.Info("-----------用户 信息 ",user)
+
 	id := utils.SnowId()
 	//create now time
 	t:=time.Now().Format("2006-01-02 15:04:05")

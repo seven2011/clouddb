@@ -1,28 +1,65 @@
 package vo
 
+import "time"
+
 //消息记录新增 (类似房间)
 
 type ChatRecoredAddParams struct {
-	Id           string `json:"id"`
-	RecordName   string  `json:"recordName"` //       1 文本  2 表情 3 图片 4 文件
-	RecordImg    string `json:"recordImg"`     // require    消息头像
-	CreateBy     string `json:"createBy"`      //require     创建者
-	LastMsg      string `json:"lastMsg"`        //require     最后的消息
-	RecordTalker string `json:"recordTalker"`  //require         0 未撤回  1  撤回
-	Token string `json:"token"`
+	Id       string `json:"id"`
+	Name     string `json:"name"`     //       1 文本  2 表情 3 图片 4 文件
+	Img      string `json:"img"`      // require    消息头像
+	FromId   string `json:"fromId"`   //require     创建者
+	LastMsg  string `json:"lastMsg"`  //require     最后的消息
+	ToId     string `json:"toId"`     //require         0 未撤回  1  撤回
+	IsActive int64  `json:"isActive"` //require         0 用传进来的  1  生成新的
+	Token    string `json:"token"`
 }
 
 //获取消息记录列表
 
 type ChatRecordListParams struct {
-	UserId string `json:"userId"`
+	FromId string `json:"fromId"`
 
+	Token string `json:"token"`
 }
 
 // 获取消息记录列表
 
 type ChatRecordDelParams struct {
-	Id string `json:"id"`
+	Id    string `json:"id"`
 	Token string `json:"token"`
+}
 
+//
+type ChatRecordInfo struct {
+	Id      string    `json:"id"`
+	Name    string    `json:"name"`
+	Img     string    `json:"img"`
+	FromId  string    `json:"fromId"`
+	Ptime   time.Time `json:"ptime"`
+	LastMsg string     `json:"lastMsg"`
+	Toid    string    `json:"toId"`
+	UserName string  `json:"userName"`
+	Phone    string `json:"phone"`
+	PeerId   string `json:"peerId"`
+	NickName string `json:"nickName"`
+	Sex      int64  `json:"sex"`
+
+}
+type ChatRecordRespListParams struct {
+	FromId       string `json:"fromId"`
+	FromName     string `json:"fromName"`
+	FromImg      string `json:"fromImg"`
+	FromPhone    string `json:"fromPhone"`
+	FromPeerId   string `json:"fromPeerId"`
+	FromNickName string `json:"fromNickName"`
+	FromSex      int64  `json:"fromSex"`
+
+	ToId       string `json:"toId"`
+	ToName     string `json:"toName"`
+	ToImg      string `json:"toImg"`
+	ToPhone    string `json:"toPhone"`
+	ToPeerId   string `json:"toPeerId"`
+	ToNickName string `json:"toNickName"`
+	ToSex      int64  `json:"toSex"`
 }

@@ -1,8 +1,10 @@
 package user
 
 import (
-	"cloud/mvc"
-	"cloud/sugar"
+	"github.com/cosmopolitann/clouddb/sugar"
+
+	"github.com/cosmopolitann/clouddb/mvc"
+
 	"database/sql"
 	"encoding/json"
 	"fmt"

@@ -77,6 +77,17 @@ func (db *Sql) UserQuery(user string) string {
 	}
 	return vo.ResponseSuccess(data)
 }
+//用户 更新
+
+func (db *Sql) UserUpdate(user string) string {
+
+	e := UserUpdate(db, user)
+
+	if e != nil {
+		return vo.ResponseErrorMsg(400,e.Error())
+	}
+	return vo.ResponseSuccess()
+}
 
 //  ==============   User  End=================
 
@@ -87,12 +98,12 @@ func (db *Sql) UserQuery(user string) string {
 //  添加文件
 
 func (db *Sql) AddFile(fInfo string) string {
-	e := AddFile(db, fInfo)
+	fileId,e := AddFile(db, fInfo)
 
 	if e != nil {
 		return vo.ResponseErrorMsg(400,e.Error())
 	}
-	return vo.ResponseSuccess()
+	return vo.ResponseSuccess(fileId)
 }
 
 
@@ -271,7 +282,17 @@ func (db *Sql)ArticleQuery(dInfo string)string{
 
 	return vo.ResponseSuccess(data)
 }
+// 文章查询
 
+func (db *Sql)ArticleSearch(dInfo string)string{
+
+	data,e := ARticleSearch(db, dInfo)
+	if e != nil {
+		return vo.ResponseErrorMsg(400,e.Error())
+	}
+
+	return vo.ResponseSuccess(data)
+}
 
 // ================  Article   End   =================
 
@@ -447,9 +468,64 @@ func (db *Sql)Search(dInfo string)string{
 }
 
 
+//===================  同步 ==========================
+//同步 User 数据
+
+func (db *Sql)SyncUser(dInfo string)string{
+
+	e := SyncUser(db, dInfo)
+	if e != nil {
+		return vo.ResponseErrorMsg(400,e.Error())
+	}
+	return vo.ResponseSuccess()
+}
+
+// 同步 文章表数据
+
+//===================  同步 ==========================
+
+func (db *Sql)SyncArticle(dInfo string)string{
+
+	e := SyncArticle(db, dInfo)
+	if e != nil {
+		return vo.ResponseErrorMsg(400,e.Error())
+	}
+	return vo.ResponseSuccess()
+}
+
+// 同步文章点赞
+
+func (db *Sql)SyncArticleGiveLike(dInfo string)string{
+
+	e := SyncAticlePlay(db, dInfo)
+	if e != nil {
+		return vo.ResponseErrorMsg(400,e.Error())
+	}
+	return vo.ResponseSuccess()
+}
+
+// 同步 文章 取消点赞
+
+func (db *Sql)SyncArticleCancelLike(dInfo string)string{
+
+	e := SyncAticlePlay(db, dInfo)
+	if e != nil {
+		return vo.ResponseErrorMsg(400,e.Error())
+	}
+	return vo.ResponseSuccess()
+}
+
+//同步 分享
 
 
+func (db *Sql)SyncArticleShare(dInfo string)string{
 
+	e := SyncArticleShare(db, dInfo)
+	if e != nil {
+		return vo.ResponseErrorMsg(400,e.Error())
+	}
+	return vo.ResponseSuccess()
+}
 
 
 //convert

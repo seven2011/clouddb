@@ -1,9 +1,9 @@
 package user
 
 import (
-	"cloud/sugar"
 	"database/sql"
 	"fmt"
+	"github.com/cosmopolitann/clouddb/sugar"
 	"testing"
 )
 

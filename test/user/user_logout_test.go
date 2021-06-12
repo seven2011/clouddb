@@ -1,7 +1,8 @@
 package user
 
 import (
-	"cloud/sugar"
+	"github.com/cosmopolitann/clouddb/sugar"
+
 	"database/sql"
 	"fmt"
 	_ "github.com/mattn/go-sqlite3"
