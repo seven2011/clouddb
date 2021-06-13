@@ -1,9 +1,11 @@
 package mvc
 
 import (
+	"encoding/json"
+	"github.com/cosmopolitann/clouddb/jwt"
 	"github.com/cosmopolitann/clouddb/sugar"
 	"github.com/cosmopolitann/clouddb/vo"
-	"encoding/json"
+	"errors"
 )
 
 //删除消息
@@ -14,7 +16,15 @@ func ChatMsgDel(db *Sql,value string)error {
 	if err!=nil{
 		return err
 	}
-		stmt, err := db.DB.Prepare("delete from chat_msg where id=?")
+	sugar.Log.Info("删除的id:",msgdel.Id)
+	//校验 token 是否 满足
+	claim,b:=jwt.JwtVeriyToken(msgdel.Token)
+	if !b{
+		return errors.New("token 失效")
+	}
+	sugar.Log.Info("claim := ", claim)
+	//userid:=claim["UserId"].(string)
+	stmt, err := db.DB.Prepare("delete from chat_msg where id=?")
 		if err!=nil{
 			return err
 		}

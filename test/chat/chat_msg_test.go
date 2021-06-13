@@ -1,10 +1,10 @@
 package chat
 
 import (
-	"github.com/cosmopolitann/clouddb/sugar"
-	"github.com/cosmopolitann/clouddb/mvc"
 	"database/sql"
 	"fmt"
+	"github.com/cosmopolitann/clouddb/mvc"
+	"github.com/cosmopolitann/clouddb/sugar"
 	_ "github.com/mattn/go-sqlite3"
 	"testing"
 )
@@ -23,7 +23,7 @@ func TestChatMsg(t *testing.T) {
 	e:=d.Ping()
 	fmt.Println(" Ping is failed,err:=",e)
 	ss:= Testdb(d)
-	value:=`{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI0MDkzMzAyMDIxNjY5NTYwMzIiLCJleHAiOjE2MjU4ODk0NzZ9.OzEFVuB2FcRYurZiii1fpiAqX2KcesfS5arJfVJZQOI","id":"4324","contentType":2,"content":"20","fromId":"123","toId":"1","isWithdraw":2,"isRead":3,"recordId":"123"}
+	value:=`{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI0MDkzMzAyMDIxNjY5NTYwMzIiLCJleHAiOjE2MjU4ODk0NzZ9.OzEFVuB2FcRYurZiii1fpiAqX2KcesfS5arJfVJZQOI","id":"4324","contentType":2,"content":"20","fromId":"410199041234702336","toId":"409330202166956032","isWithdraw":2,"isRead":3,"recordId":"110"}
 `
 	resp:= ss.ChatAddMsg(value)
 	t.Log("获取返回的数据 :=  ",resp)

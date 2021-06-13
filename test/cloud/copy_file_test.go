@@ -1,9 +1,9 @@
 package cloud
 
 import (
-	"github.com/cosmopolitann/clouddb/sugar"
 	"database/sql"
 	"fmt"
+	"github.com/cosmopolitann/clouddb/sugar"
 	"testing"
 )
 
@@ -25,8 +25,8 @@ func TestCopyFile(t *testing.T) {
 	//插入数据
    value:=`{
 "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI0MDkzMzAyMDIxNjY5NTYwMzIiLCJleHAiOjE2MjU4ODk0NzZ9.OzEFVuB2FcRYurZiii1fpiAqX2KcesfS5arJfVJZQOI",
-"parentId":"123456",
-"ids":["409330202166956032"]
+"parentId":"110",
+"ids":["409370571529261056"]
 }`
 	//b1, e := json.Marshal(fi)
 	//fmt.Println(ss)

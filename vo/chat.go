@@ -27,6 +27,7 @@ type ChatMsgListParams struct {
 // 删除消息
 
 type ChatMsgDelParams struct {
+	Token       string `json:"token"`
 	Id          string `json:"id"`
 }
 

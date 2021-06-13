@@ -25,7 +25,7 @@ type ArticleResp struct {
 	Ptime          time.Time `json:"ptime"`
 	PlayNum        int64     `json:"playNum"`
 	ShareNum       int64     `json:"shareNum"`
-	Thumbnail      string `json:"thumbnail"`
+	Thumbnail      string    `json:"thumbnail"`
 	Title          string    `json:"title"`
 	PeerId         string    `json:"peerId"`
 	Name           string    `json:"name"`

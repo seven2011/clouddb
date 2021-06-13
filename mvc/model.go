@@ -41,6 +41,22 @@ type DownLoad struct {
 	TransferType int64     `json:"transferType"`
 }
 
+//
+//DownLoadList
+type TransferDownLoadParams struct {
+	Id             string    `json:"id"`
+	UserId         string    `json:"userId"`
+	FileName       string    `json:"fileName"`
+	Ptime          time.Time `json:"ptime"`
+	FileCid        string    `json:"fileCid"`
+	FileSize       int64     `json:"fileSize"`
+	DownPath       string    `json:"downPath"`
+	FileType       int64     `json:"fileType"`
+	TransferType   int64     `json:"transferType"`
+	UploadParentId string    `json:"uploadParentId"`
+	UploadFileId   string    `json:"uploadFileId"`
+}
+
 //article
 
 type Article struct {
@@ -86,7 +102,7 @@ type ChatRecord struct {
 	Img     string    `json:"img"`
 	FromId  string    `json:"fromId"`
 	Ptime   time.Time `json:"ptime"`
-	LastMsg string `json:"lastMsg"`
+	LastMsg string    `json:"lastMsg"`
 	Toid    string    `json:"toId"`
 }
 

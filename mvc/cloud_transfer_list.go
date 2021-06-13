@@ -1,16 +1,16 @@
 package mvc
 
 import (
+	"encoding/json"
+	"errors"
 	"github.com/cosmopolitann/clouddb/jwt"
 	"github.com/cosmopolitann/clouddb/sugar"
 	"github.com/cosmopolitann/clouddb/vo"
-	"encoding/json"
-	"errors"
 )
 
 //查询文件列表
 
-func TransferList(db *Sql, value string)(data []DownLoad,e error) {
+func TransferList(db *Sql, value string)(data []TransferDownLoadParams,e error) {
 	var list vo.TransferListParams
 	err := json.Unmarshal([]byte(value), &list)
 	if err != nil {
@@ -26,15 +26,15 @@ func TransferList(db *Sql, value string)(data []DownLoad,e error) {
 	}
 	sugar.Log.Info("claim := ", claim)
 
-	var arrfile []DownLoad
+	var arrfile []TransferDownLoadParams
 	rows, err := db.DB.Query("select * from cloud_transfer where user_id=?", claim["UserId"].(string))
 	if err != nil {
 		sugar.Log.Error("Query data is failed.Err is ", err)
 		return arrfile,errors.New("查询下载列表信息失败")
 	}
 	for rows.Next() {
-		var dl DownLoad
-		err = rows.Scan(&dl.Id, &dl.UserId, &dl.FileName,&dl.Ptime, &dl.FileCid, &dl.FileSize, &dl.DownPath,&dl.FileType,&dl.TransferType)
+		var dl TransferDownLoadParams
+		err = rows.Scan(&dl.Id, &dl.UserId, &dl.FileName,&dl.Ptime, &dl.FileCid, &dl.FileSize, &dl.DownPath,&dl.FileType,&dl.TransferType,&dl.UploadParentId,&dl.UploadFileId)
 		if err != nil {
 			sugar.Log.Error("Query scan data is failed.The err is ", err)
 			return arrfile,err

@@ -7,29 +7,30 @@ import (
 	"github.com/cosmopolitann/clouddb/vo"
 )
 
-func ChatRecordList(db *Sql, value string) ([]vo.ChatRecordInfo, error) {
+func ChatRecordList(db *Sql, value string) ([]vo.ChatRecordRespListParams, error) {
 	var crd []vo.ChatRecordInfo
 	var crdToid []vo.ChatRecordInfo
+	var link []vo.ChatRecordRespListParams
 
 	var result vo.ChatRecordListParams
 	err := json.Unmarshal([]byte(value), &result)
 
 	if err != nil {
 		sugar.Log.Error("Marshal is failed.Err is ", err)
-		return crd,err
+		return link,err
 	}
 	sugar.Log.Info("Marshal data is  ", result)
 
 	if err != nil {
 		sugar.Log.Error("Insert into article table is failed.", err)
-		return crd,err
+		return link,err
 	}
 	sugar.Log.Info("result := ", result)
 
 	//token verify
 	claim,b:=jwt.JwtVeriyToken(result.Token)
 	if !b{
-		return crd,err
+		return link,err
 	}
 
 	sugar.Log.Info("claim := ", claim)
@@ -52,14 +53,14 @@ func ChatRecordList(db *Sql, value string) ([]vo.ChatRecordInfo, error) {
 		err = rows.Scan(&dl.Id, &dl.Name, &dl.Img, &dl.FromId, &dl.Ptime, &dl.LastMsg, &dl.Toid,&dl.UserName,&dl.Phone,&dl.PeerId,&dl.NickName,&dl.Sex)
 		if err != nil {
 			sugar.Log.Error("Query scan data is failed.The err is ", err)
-			return crd, err
+			return link, err
 		}
 		sugar.Log.Info("Query a entire data is ", dl)
 		crd = append(crd, dl)
 	}
 	if err != nil {
 		sugar.Log.Error("Query  chat_record  is Failed.", err)
-		return crd,err
+		return link,err
 	}
 
 
@@ -90,7 +91,7 @@ func ChatRecordList(db *Sql, value string) ([]vo.ChatRecordInfo, error) {
 			err = rows.Scan(&dl.Id, &dl.Name, &dl.Img, &dl.FromId, &dl.Ptime, &dl.LastMsg, &dl.Toid,&dl.UserName,&dl.Phone,&dl.PeerId,&dl.NickName,&dl.Sex)
 			if err != nil {
 				sugar.Log.Error("Query scan data is failed.The err is ", err)
-				return crd, err
+				return link, err
 			}
 			sugar.Log.Info("Query a entire data is ", dl)
 			crdToid = append(crdToid, dl)
@@ -103,7 +104,6 @@ func ChatRecordList(db *Sql, value string) ([]vo.ChatRecordInfo, error) {
 
 	//
 	var lin  vo.ChatRecordRespListParams
-	var link []vo.ChatRecordRespListParams
 
 	for _,v:=range crdToid{
 		lin.ToId=v.Toid
@@ -137,6 +137,6 @@ func ChatRecordList(db *Sql, value string) ([]vo.ChatRecordInfo, error) {
 
 
 
-	return crd,nil
+	return link,nil
 
 }

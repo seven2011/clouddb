@@ -1,9 +1,9 @@
 package chat
 
 import (
-	"github.com/cosmopolitann/clouddb/sugar"
 	"database/sql"
 	"fmt"
+	"github.com/cosmopolitann/clouddb/sugar"
 	_ "github.com/mattn/go-sqlite3"
 	"testing"
 )
@@ -22,7 +22,7 @@ func TestChatRecordDel(t *testing.T) {
 	e:=d.Ping()
 	fmt.Println(" Ping is failed,err:=",e)
 	ss:= Testdb(d)
-	value:=`{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI0MDkzMzAyMDIxNjY5NTYwMzIiLCJleHAiOjE2MjU4ODk0NzZ9.OzEFVuB2FcRYurZiii1fpiAqX2KcesfS5arJfVJZQOI","id":"409392459311747072"}
+	value:=`{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI0MDkzMzAyMDIxNjY5NTYwMzIiLCJleHAiOjE2MjU4ODk0NzZ9.OzEFVuB2FcRYurZiii1fpiAqX2KcesfS5arJfVJZQOI","id":"90000001"}
 `
 	resp:= ss.ChatRecordDel(value)
 	t.Log("获取返回的数据 :=  ",resp)

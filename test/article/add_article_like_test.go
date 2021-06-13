@@ -1,9 +1,9 @@
 package article
 
 import (
-	"github.com/cosmopolitann/clouddb/sugar"
 	"database/sql"
 	"fmt"
+	"github.com/cosmopolitann/clouddb/sugar"
 	_ "github.com/mattn/go-sqlite3"
 	"testing"
 )
@@ -23,7 +23,7 @@ func TestAddArticleLike(t *testing.T) {
 	fmt.Println(" Ping is failed,err:=",e)
 	ss:= Testdb(d)
 
-	value:=`{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI0MDkzMzAyMDIxNjY5NTYwMzIiLCJleHAiOjE2MjU4ODk0NzZ9.OzEFVuB2FcRYurZiii1fpiAqX2KcesfS5arJfVJZQOI","id":"408968540008222720"}
+	value:=`{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI0MDkzMzAyMDIxNjY5NTYwMzIiLCJleHAiOjE2MjU4ODk0NzZ9.OzEFVuB2FcRYurZiii1fpiAqX2KcesfS5arJfVJZQOI","id":"410490936259252224"}
 `
 	resp:= ss.ArticleGiveLike(value)
 	fmt.Println("这是返回的数据 =",resp)

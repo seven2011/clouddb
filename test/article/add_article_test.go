@@ -23,7 +23,7 @@ func TestAddArticle(t *testing.T) {
 	fmt.Println(" Ping is failed,err:=",e)
 	ss:= Testdb2(d)
 
-	value:=`{"id":"4324","userId":"123","accesstory":"20","accesstoryType":1,"text":"1","tag":"1","playNum":3,"title":"成都2","shareNum":4,"thumbnail":"刘亦菲3"}
+	value:=`{"id":"4324","userId":"123","accesstory":"20","accesstoryType":1,"text":"1","tag":"1","playNum":3,"title":"成都23","shareNum":4,"thumbnail":"刘亦菲3"}
 `
 
 	ss.ArticleAdd(value)
