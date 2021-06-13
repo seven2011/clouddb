@@ -28,11 +28,32 @@ func Search(db *Sql, value string)(data []File,e error) {
 	if !b{
 		return arrfile,errors.New("token 失效")
 	}
+	var or string
+	if s.Order==""{
+		or="ptime"
+	}
+	if s.Order=="time"{
+		or="ptime"
+	}
+	if s.Order=="name"{
+		or="file_name"
+
+	}
+	if s.Order=="type"{
+		or="file_type"
+
+	}
+	if s.Order=="size"{
+		or="file_size"
+
+	}
+	sugar.Log.Info("排序方式:", or)
+
 	userid:=claim["UserId"].(string)
 	sugar.Log.Info("claim := ", claim)
 	sugar.Log.Info("UserId := ", userid)
 
-	sql:="select * from cloud_file where user_id= ? and file_name like'%"+s.Content+"%'"
+	sql:="select * from cloud_file where user_id= ? and file_name like'%"+s.Content+"%'"+" order by "+or
 	rows, err := db.DB.Query(sql, userid)
 	if err != nil {
 		sugar.Log.Error("Query data is failed.Err is ", err)

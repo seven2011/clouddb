@@ -72,6 +72,7 @@ type TransferAdd struct {
 type FileCategoryParams struct {
 	Token    string `json:"token"`
 	FileType int64  `json:"fileType"`
+	Order    string  `json:"order"`
 }
 
 //删除传输列表
@@ -119,7 +120,8 @@ type MoveFileParams struct {
 
 type SearchFileParams struct {
 	Token    string   `json:"token"`
-	Content  string `json:"content"`
+	Content  string   `json:"content"`
+	Order    string   `json:"order"`
 }
 
 // 文章查询

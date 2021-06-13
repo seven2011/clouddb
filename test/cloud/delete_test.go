@@ -1,9 +1,9 @@
 package cloud
 
 import (
-	"github.com/cosmopolitann/clouddb/sugar"
 	"database/sql"
 	"fmt"
+	"github.com/cosmopolitann/clouddb/sugar"
 	"testing"
 )
 
@@ -20,16 +20,16 @@ func TestDelete(t *testing.T) {
 	sugar.Log.Info("Db value is ",d)
 	e:=d.Ping()
 	fmt.Println(" Ping is failed,err:=",e)
-	/*
-	ss:= Testdb(d)
 
-	value:=`{"Id":"4324","UserId":"124","Accesstory":"20","AccesstoryType":1,"Text":"1","Tag":"1","PlayNum":3,"ShareNum":4}
-`
-	//resp:= ss.DeleteOneFile(value)
-
-	fmt.Println("这是返回的数据 =",resp)
-*/
-	ss:= Testdb(d)
-	ss.DeleteAll("")
+//	ss:= Testdb(d)
+//
+//	value:=`{"Id":"4324","UserId":"124","Accesstory":"20","AccesstoryType":1,"Text":"1","Tag":"1","PlayNum":3,"ShareNum":4}
+//`
+//	resp:= ss.DeleteOneFile(value)
+//
+//	fmt.Println("这是返回的数据 =",resp)
+//
+//	ss:= Testdb(d)
+//	ss.DeleteAll(value)
 
 }

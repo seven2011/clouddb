@@ -1,9 +1,9 @@
 package cloud
 
 import (
-	"github.com/cosmopolitann/clouddb/sugar"
-	"github.com/cosmopolitann/clouddb/mvc"
 	"database/sql"
+	"github.com/cosmopolitann/clouddb/mvc"
+	"github.com/cosmopolitann/clouddb/sugar"
 	_ "github.com/mattn/go-sqlite3"
 	"log"
 	"testing"
@@ -23,9 +23,9 @@ func TestFileList(t *testing.T) {
 	e:=d.Ping()
 	log.Println(" Ping is failed,err:=",e)
 	ss:=Testdb(d)
-	value:=`{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI0MDkzMzAyMDIxNjY5NTYwMzIiLCJleHAiOjE2MjU4ODk0NzZ9.OzEFVuB2FcRYurZiii1fpiAqX2KcesfS5arJfVJZQOI","content":"三国"}
+	value:=`{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI0MDkzMzAyMDIxNjY5NTYwMzIiLCJleHAiOjE2MjU4ODk0NzZ9.OzEFVuB2FcRYurZiii1fpiAqX2KcesfS5arJfVJZQOI","content":"红"}
 `
-	resp:= ss.Search(value)
+	resp:= ss.CloudSearch(value)
 	log.Println("这是返回的数据 =",resp)
 }
 func Testdb(sq *sql.DB) mvc.Sql {

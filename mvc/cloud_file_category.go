@@ -1,11 +1,11 @@
 package mvc
 
 import (
+	"encoding/json"
+	"errors"
 	"github.com/cosmopolitann/clouddb/jwt"
 	"github.com/cosmopolitann/clouddb/sugar"
 	"github.com/cosmopolitann/clouddb/vo"
-	"encoding/json"
-	"errors"
 )
 
 //根据 文件类型 进行分类
@@ -30,8 +30,32 @@ func CloudFileCategory(db *Sql, value string)(data []File,e error) {
 	userid:=claim["UserId"].(string)
 
 	sugar.Log.Info("claim := ", claim)
+
+	// 排序
+
+	var or string
+	if list.Order==""{
+		or="ptime"
+	}
+	if list.Order=="time"{
+		or="ptime"
+	}
+	if list.Order=="name"{
+		or="file_name"
+
+	}
+	if list.Order=="type"{
+		or="file_type"
+
+	}
+	if list.Order=="size"{
+		or="file_size"
+
+	}
+	sugar.Log.Info("排序方式:", or)
+
 	// 查询
-	rows, err := db.DB.Query("select * from cloud_file where file_type=? and user_id=?",list.FileType,userid)
+	rows, err := db.DB.Query("select * from cloud_file where file_type=? and user_id=? order by ?",list.FileType,userid,or)
 	if err != nil {
 		sugar.Log.Error("Query data is failed.Err is ", err)
 		return arrfile,err

@@ -458,7 +458,7 @@ func (db *Sql)CloudFindList(dInfo string)string{
 
 //查询
 
-func (db *Sql)Search(dInfo string)string{
+func (db *Sql)CloudSearch(dInfo string)string{
 
 	result,e := Search(db, dInfo)
 	if e != nil {
