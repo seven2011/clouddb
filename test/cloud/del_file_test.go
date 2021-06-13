@@ -1,11 +1,11 @@
 package cloud
 
 import (
-	"github.com/cosmopolitann/clouddb/sugar"
-	"github.com/cosmopolitann/clouddb/vo"
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"github.com/cosmopolitann/clouddb/sugar"
+	"github.com/cosmopolitann/clouddb/vo"
 	"testing"
 )
 
@@ -28,13 +28,13 @@ func TestAddDelete(t *testing.T) {
 		Id:       "123",
 		FileName: "文学巨著",
 		ParentId: "12",
-		Token:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiIxODg4IiwiZXhwIjoxNjI1ODc4MzYxfQ.FkABVsrygfxKq2_GWP5pG2G9oYpUqD1yw5cA3boB-Dc",
+		Token:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI0MDkzMzAyMDIxNjY5NTYwMzIiLCJleHAiOjE2MjU4ODk0NzZ9.OzEFVuB2FcRYurZiii1fpiAqX2KcesfS5arJfVJZQOI",
 	}
 	b1, e := json.Marshal(f1)
 	fmt.Println(e)
 	fmt.Println(string(b1))
 
-	value:=`{"ids":["409292472099803136","409302447882768384"]}
+	value:=`{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI0MDkzMzAyMDIxNjY5NTYwMzIiLCJleHAiOjE2MjU4ODk0NzZ9.OzEFVuB2FcRYurZiii1fpiAqX2KcesfS5arJfVJZQOI","ids":["409355383312748544","409355876189605888"]}
 `
 
 

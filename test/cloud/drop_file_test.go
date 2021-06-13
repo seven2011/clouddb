@@ -1,9 +1,9 @@
 package cloud
 
 import (
-	"github.com/cosmopolitann/clouddb/sugar"
 	"database/sql"
 	"fmt"
+	"github.com/cosmopolitann/clouddb/sugar"
 	"testing"
 )
 
@@ -21,29 +21,29 @@ func TestDropFile(t *testing.T) {
 	sugar.Log.Info("Db value is ",d)
 	e:=d.Ping()
 	fmt.Println(" Ping is failed,err:=",e)
-	ss:= Testdb(d)
-	//插入数据
-	value:=`{
-    "DropFile":[
-        {
-            "Id":"408283148502175744",
-           "UserId":"4082175335569858561",
-"FileName":"红楼梦",
- "ParentId":"1",
- "Ptime":"12",
-            "FileCid":"Qmcid",
-            "FileSize":20,
-"FileStatus":1,
-            "FileType":1,
-"IsFolder":0
-        }
-    ]
-}`
-	//b1, e := json.Marshal(fi)
-	//fmt.Println(ss)
-	//fmt.Println(b1)
-	resp:= ss.DeleteOneFile(string(value))
-	fmt.Println("这是返回的数据 =",resp)
+//	ss:= Testdb(d)
+//	//插入数据
+//	value:=`{
+//    "DropFile":[
+//        {
+//            "Id":"408283148502175744",
+//           "UserId":"4082175335569858561",
+//"FileName":"红楼梦",
+// "ParentId":"1",
+// "Ptime":"12",
+//            "FileCid":"Qmcid",
+//            "FileSize":20,
+//"FileStatus":1,
+//            "FileType":1,
+//"IsFolder":0
+//        }
+//    ]
+//}`
+//	//b1, e := json.Marshal(fi)
+//	//fmt.Println(ss)
+//	//fmt.Println(b1)
+//	resp:= ss.DeleteOneFile(string(value))
+//	fmt.Println("这是返回的数据 =",resp)
 
 
 }
