@@ -57,7 +57,7 @@ func InitDB(path string)(*sql.DB){
 	//
 	//mvc, err := sql.Open("sqlite3", path)
 	if path==""{
-		path="./foo.db"
+		path="../tables/foo.db"
 	}
 	fmt.Println(" dbpath = ",path)
 	sugar.Log.Info("Start Open Sqlite3 Database.")

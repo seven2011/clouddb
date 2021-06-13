@@ -38,7 +38,7 @@ type UserDelParams struct {
 //  user list
 
 type UserListParams struct {
-	Id string 	`json:"id"`
+	//Id string 	`json:"id"`
 	Token string `json:"token"`
 }
 type UserUpdateParams struct {

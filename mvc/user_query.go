@@ -25,7 +25,7 @@ func UserQuery(db *Sql, value string)(data SysUser,e error) {
 	sugar.Log.Info("claim := ", claim)
 
 	//query
-	rows, err := db.DB.Query("select * from sys_user where id=?", userlist.Id)
+	rows, err := db.DB.Query("select * from sys_user where phone=?", claim["UserId"])
 	if err != nil {
 		sugar.Log.Error("Query data is failed.Err is ", err)
 		return dl,err
