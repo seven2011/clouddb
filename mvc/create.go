@@ -129,6 +129,17 @@ func (db *Sql) DeleteOneFile(dInfo string) string {
 	return vo.ResponseSuccess()
 }
 
+//重命名
+
+func (db *Sql) FileRename(dInfo string) string {
+	e := CloudFileRename(db, dInfo)
+	if e != nil {
+		return vo.ResponseErrorMsg(400,e.Error())
+	}
+
+	return vo.ResponseSuccess()
+}
+
 // 获取文件层级列表
 
 func (db *Sql) FileList(dInfo string) string {

@@ -84,3 +84,11 @@ type ArticleCancelLikeParams struct {
 type ArticleQueryParams struct {
 	Id string `json:"id"`
 }
+
+// 文件重命名
+
+type CloudFileRenameParams struct {
+	Id    string `json:"id"`
+	Rename string `json:"rename"`
+	Token string `json:"token"`
+}
