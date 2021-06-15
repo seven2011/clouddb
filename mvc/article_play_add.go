@@ -1,10 +1,10 @@
 package mvc
 
 import (
-	"github.com/cosmopolitann/clouddb/sugar"
-	"github.com/cosmopolitann/clouddb/vo"
 	"encoding/json"
 	"errors"
+	"github.com/cosmopolitann/clouddb/sugar"
+	"github.com/cosmopolitann/clouddb/vo"
 )
 
 
@@ -30,8 +30,9 @@ func ArticlePlayAdd(db *Sql, value string) error {
 	vl,_:=rows.Columns()
 	sugar.Log.Info("vl ", vl)
 
+
 	for rows.Next() {
-		err = rows.Scan(&dl.Id, &dl.UserId, &dl.Accesstory, &dl.AccesstoryType, &dl.Text, &dl.Tag, &dl.Ptime, &dl.PlayNum, &dl.Title,&dl.ShareNum)
+		err = rows.Scan(&dl.Id, &dl.UserId, &dl.Accesstory, &dl.AccesstoryType, &dl.Text, &dl.Tag, &dl.Ptime, &dl.PlayNum,&dl.ShareNum, &dl.Title,&dl.Thumbnail,&dl.FileName,&dl.FileType)
 		if err != nil {
 			sugar.Log.Error("Query scan data is failed.The err is ", err)
 			return err
@@ -89,7 +90,7 @@ func ArticleShareAdd(db *Sql, value string) error {
 	}
 
 	for rows.Next() {
-		err = rows.Scan(&dl.Id, &dl.UserId, &dl.Accesstory, &dl.AccesstoryType, &dl.Text, &dl.Tag, &dl.Ptime, &dl.PlayNum, &dl.ShareNum)
+		err = rows.Scan(&dl.Id, &dl.UserId, &dl.Accesstory, &dl.AccesstoryType, &dl.Text, &dl.Tag, &dl.Ptime, &dl.PlayNum, &dl.ShareNum,&dl.Title,&dl.Thumbnail,&dl.FileName,&dl.FileType)
 		if err != nil {
 			sugar.Log.Error("Query scan data is failed.The err is ", err)
 			return err

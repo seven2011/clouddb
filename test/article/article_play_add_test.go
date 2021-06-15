@@ -1,8 +1,8 @@
 package article
 
 import (
-	"github.com/cosmopolitann/clouddb/sugar"
 	"database/sql"
+	"github.com/cosmopolitann/clouddb/sugar"
 	_ "github.com/mattn/go-sqlite3"
 	"testing"
 )
@@ -23,7 +23,7 @@ func TestAddArticlePlayAdd(t *testing.T) {
 	ss:=Testdb(d)
 	// request json  params
 	// test 1
-	value:=`{"id":"408575816247545856"}
+	value:=`{"id":"411285804581654528"}
 `
 	t.Log("request value :=",value)
 	resp:= ss.ArticlePlayAdd(value)
@@ -31,7 +31,7 @@ func TestAddArticlePlayAdd(t *testing.T) {
 
 
 	// test 2
-	value2:=`{"id":"409375627263610880"}
+	value2:=`{"id":"411285804581654528"}
 `
 	t.Log("request value :=",value2)
 	resp2:= ss.ArticlePlayAdd(value2)

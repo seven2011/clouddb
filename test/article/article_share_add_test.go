@@ -1,8 +1,8 @@
 package article
 
 import (
-	"github.com/cosmopolitann/clouddb/sugar"
 	"database/sql"
+	"github.com/cosmopolitann/clouddb/sugar"
 	_ "github.com/mattn/go-sqlite3"
 	"testing"
 )
@@ -12,7 +12,7 @@ func TestAddArticleShareAdd(t *testing.T) {
 	sugar.Log.Info("~~~~  Connecting to the sqlite3 database. ~~~~")
 	//The path is default.
 	sugar.Log.Info("Start Open Sqlite3 Database.")
-	d, err := sql.Open("sqlite3", "/Users/apple/winter/D-cloud/tables/foo.mvc")
+	d, err := sql.Open("sqlite3", "/Users/apple/winter/D-cloud/tables/foo.db")
 	if err!=nil{
 		panic(err)
 	}
@@ -23,7 +23,7 @@ func TestAddArticleShareAdd(t *testing.T) {
 	ss:=Testdb(d)
 	// request json  params
 	// test 1
-	value:=`{"id":"408575816247545856"}
+	value:=`{"id":"411285804581654528"}
 `
 	t.Log("request value :=",value)
 	resp:= ss.ArticleShareAdd(value)
@@ -31,7 +31,7 @@ func TestAddArticleShareAdd(t *testing.T) {
 
 
 	// test 2
-	value2:=`{"id":"408583113132740608"}
+	value2:=`{"id":"411285804581654528"}
 `
 	t.Log("request value :=",value2)
 	resp2:= ss.ArticleShareAdd(value2)

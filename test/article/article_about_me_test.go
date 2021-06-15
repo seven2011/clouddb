@@ -3,18 +3,15 @@ package article
 import (
 	"database/sql"
 	"github.com/cosmopolitann/clouddb/sugar"
-	_ "github.com/mattn/go-sqlite3"
 	"testing"
 )
 
-
-//文章获取详情
-func TestArticleQuery(t *testing.T) {
+func TestArticleAboutMe(t *testing.T) {
 	sugar.InitLogger()
 	sugar.Log.Info("~~~~  Connecting to the sqlite3 database. ~~~~")
 	//The path is default.
 	sugar.Log.Info("Start Open Sqlite3 Database.")
-	d, err := sql.Open("sqlite3", "/Users/apple/winter/D-cloud/tables/foo.db")
+	d, err := sql.Open("sqlite3", "../../tables/foo.db")
 	if err!=nil{
 		panic(err)
 	}
@@ -25,19 +22,11 @@ func TestArticleQuery(t *testing.T) {
 	ss:=Testdb(d)
 	// request json  params
 	// test 1
-	value:=`{"id":"411285804581654528"}
+	value:=`{"pageSize":3,"pageNum":0,"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI0MDkzMzAyMDIxNjY5NTYwMzIiLCJleHAiOjE2MjU4ODk0NzZ9.OzEFVuB2FcRYurZiii1fpiAqX2KcesfS5arJfVJZQOI"}
 `
 	t.Log("request value :=",value)
-	resp:= ss.ArticleQuery(value)
+	resp:= ss.ArticleAboutMe(value)
 	t.Log("result:=",resp)
-
-
-	// test 2
-	value2:=`{"id":"411285804581654528"}
-`
-	t.Log("request value :=",value2)
-	resp2:= ss.ArticleQuery(value2)
-	t.Log("result:=",resp2)
 
 
 }

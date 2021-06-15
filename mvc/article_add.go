@@ -21,7 +21,7 @@ func AddArticle(db *Sql, value string) error {
 	sugar.Log.Info("Marshal data is  ", art)
 	id := utils.SnowId()
 	t := time.Now().Format("2006-01-02 15:04:05")
-	stmt, err := db.DB.Prepare("INSERT INTO article values(?,?,?,?,?,?,?,?,?,?,?)")
+	stmt, err := db.DB.Prepare("INSERT INTO article values(?,?,?,?,?,?,?,?,?,?,?,?,?)")
 	if err != nil {
 		sugar.Log.Error("Insert into article table is failed.", err)
 		return errors.New("插入article 表数据 失败")
@@ -29,7 +29,7 @@ func AddArticle(db *Sql, value string) error {
 	}
 	sid := strconv.FormatInt(id, 10)
 	stmt.QueryRow()
-	res, err := stmt.Exec(sid, art.UserId, art.Accesstory,art.AccesstoryType,art.Text, art.Tag,t , 0,0,art.Title,art.Thumbnail)
+	res, err := stmt.Exec(sid, art.UserId, art.Accesstory,art.AccesstoryType,art.Text, art.Tag,t , 0,0,art.Title,art.Thumbnail,art.FileName,art.FileType)
 	if err != nil {
 		sugar.Log.Error("Insert into article  is Failed.", err)
 		return errors.New("插入数据失败")
@@ -77,7 +77,7 @@ func ArticleList(db *Sql, value string) ([]Article,error) {
 	}
 	for rows.Next() {
 		var dl Article
-		err = rows.Scan(&dl.Id, &dl.UserId, &dl.Accesstory, &dl.AccesstoryType, &dl.Text, &dl.Tag, &dl.Ptime, &dl.PlayNum, &dl.ShareNum,&dl.Title,&dl.Thumbnail)
+		err = rows.Scan(&dl.Id, &dl.UserId, &dl.Accesstory, &dl.AccesstoryType, &dl.Text, &dl.Tag, &dl.Ptime, &dl.PlayNum, &dl.ShareNum,&dl.Title,&dl.Thumbnail,&dl.FileName,&dl.FileType)
 		if err != nil {
 			sugar.Log.Error("Query scan data is failed.The err is ", err)
 			return art, err

@@ -71,6 +71,8 @@ type Article struct {
 	ShareNum       int64     `json:"shareNum"`
 	Title          string    `json:"title"`
 	Thumbnail      string    `json:"thumbnail"`
+	FileName      string    `json:"fileName"`
+	FileType      string    `json:"fileType"`
 }
 
 //article like

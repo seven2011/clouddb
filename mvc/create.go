@@ -318,6 +318,22 @@ func (db *Sql)ArticleSearch(dInfo string)string{
 	return vo.ResponseSuccess(data)
 }
 
+
+// 我发布的 文章信息
+
+func (db *Sql)ArticleAboutMe(dInfo string)string{
+
+	data,e := ArticleAboutMe(db, dInfo)
+	if e != nil {
+		return vo.ResponseErrorMsg(400,e.Error())
+	}
+
+	return vo.ResponseSuccess(data)
+}
+
+
+
+
 // ================  Article   End   =================
 
 //===========123======   Chat           ==================

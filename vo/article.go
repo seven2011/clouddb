@@ -11,6 +11,8 @@ type ArticleAddParams struct {
 	Tag            string `json:"tag"`
 	Title          string `json:"title"`
 	Thumbnail      string `json:"thumbnail"`
+	FileName      string `json:"fileName"`
+	FileType      string `json:"fileType"`
 }
 
 //  返回 信息
@@ -26,6 +28,8 @@ type ArticleResp struct {
 	PlayNum        int64     `json:"playNum"`
 	ShareNum       int64     `json:"shareNum"`
 	Thumbnail      string    `json:"thumbnail"`
+	FileName      string    `json:"fileName"`
+	FileType      string    `json:"fileType"`
 	Title          string    `json:"title"`
 	PeerId         string    `json:"peerId"`
 	Name           string    `json:"name"`
@@ -52,6 +56,13 @@ type ArticleCategoryParams struct {
 	PageSize       int64 `json:"pageSize"`
 	PageNum        int64 `json:"pageNum"`
 	AccesstoryType int64 `json:"accesstoryType"`
+}
+
+//我发布的文章
+type ArticleAboutMeParams struct {
+	PageSize int64  `json:"pageSize"`
+	PageNum  int64  `json:"pageNum"`
+	Token    string `json:"token"`
 }
 
 // article play add
@@ -89,7 +100,9 @@ type ArticleQueryParams struct {
 // 文件重命名
 
 type CloudFileRenameParams struct {
-	Id    string `json:"id"`
+	Id     string `json:"id"`
 	Rename string `json:"rename"`
-	Token string `json:"token"`
+	IsFolder int64  `json:"isFolder"`
+	Token  string `json:"token"`
+	ParentId string `json:"parentId"`
 }
