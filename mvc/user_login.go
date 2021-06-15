@@ -8,8 +8,9 @@ import (
 	"github.com/cosmopolitann/clouddb/vo"
 )
 
-func UserLogin(db *Sql,value string) (string,error) {
+func UserLogin(db *Sql,value string) (vo.UserLoginRespParams,error) {
    	//解析传进来的参数信息
+	var resp vo.UserLoginRespParams
 
 	var userLogin vo.UserLoginParams
 	err := json.Unmarshal([]byte(value), &userLogin)
@@ -22,10 +23,10 @@ func UserLogin(db *Sql,value string) (string,error) {
 	//查询数据库
 	c,err,user:=FindIsExistLoginUser(db,userLogin.Phone)
 	if err!=nil{
-		return "",err
+		return resp,err
 	}
 	if c==0{
-		return "",errors.New("请先注册用户")
+		return resp,errors.New("请先注册用户")
 	}
 
 	////生成 token
@@ -44,18 +45,17 @@ func UserLogin(db *Sql,value string) (string,error) {
 	//查询数据库  根据 用户手机号   查出用户信息 返回
 
 	//struct => json
-	var resp vo.UserLoginRespParams
 
 	resp.Token=token
 	resp.UserInfo=user
 	sugar.Log.Info(" 获取的 返回信息= ", resp)
 
-	strUser, err := json.Marshal(resp)
-	     if err != nil {
-			 sugar.Log.Error("Marshal is failed.Err is ", err)
-			return "",errors.New("解析参数失败")
-		 }
-	return string(strUser) ,nil
+	//strUser, err := json.Marshal(resp)
+	//     if err != nil {
+	//		 sugar.Log.Error("Marshal is failed.Err is ", err)
+	//		return "",errors.New("解析参数失败")
+	//	 }
+	return  resp,nil
 }
 func FindIsExistLoginUser(db *Sql,data string)( int64,error,vo.RespSysUser){
 	var s vo.RespSysUser

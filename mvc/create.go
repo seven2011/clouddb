@@ -41,6 +41,10 @@ func (db *Sql) UserRegister(user string) string {
 	}
 	return vo.ResponseSuccess()
 }
+//
+
+
+
 
 //  用户注销
 
