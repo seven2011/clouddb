@@ -28,12 +28,12 @@ func TestAddFile(t *testing.T) {
 	//插入数据
 	var fi = vo.CloudAddFileParams{
 		Id:         "409054047794892800",
-		FileName:   "三国演义12345",
-		ParentId:   "1",
+		FileName:   "我爱中国",
+		ParentId:   "0",
 		FileCid:    "Qmcid12312",
 		FileSize:   100,
 		FileType:   0,
-		Token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiIxODg4IiwiZXhwIjoxNjI1ODc4MzYxfQ.FkABVsrygfxKq2_GWP5pG2G9oYpUqD1yw5cA3boB-Dc",
+		Token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI0MTExOTI3MjA0NDc1MDg0ODAiLCJleHAiOjE2MjYzMzM1NzJ9.EDv7k__JEugp-57RU3wDsJ1Swa3C0t-Ofr4KeQQhzeA",
 	}
 
 	b1, e := json.Marshal(fi)

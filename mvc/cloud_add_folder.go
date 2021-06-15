@@ -1,11 +1,11 @@
 package mvc
 
 import (
+	"errors"
 	"github.com/cosmopolitann/clouddb/jwt"
 	"github.com/cosmopolitann/clouddb/sugar"
 	"github.com/cosmopolitann/clouddb/utils"
 	"github.com/cosmopolitann/clouddb/vo"
-	"errors"
 	"github.com/goinggo/mapstructure"
 	"strconv"
 	"strings"

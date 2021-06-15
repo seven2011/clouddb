@@ -1,12 +1,12 @@
 package mvc
 
 import (
-	"github.com/cosmopolitann/clouddb/jwt"
-	"github.com/cosmopolitann/clouddb/sugar"
-	"github.com/cosmopolitann/clouddb/vo"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/cosmopolitann/clouddb/jwt"
+	"github.com/cosmopolitann/clouddb/sugar"
+	"github.com/cosmopolitann/clouddb/vo"
 	"log"
 )
 
@@ -29,23 +29,24 @@ func MoveFile(db *Sql,value string)(error) {
 	}
 	sugar.Log.Info("解析token 参数值 ： ", claim)
 
-	userid:=claim["UserId"].(string)
+	//userid:=claim["UserId"].(string)
 
 
 	for _,v:=range mvFile.Ids{
 		//开启事务
-		rows1, _ := db.DB.Query("SELECT * FROM cloud_file where id=?",v)
-		var m File
-
-		for rows1.Next() {
-			err := rows1.Scan(&m.Id, &m.UserId, &m.FileName, &m.ParentId, &m.Ptime, &m.FileCid,&m.FileSize,&m.FileType,&m.IsFolder)
-
-			if err != nil {
-				fmt.Println("query err is ",err)
-				return  err
-			}
-		}
-		rows, _ := db.DB.Query("SELECT * FROM cloud_file where file_name=? and parent_id=? and user_id=?",m.FileName,mvFile.ParentId,userid)
+		//rows1, _ := db.DB.Query("SELECT * FROM cloud_file where id=?",v)
+		//var m File
+		//
+		//for rows1.Next() {
+		//	err := rows1.Scan(&m.Id, &m.UserId, &m.FileName, &m.ParentId, &m.Ptime, &m.FileCid,&m.FileSize,&m.FileType,&m.IsFolder)
+		//
+		//	if err != nil {
+		//		fmt.Println("query err is ",err)
+		//		return  err
+		//	}
+		//}
+		log.Println("这是要移动的文件id：",v)
+		rows, _ := db.DB.Query("SELECT * from cloud_file as b WHERE (b.file_name,b.user_id,b.is_folder) in (SELECT a.file_name,a.user_id,a.is_folder from cloud_file as a WHERE a.id=?) and b.parent_id=?;",v,mvFile.ParentId)
 		var s File
 
 		for rows.Next() {
@@ -56,25 +57,30 @@ func MoveFile(db *Sql,value string)(error) {
 				return  err
 			}
 		}
+		log.Println(" 这是移动 查找出来的结果  move file  =",s)
 
-		log.Println(" 这是查找的结果 s =",s)
 		if s.Id!=""{
 			log.Println("文件夹已经存在")
 			return errors.New("文件夹已经存在")
 		}
 		if s.Id==""{
+			log.Println(" 这是移动 查找出来的结果  move file  =",s)
+			log.Println(" 文件不存在 =",s)
+
+			log.Println(" movde file  id  =",s.Id)
 
 			//0  文件  1 文件夹
 		//	if s.IsFolder==0{
+			log.Println(" 更新 文件 父  id 信息 =",s)
 
 				//stmt, err := mvc.DB.Prepare("INSERT INTO cloud_file values(?,?,?,?,?,?,?,?,?,?)")
 				stmt, err := db.DB.Prepare("UPDATE cloud_file set parent_id=? where id=?")
 
 				//update userinfo set username=? where uid=?
-				fmt.Println(" 这是 需要 更新的 id == ",m.Id)
-				fmt.Println(" 这是 需要 更新的 Pid == ",mvFile.ParentId)
+				fmt.Println(" 这是 需要 更新的 id == ",v)
+				fmt.Println(" 这是 需要 更新的 父 id  == ",mvFile.ParentId)
 
-				res, err := stmt.Exec(mvFile.ParentId, m.Id)
+				res, err := stmt.Exec(mvFile.ParentId,v)
 				if err != nil {
 					sugar.Log.Error("Update cloud_file table is failed.",err)
 					return err

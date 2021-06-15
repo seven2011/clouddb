@@ -2,7 +2,12 @@ package example_folder
 
 import (
 	"context"
+	"database/sql"
+	"encoding/json"
 	"fmt"
+	"github.com/cosmopolitann/clouddb/mvc"
+	"github.com/cosmopolitann/clouddb/sugar"
+	"github.com/cosmopolitann/clouddb/vo"
 	config "github.com/ipfs/go-ipfs-config"
 	files "github.com/ipfs/go-ipfs-files"
 	"github.com/ipfs/go-ipfs/core"
@@ -212,22 +217,20 @@ func InItipfs() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-		// Spawn a node using the default path (~/.ipfs), assuming that a repo exists there already
-		fmt.Println("Spawning node on default repo")
-		//ipfs, err := spawnDefault(ctx)
-		//if err != nil {
-		//	fmt.Println("No IPFS repo available on the default path")
-		//}
+	// Spawn a node using the default path (~/.ipfs), assuming that a repo exists there already
+	fmt.Println("Spawning node on default repo")
+	//ipfs, err := spawnDefault(ctx)
+	//if err != nil {
+	//	fmt.Println("No IPFS repo available on the default path")
+	//}
 	// Spawn a node using a temporary path, creating a temporary repo for the run
 	fmt.Println("Spawning node on a temporary repo")
-	ipfs, err,peerId := spawnEphemeral(ctx)
+	ipfs, err, peerId := spawnEphemeral(ctx)
 	if err != nil {
 		panic(fmt.Errorf("failed to spawn ephemeral node: %s", err))
 	}
 	fmt.Println("IPFS node is running")
 	fmt.Println("这是 IPFS peerId信息 ", peerId)
-
-
 
 	/// --- Part II: Adding a file and a directory to IPFS
 
@@ -324,7 +327,6 @@ func InItipfs() {
 		//"/ip4/127.0.0.1/udp/4010/quic/p2p/QmZp2fhDLxjYue2RiUvLwT9MWdnbDxam32qYFnGmxZDh5L",
 		"/ip4/127.0.0.1/tcp/4001/p2p/12D3KooWNfFx5Fgd1LjkcTT8Egz5yVT5e7orBrpGxXc8hzUKBBoA",
 		"/ip4/127.0.0.1/udp/4001/quic/p2p/12D3KooWNfFx5Fgd1LjkcTT8Egz5yVT5e7orBrpGxXc8hzUKBBoA",
-
 	}
 
 	go connectToPeers(ctx, ipfs, bootstrapNodes)
@@ -349,12 +351,67 @@ func InItipfs() {
 
 	fmt.Println("\nAll done! You just finalized your first tutorial on how to use go-ipfs as a library")
 
+	ipfs.PubSub().Publish(ctx, "fly", []byte("于欢 喜欢  抽烟"))
+	ipfs.PubSub().Publish(ctx, "fly", []byte("于欢 喜欢  打牌"))
 
-		ipfs.PubSub().Publish(ctx,"fly",[]byte("于欢 喜欢  抽烟"))
-	    ipfs.PubSub().Publish(ctx,"fly",[]byte("于欢 喜欢  打牌"))
-		for i:=0;i<20;i++{
-			time.Sleep(time.Second)
-			ipfs.PubSub().Publish(ctx,"fly",[]byte("欢哥 喜欢  打牌"))
+	//
+	va:=`{"type":"userRegister","data":{"id":"324833623369797632","name":"22333","phone":"22333","sex":22333,"ptime":1623747170,"utime":1623747170,"nickname":"","peer_id":"22333","img":"www.baidu.com"}}`
+
+	for i := 0; i < 20000; i++ {
+		time.Sleep(time.Second)
+		ipfs.PubSub().Publish(ctx, "/db-online-sync", []byte(va))
+		ipfs.PubSub().Publish(ctx, "fly", []byte(va))
+	}
+	go func() {
+		for {
+			p, err := ipfs.PubSub().Subscribe(ctx, "/db-online-sync")
+			if err != nil {
+				fmt.Println(" ipfs 发布 错误:", err)
+			}
+			fmt.Println("pub:", p)
+
+			msg, err := p.Next(ctx)
+			if err != nil {
+				fmt.Println("sub err:", err)
+			}
+			fmt.Println("msg data:", string(msg.Data()))
+			fmt.Println("msg from peerId:", msg.From())
+			fmt.Println("msg from Topics:", msg.Topics())
+			fmt.Println("msg from Seq:", string(msg.Seq()))
+			// 解析数据,调用同步方法
+			// 判断 peer id 是否是自己的
+			// todo
+
+			var sc vo.SyncParams
+			err = json.Unmarshal([]byte(msg.Data()), &sc)
+			if err != nil {
+				sugar.Log.Error("Marshal is failed.Err is ", err)
+			}
+			log.Println(" 解析的值 =", sc)
+			if sc.Method == "SyncUser" {
+
+				//json 转成 string
+
+				jsonBytes, err := json.Marshal(sc.Data)
+				if err != nil {
+					fmt.Println("解析错误:", err)
+				}
+				fmt.Println("转换为 json 串打印结果:%s", string(jsonBytes))
+				//打开数据库
+				d, err := sql.Open("sqlite3", "../../tables/foo.db")
+
+				ss := sqlitedb(d)
+
+				resp := ss.SyncArticle(string(jsonBytes))
+				log.Println("这是返回的数据 =", resp)
+			}
+
 		}
+	}()
+
 
 }
+func sqlitedb(sq *sql.DB) mvc.Sql {
+		return mvc.Sql{DB: sq}
+	}
+

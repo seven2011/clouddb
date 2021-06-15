@@ -12,3 +12,7 @@ type SyncUserParams struct {
 	Method string           `json:"method"`
 	Data ArticleAddParams  `json:"data"`
 }
+type SyncParams struct {
+	Method string           `json:"type"`
+	Data ArticleAddParams  `json:"data"`
+}

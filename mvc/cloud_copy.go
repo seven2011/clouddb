@@ -1,13 +1,13 @@
 package mvc
 
 import (
+	"encoding/json"
+	"errors"
+	"fmt"
 	"github.com/cosmopolitann/clouddb/jwt"
 	"github.com/cosmopolitann/clouddb/sugar"
 	"github.com/cosmopolitann/clouddb/utils"
 	"github.com/cosmopolitann/clouddb/vo"
-	"encoding/json"
-	"errors"
-	"fmt"
 	"log"
 	"strconv"
 	"time"
@@ -40,16 +40,22 @@ func CopyFile(db *Sql,value string)(error) {
 	for _,v:=range cFile.Ids{
 		//开启事务
 		// 查询 id 的 文件 或者 文件夹 信息
-		rows1, _ := db.DB.Query("SELECT * FROM cloud_file where id=?",v)
-		var find File
-		for rows1.Next() {
-			err := rows1.Scan(&find.Id, &find.UserId, &find.FileName, &find.ParentId, &find.Ptime, &find.FileCid,&find.FileSize,&find.FileType,&find.IsFolder)
-			if err != nil {
-				return  err
-			}
-		}
+		//rows1, _ := db.DB.Query("SELECT * FROM cloud_file where id=?",v)
+		//var find File
+		//for rows1.Next() {
+		//	err := rows1.Scan(&find.Id, &find.UserId, &find.FileName, &find.ParentId, &find.Ptime, &find.FileCid,&find.FileSize,&find.FileType,&find.IsFolder)
+		//	if err != nil {
+		//		return  err
+		//	}
+		//}
+		log.Println("parent_id = ",cFile.ParentId)
+		log.Println("v = ",v)
 
-		rows, _ := db.DB.Query("SELECT * FROM cloud_file where file_name=? and user_id=? and parent_id=?",find.FileName,userid,cFile.ParentId)
+		rows, err := db.DB.Query("SELECT * from cloud_file as b WHERE (b.file_name,b.user_id,b.is_folder) in (SELECT a.file_name,a.user_id,a.is_folder from cloud_file as a where a.id=?) and b.parent_id=?",v,cFile.ParentId)
+		if err!=nil{
+			log.Println("errroew = ",err)
+			return err
+		}
 		var s File
 		for rows.Next() {
 			err := rows.Scan(&s.Id, &s.UserId, &s.FileName, &s.ParentId, &s.Ptime, &s.FileCid,&s.FileSize,&s.FileType,&s.IsFolder)
@@ -58,18 +64,37 @@ func CopyFile(db *Sql,value string)(error) {
 				fmt.Println("query err is ",err)
 				return  err
 			}
+			log.Println("这是查到第一次 多语句查询的 值 file = ",s)
 
 		}
+		log.Println("s.id = ",s.Id)
+		log.Println("s.id = ",s.Id)
+
 		if s.Id!=""{
 			log.Println("文件已经存在")
 			return errors.New("文件已经存在")
 		}
 
-		log.Println("查到的 数据 结果 = ",s)
+
+		log.Println("查到的 文件 数据 结果 = ",s)
 		if s.Id==""{
 			//0  文件  1 文件夹
-			if find.IsFolder==0{
-				//插入 文件
+			//
+			rows, err := db.DB.Query("SELECT * from cloud_file where id=?",v)
+			if err!=nil{
+				log.Println("errroew = ",err)
+				return err
+			}
+			for rows.Next() {
+				err := rows.Scan(&s.Id, &s.UserId, &s.FileName, &s.ParentId, &s.Ptime, &s.FileCid,&s.FileSize,&s.FileType,&s.IsFolder)
+
+				if err != nil {
+					fmt.Println("query err is ",err)
+					return  err
+				}
+				log.Println("ss2 = ",s)
+
+			}
 				id := utils.SnowId()
 				t:=time.Now().Format("2006-01-02 15:04:05")
 				stmt, err := db.DB.Prepare("INSERT INTO cloud_file values(?,?,?,?,?,?,?,?,?)")
@@ -78,39 +103,14 @@ func CopyFile(db *Sql,value string)(error) {
 					return err
 				}
 				sid := strconv.FormatInt(id, 10)
-				res, err := stmt.Exec(sid, userid, find.FileName, cFile.ParentId,t ,find.FileCid,find.FileSize,find.FileType,0)
+				res, err := stmt.Exec(sid, userid, s.FileName, cFile.ParentId,t ,s.FileCid,s.FileSize,s.FileType,1)
 				c,_:=res.RowsAffected()
-				//if c==0{
-				//todo
-				//}
-				fmt.Println("c =",c)
-
-			}
-			if find.IsFolder==1{
-
-				id := utils.SnowId()
-				t:=time.Now().Format("2006-01-02 15:04:05")
-
-				stmt, err := db.DB.Prepare("INSERT INTO cloud_file values(?,?,?,?,?,?,?,?,?)")
-				if err != nil {
-					sugar.Log.Error("Insert into cloud_file table is failed.",err)
-					return err
+				if c==0{
+					return errors.New("插入文件失败")
 				}
-				sid := strconv.FormatInt(id, 10)
-				res, err := stmt.Exec(sid, userid, find.FileName, cFile.ParentId,t ,find.FileCid,find.FileSize,find.FileType,1)
-				c,_:=res.RowsAffected()
-				//if c==0{
-				//
-				//}
 				fmt.Println("c =",c)
 			}
-		}else {
-			// 文件或者 文件夹 已经存在
-			return errors.New("文件夹已经存在")
-		}
-
 	}
-
 
 	return nil
 }

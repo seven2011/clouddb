@@ -37,7 +37,7 @@ func (db *Sql) UserRegister(user string) string {
 	//返回封装成方法
 	// 返回的时候 要改东西
 	if err!=nil{
-		return vo.ResponseSuccess(err)
+		return vo.ResponseErrorMsg(400,err.Error())
 	}
 	return vo.ResponseSuccess()
 }
@@ -364,7 +364,7 @@ func (db *Sql)ChatRecordAdd(dInfo string)string{
 
 	recordId,e := ChatRecordAdd(db, dInfo)
 	if e != nil {
-		return vo.ResponseSuccess(e)
+		return vo.ResponseErrorMsg(400,e.Error())
 	}
 	return vo.ResponseSuccess(recordId)
 }
@@ -376,7 +376,7 @@ func (db *Sql)ChatRecordList(dInfo string)string{
 
 	data,e := ChatRecordList(db, dInfo)
 	if e != nil {
-		return vo.ResponseSuccess(e)
+		return vo.ResponseErrorMsg(400,e.Error())
 	}
 	return vo.ResponseSuccess(data)
 }
@@ -387,7 +387,7 @@ func (db *Sql)ChatRecordDel(dInfo string)string{
 
 	e := ChatRecordDel(db, dInfo)
 	if e != nil {
-		return vo.ResponseSuccess(e)
+		return vo.ResponseErrorMsg(400,e.Error())
 	}
 	return vo.ResponseSuccess()
 }
@@ -538,6 +538,10 @@ func (db *Sql)SyncArticleCancelLike(dInfo string)string{
 	}
 	return vo.ResponseSuccess()
 }
+
+//
+
+
 
 //同步 分享
 
