@@ -1,17 +1,19 @@
 package mvc
 
 import (
+	"encoding/json"
+	"errors"
 	"github.com/cosmopolitann/clouddb/jwt"
 	"github.com/cosmopolitann/clouddb/sugar"
 	"github.com/cosmopolitann/clouddb/vo"
-	"encoding/json"
-	"errors"
 )
 
 //查询文件列表
 
 func CloudFileList(db *Sql, value string)(data []File,e error) {
 	var list vo.CloudFindListParams
+	var arrfile []File
+
 	err := json.Unmarshal([]byte(value), &list)
 	if err != nil {
 		sugar.Log.Error("Marshal is failed.Err is ", err)
@@ -20,12 +22,12 @@ func CloudFileList(db *Sql, value string)(data []File,e error) {
 	//验证 token 是否 满足条件
 	claim,b:=jwt.JwtVeriyToken(list.Token)
 	if !b{
+		return arrfile, errors.New("token 验证失败")
 	}
 	sugar.Log.Info("claim := ", claim)
 
 
 	// 查询
-	var arrfile []File
 	rows, err := db.DB.Query("select * from cloud_file where parent_id=? and is_folder=? and user_id",list.ParentId,0,claim["UserId"].(string))
 	if err != nil {
 		sugar.Log.Error("Query data is failed.Err is ", err)
