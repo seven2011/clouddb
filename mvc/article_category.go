@@ -28,7 +28,7 @@ func ArticleCategory(db *Sql, value string)([]vo.ArticleResp, error) {
 	//SELECT * from article as a LEFT JOIN sys_user as b on a.user_id=b.id  LIMIT 0,4;
 
 
-	rows, err := db.DB.Query("SELECT a.*,b.peer_id ,b.name,b.phone,b.sex,b.nickname from article as a LEFT JOIN sys_user as b on a.user_id=b.id  LIMIT ?,?;", r,result.PageSize)
+	rows, err := db.DB.Query("SELECT a.*,b.peer_id ,b.name,b.phone,b.sex,b.nickname from article as a LEFT JOIN sys_user as b on a.user_id=b.id where a.accesstory_type=? LIMIT ?,?;",result.AccesstoryType, r,result.PageSize)
 
 	if err != nil {
 		sugar.Log.Error("Query data is failed.Err is ", err)
