@@ -23,6 +23,13 @@ type ChatMsgListParams struct {
 	Token       string  `json:"token"`//token
 
 }
+//
+type ArticleListParams struct {
+	PageSize       int64  `json:"pageSize"`
+	PageNum        int64  `json:"pageNum"`
+	Token       string  `json:"token"`//token
+}
+
 
 // 删除消息
 

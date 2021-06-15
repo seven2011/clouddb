@@ -26,7 +26,9 @@ func ArticleCategory(db *Sql, value string)([]vo.ArticleResp, error) {
 	sugar.Log.Info("pageNum := ", result.PageNum)
 	//rows, err := db.DB.Query("SELECT * FROM article limit ?,?", r,result.PageSize)
 	//SELECT * from article as a LEFT JOIN sys_user as b on a.user_id=b.id  LIMIT 0,4;
-	rows, err := db.DB.Query("SELECT a.*,b.peer_id,b.name,b.phone,b.sex,b.nickname from article as a LEFT JOIN sys_user as b on a.user_id=b.id  LIMIT ?,?;", r,result.PageSize)
+
+
+	rows, err := db.DB.Query("SELECT a.*,b.peer_id ,b.name,b.phone,b.sex,b.nickname from article as a LEFT JOIN sys_user as b on a.user_id=b.id  LIMIT ?,?;", r,result.PageSize)
 
 	if err != nil {
 		sugar.Log.Error("Query data is failed.Err is ", err)
@@ -34,12 +36,43 @@ func ArticleCategory(db *Sql, value string)([]vo.ArticleResp, error) {
 	}
 	for rows.Next() {
 		var dl vo.ArticleResp
-		err = rows.Scan(&dl.Id, &dl.UserId, &dl.Accesstory, &dl.AccesstoryType,&dl.Text, &dl.Tag, &dl.Ptime ,&dl.ShareNum,&dl.PlayNum,&dl.Title,&dl.Thumbnail,&dl.PeerId,&dl.Name,&dl.Phone,&dl.Sex,&dl.NickName)
+		var peerId interface{}
+		var name interface{}
+		var phone interface{}
+		var sex interface{}
+		var NickName interface{}
+		err = rows.Scan(&dl.Id, &dl.UserId, &dl.Accesstory, &dl.AccesstoryType,&dl.Text, &dl.Tag, &dl.Ptime ,&dl.ShareNum,&dl.PlayNum,&dl.Title,&dl.Thumbnail,&peerId,&name,&phone,&sex,&NickName)
 		if err != nil {
 			sugar.Log.Error("Query scan data is failed.The err is ", err)
 			return art, err
 		}
+
+		var k =""
+		if peerId==nil{
+			dl.PeerId = k
+			dl.PeerId = k
+			dl.Name = k
+			dl.Phone = k
+			dl.Sex = 0
+			dl.NickName = k
+		}else{
+			dl.PeerId = peerId.(string)
+			dl.Name = name.(string)
+			dl.Phone = phone.(string)
+			dl.Sex = sex.(int64)
+			dl.NickName = NickName.(string)
+		}
+		//dl.PeerId = peerId.(string)
+		//dl.Name = name.(string)
+		//dl.Phone = phone.(string)
+		//dl.Sex = sex.(int64)
+		//dl.NickName = NickName.(string)
+
+
 		sugar.Log.Info("Query a entire data is ", dl)
+		if dl.UserId==""{
+			dl.UserId="anonymity"
+		}
 		art = append(art, dl)
 	}
 	if err != nil {

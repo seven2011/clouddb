@@ -2,7 +2,6 @@ package mvc
 
 import (
 	"database/sql"
-	"fmt"
 	"github.com/cosmopolitann/clouddb/sugar"
 )
 
@@ -59,7 +58,7 @@ func InitDB(path string)(*sql.DB){
 	if path==""{
 		path="../tables/foo.db"
 	}
-	fmt.Println(" dbpath = ",path)
+	sugar.Log.Info(" 数据库路径  = ",path)
 	sugar.Log.Info("Start Open Sqlite3 Database.")
 	db, err := sql.Open("sqlite3", path)
 	checkErr(err)

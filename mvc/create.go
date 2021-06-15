@@ -221,7 +221,16 @@ func (db *Sql)ArticleAdd(dInfo string)string{
 
 	return vo.ResponseSuccess()
 }
+//  查找arttcle list
 
+func (db *Sql)ArticleList(dInfo string)string{
+	data,e :=ArticleList(db,dInfo)
+	if e != nil {
+		return vo.ResponseErrorMsg(400,e.Error())
+	}
+
+	return vo.ResponseSuccess(data)
+}
 // 文章列表分类
 
 func (db *Sql)ArticleCategory(dInfo string)string{

@@ -1,9 +1,9 @@
 package vo
 
 import (
-	"github.com/cosmopolitann/clouddb/sugar"
 	"encoding/json"
 	"fmt"
+	"github.com/cosmopolitann/clouddb/sugar"
 )
 
 type ResponseModel struct {
@@ -44,7 +44,6 @@ func ResponseErrorMsg(code int, msg string)string {
 	resmodel.Message = msg
 	resmodel.Code = code
 	b, e := json.Marshal(resmodel)
-
 
 	if e!=nil{
 		sugar.Log.Error("Marshal is failed.")
