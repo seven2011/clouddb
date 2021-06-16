@@ -21,7 +21,7 @@ func TestUserInfoList(t *testing.T) {
 	e:=d.Ping()
 	fmt.Println(" Ping is failed,err:=",e)
 	ss:=Testdb(d)
-	value:=`{"Token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiIxODg4IiwiZXhwIjoxNjI1ODc4MzYxfQ.FkABVsrygfxKq2_GWP5pG2G9oYpUqD1yw5cA3boB-Dc"}`
+	value:=`{"Token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI0MTE1ODA1MTE1ODUwNDY1MjgiLCJleHAiOjE2MjY0MjY1NTh9.RkTxabtz3HMEEzD8wPc8la0M3bEn5TQZ1EES92tAjLg"}`
 	resp:= ss.UserQuery(value)
 	fmt.Println("这是返回的数据 =",resp)
 

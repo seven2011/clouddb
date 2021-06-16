@@ -21,14 +21,15 @@ func ArticleCategory(db *Sql, value string)([]vo.ArticleResp, error) {
 		return art,err
 	}
 	sugar.Log.Error("Marshal data is  result := ", result)
-	r:=(result.PageNum-1)*3
+	r:=(result.PageNum-1)*result.PageSize
+	r1:=result.PageSize
+
 	sugar.Log.Info("pageSize := ", result.PageSize)
 	sugar.Log.Info("pageNum := ", result.PageNum)
 	//rows, err := db.DB.Query("SELECT * FROM article limit ?,?", r,result.PageSize)
 	//SELECT * from article as a LEFT JOIN sys_user as b on a.user_id=b.id  LIMIT 0,4;
 	//userid:=cla
-
-	rows, err := db.DB.Query("SELECT a.*,b.peer_id ,b.name,b.phone,b.sex,b.nickname,c.is_like  from article as a LEFT JOIN sys_user as b on a.user_id=b.id LEFT JOIN article_like as c on a.user_id=c.user_id where a.accesstory_type=? ORDER BY ptime LIMIT ?,?",result.AccesstoryType, r,result.PageSize)
+	rows, err := db.DB.Query("SELECT a.*,b.peer_id ,b.name,b.phone,b.sex,b.nickname,c.is_like  from article as a LEFT JOIN sys_user as b on a.user_id=b.id LEFT JOIN article_like as c on a.user_id=c.user_id where a.accesstory_type=? ORDER BY ptime LIMIT ?,?",result.AccesstoryType, r,r1)
 
 	if err != nil {
 		sugar.Log.Error("Query data is failed.Err is ", err)
@@ -49,7 +50,7 @@ func ArticleCategory(db *Sql, value string)([]vo.ArticleResp, error) {
 		}
 
 		var k =""
-		if peerId==nil{
+		if peerId==nil || islike==nil{
 			dl.PeerId = k
 			dl.PeerId = k
 			dl.Name = k
@@ -64,13 +65,13 @@ func ArticleCategory(db *Sql, value string)([]vo.ArticleResp, error) {
 			dl.Sex = sex.(int64)
 			dl.NickName = NickName.(string)
 			dl.IsLike=islike.(int64)
-
 		}
 		//dl.PeerId = peerId.(string)
 		//dl.Name = name.(string)
 		//dl.Phone = phone.(string)
 		//dl.Sex = sex.(int64)
 		//dl.NickName = NickName.(string)
+		sugar.Log.Info("345 ")
 
 
 		sugar.Log.Info("Query a entire data is ", dl)

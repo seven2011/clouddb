@@ -13,7 +13,8 @@ func TestAddArticleCategory(t *testing.T) {
 	sugar.Log.Info("~~~~  Connecting to the sqlite3 database. ~~~~")
 	//The path is default.
 	sugar.Log.Info("Start Open Sqlite3 Database.")
-	d, err := sql.Open("sqlite3", "../../tables/foo.db")
+	d, err := sql.Open("sqlite3", "/Users/apple/winter/D-cloud/tables/foo.db")
+
 	if err!=nil{
 		panic(err)
 	}
@@ -24,7 +25,7 @@ func TestAddArticleCategory(t *testing.T) {
 	ss:=Testdb(d)
 	// request json  params
 	// test 1
-	value:=`{"pageSize":3,"pageNum":0,"accesstoryType":2}
+	value:=`{"pageSize":9,"pageNum":1,"accesstoryType":2}
 `
 	t.Log("request value :=",value)
 	resp:= ss.ArticleCategory(value)

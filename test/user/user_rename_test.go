@@ -3,11 +3,10 @@ package user
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"github.com/cosmopolitann/clouddb/mvc"
 	"github.com/cosmopolitann/clouddb/sugar"
 	"testing"
-	"time"
-	"fmt"
 )
 
 func TestUserRename(t *testing.T) {
@@ -33,7 +32,7 @@ func TestUserRename(t *testing.T) {
 		FileSize:   100,
 		FileType:   11,
 		IsFolder:   0,
-		Ptime:      time.Time{},
+		Ptime:      1232,
 	}
 	b1, e := json.Marshal(fi)
 	fmt.Println(e)

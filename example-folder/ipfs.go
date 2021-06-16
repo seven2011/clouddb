@@ -389,9 +389,7 @@ func InItipfs() {
 			}
 			log.Println(" 解析的值 =", sc)
 			if sc.Method == "SyncUser" {
-
 				//json 转成 string
-
 				jsonBytes, err := json.Marshal(sc.Data)
 				if err != nil {
 					fmt.Println("解析错误:", err)
