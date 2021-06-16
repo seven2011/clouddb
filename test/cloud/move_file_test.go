@@ -24,9 +24,9 @@ func TestMoveFile(t *testing.T) {
 	ss := Testdb(d)
 	//插入数据
 	value := `{
-"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI0MDkzMzAyMDIxNjY5NTYwMzIiLCJleHAiOjE2MjU4ODk0NzZ9.OzEFVuB2FcRYurZiii1fpiAqX2KcesfS5arJfVJZQOI",
-    "parentId":"1",
-    "ids":["410530365875163136"]
+"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI0MTE1ODA1MTE1ODUwNDY1MjgiLCJleHAiOjE2MjY0MjY1NTh9.RkTxabtz3HMEEzD8wPc8la0M3bEn5TQZ1EES92tAjLg",
+    "parentId":"2",
+    "ids":["411634526041673728"]
 }`
 	//b1, e := json.Marshal(fi)
 	//fmt.Println(ss)

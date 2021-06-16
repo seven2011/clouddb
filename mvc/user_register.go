@@ -70,7 +70,7 @@ func FindIsExistUser(db *Sql,user SysUser)(int64,error){
 
 	rows, _ := db.DB.Query("SELECT * FROM sys_user where phone=?",user.Phone)
 	for rows.Next() {
-		err := rows.Scan(&s.Id, &s.PeerId, &s.Name, &s.Phone, &s.Sex, &s.Ptime, &s.Utime, &s.NickName)
+		err := rows.Scan(&s.Id, &s.PeerId, &s.Name, &s.Phone, &s.Sex, &s.Ptime, &s.Utime, &s.NickName,&s.Img)
 		if err!=nil{
 			sugar.Log.Error(" query is failed. ",err)
 
