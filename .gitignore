@@ -8,3 +8,4 @@ test.log
 pid.txt
 .DS_Store
 ./ipfs
+test/chat/.ipfs/*
