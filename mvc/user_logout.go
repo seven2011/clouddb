@@ -7,14 +7,12 @@ import (
 )
 
 func UserDel(db *Sql, value string) error {
-
 	var userdel vo.UserDelParams
 	err := json.Unmarshal([]byte(value), &userdel)
-
 	if err != nil {
-		sugar.Log.Error("Marshal is failed.Err is ", err)
+		sugar.Log.Error("解析参数失败:", err)
 	}
-	sugar.Log.Info("Marshal data is  ", userdel)
+	sugar.Log.Info("解析参数信息是:", userdel)
 	//delete
 	stmt, err := db.DB.Prepare("delete from sys_user where id=?")
 	if 	err!=nil{
@@ -28,7 +26,6 @@ func UserDel(db *Sql, value string) error {
 	//}
 	//sugar.Log.Info("claim := ", claim)
 
-	//
 	sugar.Log.Info("userId is  ",userdel.Id)
 	res, err := stmt.Exec(userdel.Id)
 	if err != nil {

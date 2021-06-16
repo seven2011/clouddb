@@ -46,7 +46,7 @@ func TestUserUpdate(t *testing.T) {
 	//这里 改成 穿 json 字符串，字段 要改成更新之后的数据。
 
 	//{"id":"4324","peerId":"124","name":"20","phone":1,"sex":"1","nickName":"nick"}
-	value:=`{"id":"410199041234702336","peerId":"555555","name":"莉莉娅23","phone":"1888","sex":"0","nickName":"lillsf","token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI0MDkzMzAyMDIxNjY5NTYwMzIiLCJleHAiOjE2MjU4ODk0NzZ9.OzEFVuB2FcRYurZiii1fpiAqX2KcesfS5arJfVJZQOI"}`
+	value:=`{"name":"莉莉娅33","sex":3,"nickName":"","token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI0MDkzMzAyMDIxNjY5NTYwMzIiLCJleHAiOjE2MjU4ODk0NzZ9.OzEFVuB2FcRYurZiii1fpiAqX2KcesfS5arJfVJZQOI"}`
 	//resp:= ss.UserAdd(string(b1)
 
 	resp:= ss.UserUpdate(value)

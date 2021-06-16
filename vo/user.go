@@ -42,8 +42,6 @@ type UserListParams struct {
 	Token string `json:"token"`
 }
 type UserUpdateParams struct {
-	Id       string    `json:"id"`
-	PeerId   string    `json:"peerId"`
 	Name     string    `json:"name"`
 	Phone    string    `json:"phone"`
 	Sex      int64     `json:"sex"`

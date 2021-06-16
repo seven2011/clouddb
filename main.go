@@ -33,7 +33,7 @@ func main(){
 
 	d:=mvc.NTestNode("")
 	err:=d.Add()
-	sugar.Log.Info("创建数据库 成功 err",err)
+	sugar.Log.Info("创建数据库失败，错误:",err)
 	//example-folder
 	example_folder.InItipfs()
 	time.Sleep(time.Hour)

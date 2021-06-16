@@ -6,30 +6,28 @@ import (
 	"github.com/cosmopolitann/clouddb/sugar"
 	"github.com/cosmopolitann/clouddb/vo"
 )
-//
 
 
-
-
-
-
-//------------------------------------------------//-
+//|-------------------------------------------------\
 // 初始化数据库                                      //|
-
 func (db *Sql) Ping() error {                      //|
 	err := db.DB.Ping()                            //|
 	if err != nil {                                //|
-		sugar.Log.Error("Ping is Failed.",err)  //|
+		sugar.Log.Error("Ping is Failed.",err)     //|
 	}                                              //|
 	return err                                     //|
 }                                                  //|
-//-------------------------------------------------|-
+//---------------------------------------------------/
 
 
 
 
+/*
+------------------------------------------------------
+|                        User                        |
+------------------------------------------------------
+*/
 
-//  ==============   User  =================
 //  用户注册
 
 func (db *Sql) UserRegister(user string) string {
@@ -41,10 +39,6 @@ func (db *Sql) UserRegister(user string) string {
 	}
 	return vo.ResponseSuccess()
 }
-//
-
-
-
 
 //  用户注销
 
@@ -92,13 +86,19 @@ func (db *Sql) UserUpdate(user string) string {
 	}
 	return vo.ResponseSuccess()
 }
+/*
+------------------------------------------------------
+|                     User  End                      |
+------------------------------------------------------
+*/
 
-//  ==============   User  End=================
 
+/*
+------------------------------------------------------
+|                       Cloud                        |
+------------------------------------------------------
+*/
 
-
-
-//================   Cloud ====================
 //  添加文件
 
 func (db *Sql) AddFile(fInfo string) string {
@@ -208,12 +208,85 @@ func (db *Sql) TransferList(dInfo string) string {
 	return vo.ResponseSuccess(data)
 }
 
-//================   Cloud  ENd ====================
+//  下载列表
+
+func (db *Sql) DownloadList(dInfo string) string {
+	data, e := DownloadList(db, dInfo)
+	if e != nil {
+		return vo.ResponseErrorMsg(400,e.Error())
+	}
 
 
+	return vo.ResponseSuccess(data)
+}
+//  复制文件
+
+func (db *Sql) CopyFile(dInfo string) string {
+	 e := CopyFile(db, dInfo)
+	if e != nil {
+		return vo.ResponseErrorMsg(400,e.Error())
+	}
+	return vo.ResponseSuccess()
+}
+
+//  移动文件
+
+func (db *Sql) MoveFile(dInfo string) string {
+	 e := MoveFile(db, dInfo)
+	if e != nil {
+		return vo.ResponseErrorMsg(400,e.Error())
+	}
+
+	return vo.ResponseSuccess()
+}
+//删除
+
+func (db *Sql)DeleteAll(dInfo string)string{
+
+	e := Delete(db, dInfo)
+	if e != nil {
+		return vo.ResponseErrorMsg(400,e.Error())
+	}
+
+	return vo.ResponseSuccess()
+}
+
+//delete
+
+func (db *Sql)CloudFindList(dInfo string)string{
+
+	result,e := CloudFindList(db, dInfo)
+	if e != nil {
+		return vo.ResponseErrorMsg(400,e.Error())
+	}
+	return vo.ResponseSuccess(result)
+}
 
 
-// ================  Article  =====================
+//查询
+
+func (db *Sql)CloudSearch(dInfo string)string{
+
+	result,e := Search(db, dInfo)
+	if e != nil {
+		return vo.ResponseErrorMsg(400,e.Error())
+	}
+	return vo.ResponseSuccess(result)
+}
+
+/*
+------------------------------------------------------
+|                    Cloud  End                      |
+------------------------------------------------------
+*/
+
+
+/*
+------------------------------------------------------
+|                     Article                        |
+------------------------------------------------------
+*/
+
 
 //  添加 朋友圈文章
 
@@ -225,7 +298,7 @@ func (db *Sql)ArticleAdd(dInfo string)string{
 
 	return vo.ResponseSuccess()
 }
-//  查找arttcle list
+//  查找文章详情
 
 func (db *Sql)ArticleList(dInfo string)string{
 	data,e :=ArticleList(db,dInfo)
@@ -258,7 +331,6 @@ func (db *Sql)ArticlePlayAdd(dInfo string)string{
 
 	return vo.ResponseSuccess()
 }
-
 
 // 增加播放量
 
@@ -341,10 +413,17 @@ func (db *Sql)ArticleRecommend(dInfo string)string{
 
 	return vo.ResponseSuccess(data)
 }
+/*
+------------------------------------------------------
+|                 Article  End                       |
+------------------------------------------------------
+*/
 
-// ================  Article   End   =================
-
-//===========123======   Chat           ==================
+/*
+------------------------------------------------------
+|                       Chat                         |
+------------------------------------------------------
+*/
 
 //保存消息
 
@@ -426,44 +505,6 @@ func (db *Sql)ChatMsgWithDraw(dInfo string)string{
 	}
 	return vo.ResponseSuccess()
 }
-//=================   Chat     End   ==================
-
-
-//  下载列表
-
-func (db *Sql) DownloadList(dInfo string) string {
-	data, e := DownloadList(db, dInfo)
-	if e != nil {
-		return vo.ResponseErrorMsg(400,e.Error())
-	}
-
-
-	return vo.ResponseSuccess(data)
-}
-//  复制文件
-
-func (db *Sql) CopyFile(dInfo string) string {
-	 e := CopyFile(db, dInfo)
-	if e != nil {
-		return vo.ResponseErrorMsg(400,e.Error())
-	}
-	return vo.ResponseSuccess()
-}
-
-//  移动文件
-
-func (db *Sql) MoveFile(dInfo string) string {
-	 e := MoveFile(db, dInfo)
-	if e != nil {
-		return vo.ResponseErrorMsg(400,e.Error())
-	}
-
-	return vo.ResponseSuccess()
-}
-
-
-
-
 
 
 //  聊天记录
@@ -478,46 +519,19 @@ func (db *Sql)AddChatRecord(dInfo string)string{
 	return vo.ResponseSuccess()
 }
 
+/*
+------------------------------------------------------
+|                    Chat  End                       |
+------------------------------------------------------
+*/
 
-//删除
+/*
+------------------------------------------------------
+|                       Sync                         |
+------------------------------------------------------
+*/
 
-func (db *Sql)DeleteAll(dInfo string)string{
-
-	e := Delete(db, dInfo)
-	if e != nil {
-		return vo.ResponseErrorMsg(400,e.Error())
-	}
-
-	return vo.ResponseSuccess()
-}
-
-//
-//delete
-
-func (db *Sql)CloudFindList(dInfo string)string{
-
-	result,e := CloudFindList(db, dInfo)
-	if e != nil {
-		return vo.ResponseErrorMsg(400,e.Error())
-	}
-	return vo.ResponseSuccess(result)
-}
-
-
-//查询
-
-func (db *Sql)CloudSearch(dInfo string)string{
-
-	result,e := Search(db, dInfo)
-	if e != nil {
-		return vo.ResponseErrorMsg(400,e.Error())
-	}
-	return vo.ResponseSuccess(result)
-}
-
-
-//===================  同步 ==========================
-//同步 User 数据
+//同步 User表 数据
 
 func (db *Sql)SyncUser(dInfo string)string{
 
@@ -528,9 +542,7 @@ func (db *Sql)SyncUser(dInfo string)string{
 	return vo.ResponseSuccess()
 }
 
-// 同步 文章表数据
-
-//===================  同步 ==========================
+// 同步 article表数据
 
 func (db *Sql)SyncArticle(dInfo string)string{
 
@@ -541,7 +553,7 @@ func (db *Sql)SyncArticle(dInfo string)string{
 	return vo.ResponseSuccess()
 }
 
-// 同步文章点赞
+// 同步文章点赞    article_like表
 
 func (db *Sql)SyncArticleGiveLike(dInfo string)string{
 
@@ -552,7 +564,7 @@ func (db *Sql)SyncArticleGiveLike(dInfo string)string{
 	return vo.ResponseSuccess()
 }
 
-// 同步 文章 取消点赞
+// 同步 文章 取消点赞  article_like表
 
 func (db *Sql)SyncArticleCancelLike(dInfo string)string{
 
@@ -563,12 +575,7 @@ func (db *Sql)SyncArticleCancelLike(dInfo string)string{
 	return vo.ResponseSuccess()
 }
 
-//
-
-
-
-//同步 分享
-
+//同步 分享  
 
 func (db *Sql)SyncArticleShare(dInfo string)string{
 
@@ -578,7 +585,17 @@ func (db *Sql)SyncArticleShare(dInfo string)string{
 	}
 	return vo.ResponseSuccess()
 }
+/*
+------------------------------------------------------
+|                    Sync   End                      |
+------------------------------------------------------
+*/
 
+/*
+------------------------------------------------------
+|                       Other                        |
+------------------------------------------------------
+*/
 
 //convert
 
@@ -587,7 +604,6 @@ func ConvertString(value string, t interface{}) (res map[string]interface{}) {
 	json.Unmarshal([]byte(value), &t)
 	fmt.Println(" 这是 获得的结果 ", t)
 	fmt.Printf(" 这是 获得的结果  %T\n", t)
-
 	return t.(map[string]interface{})
 }
 

@@ -66,7 +66,8 @@ type Article struct {
 	AccesstoryType int64     `json:"accesstoryType"`
 	Text           string    `json:"text"`
 	Tag            string    `json:"tag"`
-	Ptime          time.Time `json:"ptime"`
+	//Ptime          time.Time `json:"ptime"`
+	Ptime          int64     `json:"ptime"`
 	PlayNum        int64     `json:"playNum"`
 	ShareNum       int64     `json:"shareNum"`
 	Title          string    `json:"title"`
