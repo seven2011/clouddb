@@ -17,6 +17,8 @@ type RespSysUser struct {
 	NickName string    `json:"nickName"`
 	Ptime    int64 `json:"ptime"`
 	Utime    int64 `json:"utime"`
+	Img    string `json:"img"`
+
 }
 
 type UserLoginRespParams struct {

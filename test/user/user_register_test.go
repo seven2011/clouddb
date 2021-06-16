@@ -45,7 +45,7 @@ func TestUserRegister(t *testing.T) {
 	//这里 改成 穿 json 字符串，字段 要改成更新之后的数据。
 
 	//{"id":"4324","peerId":"124","name":"20","phone":1,"sex":"1","nickName":"nick"}
-	value:=`{"id":"43243421","peerId":"Qwe123321","name":"20","phone":"1234","sex":"1","nickName":"nick","img":"123"}`
+	value:=`{"id":"43243421","peerId":"Q1we1233221","name":"20","phone":"1223345","sex":"1","nickName":"nick","img":"123"}`
 	//resp:= ss.UserAdd(string(b1)
 
 	resp:= ss.UserRegister(value)

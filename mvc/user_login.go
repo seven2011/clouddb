@@ -45,7 +45,7 @@ func FindIsExistLoginUser(db *Sql,data string)( int64,error,vo.RespSysUser){
 	sugar.Log.Info("用户信息是",data)
 	rows, _ := db.DB.Query("SELECT * FROM sys_user where phone=?",data)
 	for rows.Next() {
-		err := rows.Scan(&s.Id, &s.PeerId, &s.Name, &s.Phone, &s.Sex, &s.Ptime, &s.Utime, &s.NickName)
+		err := rows.Scan(&s.Id, &s.PeerId, &s.Name, &s.Phone, &s.Sex, &s.Ptime, &s.Utime, &s.NickName,&s.Img)
 		if err!=nil{
 			sugar.Log.Error("查找用户表失败,原因:",err)
 			return 0, err,s
