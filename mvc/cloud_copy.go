@@ -103,7 +103,7 @@ func CopyFile(db *Sql,value string)(error) {
 					return err
 				}
 				sid := strconv.FormatInt(id, 10)
-				res, err := stmt.Exec(sid, userid, s.FileName, cFile.ParentId,t ,s.FileCid,s.FileSize,s.FileType,1)
+				res, err := stmt.Exec(sid, userid, s.FileName, cFile.ParentId,t ,s.FileCid,s.FileSize,s.FileType,s.IsFolder)
 				c,_:=res.RowsAffected()
 				if c==0{
 					return errors.New("插入文件失败")

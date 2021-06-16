@@ -64,6 +64,15 @@ type ArticleAboutMeParams struct {
 	PageNum  int64  `json:"pageNum"`
 	Token    string `json:"token"`
 }
+//  文章推荐
+type ArticleRecommendParams struct {
+	PageSize       int64 `json:"pageSize"`
+	PageNum        int64 `json:"pageNum"`
+	 //int64 `json:"accesstoryType"`
+}
+
+
+
 
 // article play add
 

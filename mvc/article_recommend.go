@@ -1,16 +1,15 @@
 package mvc
 
 import (
-	"encoding/json"
-	"errors"
-	"github.com/cosmopolitann/clouddb/jwt"
-	"github.com/cosmopolitann/clouddb/sugar"
-	"github.com/cosmopolitann/clouddb/vo"
+"encoding/json"
+"errors"
+"github.com/cosmopolitann/clouddb/sugar"
+"github.com/cosmopolitann/clouddb/vo"
 )
 
-func ArticleAboutMe(db *Sql, value string)([]Article, error) {
+func ArticleRecommend(db *Sql, value string)([]Article, error) {
 	var art []Article
-	var result vo.ArticleAboutMeParams
+	var result vo.ArticleRecommendParams
 	err := json.Unmarshal([]byte(value), &result)
 	if err != nil {
 		sugar.Log.Error("Marshal is failed.Err is ", err)
@@ -29,18 +28,7 @@ func ArticleAboutMe(db *Sql, value string)([]Article, error) {
 	//SELECT * from article as a LEFT JOIN sys_user as b on a.user_id=b.id  LIMIT 0,4;
 	//userid:=cla
 
-	//SELECT * from article_like as a where user_id='409330202166956032' and is_like=1;
-
-	//token
-	//验证token 是否满足条件
-	//校验 token 是否 满足
-	claim,b:=jwt.JwtVeriyToken(result.Token)
-	if !b{
-		return art,err
-	}
-	sugar.Log.Info("claim := ", claim)
-	userid:=claim["UserId"]
-	rows, err := db.DB.Query("SELECT b.* from article_like as a LEFT JOIN article as b on a.article_id=b.id WHERE a.is_like=1 and a.user_id=? ORDER BY ptime LIMIT ?,?",userid, r,result.PageSize)
+	rows, err := db.DB.Query("SELECT * from article LIMIT 0,3;", r,result.PageSize)
 
 	if err != nil {
 		sugar.Log.Error("Query data is failed.Err is ", err)
@@ -48,20 +36,11 @@ func ArticleAboutMe(db *Sql, value string)([]Article, error) {
 	}
 	for rows.Next() {
 		var dl Article
-		var id interface{}
-		//var peerId interface{}
-		//var name interface{}
-		//var phone interface{}
-		//var sex interface{}
-		//var NickName interface{}
-		//var islike interface{}
-		err = rows.Scan(&id, &dl.UserId, &dl.Accesstory, &dl.AccesstoryType,&dl.Text, &dl.Tag, &dl.Ptime ,&dl.ShareNum,&dl.PlayNum,&dl.Title,&dl.Thumbnail,&dl.FileName,&dl.FileType)
+
+		err = rows.Scan(&dl.Id, &dl.UserId, &dl.Accesstory, &dl.AccesstoryType,&dl.Text, &dl.Tag, &dl.Ptime ,&dl.ShareNum,&dl.PlayNum,&dl.Title,&dl.Thumbnail,&dl.FileName,&dl.FileType)
 		if err != nil {
 			sugar.Log.Error("Query scan data is failed.The err is ", err)
 			return art, err
-		}
-		if id!=""{
-			dl.Id=id.(string)
 		}
 
 		sugar.Log.Info("Query a entire data is ", dl)

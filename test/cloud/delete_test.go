@@ -21,15 +21,16 @@ func TestDelete(t *testing.T) {
 	e:=d.Ping()
 	fmt.Println(" Ping is failed,err:=",e)
 
-//	ss:= Testdb(d)
+	ss:= Testdb(d)
 //
-//	value:=`{"Id":"4324","UserId":"124","Accesstory":"20","AccesstoryType":1,"Text":"1","Tag":"1","PlayNum":3,"ShareNum":4}
-//`
+	value:=`{"Id":"4324","UserId":"124","Accesstory":"20","AccesstoryType":1,"Text":"1","Tag":"1","PlayNum":3,"ShareNum":4}
+`
 //	resp:= ss.DeleteOneFile(value)
 //
 //	fmt.Println("这是返回的数据 =",resp)
-//
-//	ss:= Testdb(d)
-//	ss.DeleteAll(value)
+
+	resp1:=ss.DeleteAll(value)
+
+	fmt.Println("这是返回的数据 =",resp1)
 
 }

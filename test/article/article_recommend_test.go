@@ -2,13 +2,12 @@ package article
 
 import (
 	"database/sql"
-	"github.com/cosmopolitann/clouddb/mvc"
 	"github.com/cosmopolitann/clouddb/sugar"
-	_ "github.com/mattn/go-sqlite3"
 	"testing"
 )
 
-func TestArticleCancelLike(t *testing.T) {
+
+func TestArticleRecommend(t *testing.T) {
 	sugar.InitLogger()
 	sugar.Log.Info("~~~~  Connecting to the sqlite3 database. ~~~~")
 	//The path is default.
@@ -21,16 +20,22 @@ func TestArticleCancelLike(t *testing.T) {
 	sugar.Log.Info("Db value is ",d)
 	e:=d.Ping()
 	sugar.Log.Info(" Ping is failed,err:= ",e)
-	ss:=Testdb1(d)
+	ss:=Testdb(d)
 	// request json  params
 	// test 1
-
-	value:=`{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI0MDkzMzAyMDIxNjY5NTYwMzIiLCJleHAiOjE2MjU4ODk0NzZ9.OzEFVuB2FcRYurZiii1fpiAqX2KcesfS5arJfVJZQOI","id":"411285804581654528"}
+	value:=`{"pageSize":3,"pageNum":1}
 `
 	t.Log("request value :=",value)
-	resp:= ss.ArticleCancelLike(value)
+	resp:= ss.ArticleRecommend(value)
 	t.Log("result:=",resp)
-}
-func Testdb1(sq *sql.DB) mvc.Sql {
-	return mvc.Sql{DB: sq}
+
+
+//	// test 2
+//	value2:=`{"id":"411285804581654528"}
+//`
+//	t.Log("request value :=",value2)
+//	resp2:= ss.ArticlePlayAdd(value2)
+//	t.Log("result:=",resp2)
+
+
 }
