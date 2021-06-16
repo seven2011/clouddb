@@ -43,7 +43,7 @@ func UserLogin(db *Sql,value string) (vo.UserLoginRespParams,error) {
 func FindIsExistLoginUser(db *Sql,data string)( int64,error,vo.RespSysUser){
 	var s vo.RespSysUser
 	sugar.Log.Info("用户信息是",data)
-	rows, _ := db.DB.Query("SELECT * FROM sys_user where phone=?",data)
+	rows, _ := db.DB.Query("SELECT id,peer_id,name,phone,sex,ptime,utime,nickname,img FROM sys_user as a where phone=?",data)
 	for rows.Next() {
 		err := rows.Scan(&s.Id, &s.PeerId, &s.Name, &s.Phone, &s.Sex, &s.Ptime, &s.Utime, &s.NickName,&s.Img)
 		if err!=nil{
