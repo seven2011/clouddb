@@ -30,7 +30,7 @@ func AddArticle(db *Sql, value string) error {
 	}
 	sid := strconv.FormatInt(id, 10)
 	stmt.QueryRow()
-	res, err := stmt.Exec(sid, art.UserId, art.Accesstory,art.AccesstoryType,art.Text, art.Tag,t , 0,0,art.Title,art.Thumbnail,art.FileName,art.FileType)
+	res, err := stmt.Exec(sid, art.UserId, art.Accesstory,art.AccesstoryType,art.Text, art.Tag,t , 0,0,art.Title,art.Thumbnail,art.FileName,art.FileSize)
 	if err != nil {
 		sugar.Log.Error("Insert into article  is Failed.", err)
 		return errors.New("插入数据失败")
@@ -78,7 +78,7 @@ func ArticleList(db *Sql, value string) ([]Article,error) {
 	}
 	for rows.Next() {
 		var dl Article
-		err = rows.Scan(&dl.Id, &dl.UserId, &dl.Accesstory, &dl.AccesstoryType, &dl.Text, &dl.Tag, &dl.Ptime, &dl.PlayNum, &dl.ShareNum,&dl.Title,&dl.Thumbnail,&dl.FileName,&dl.FileType)
+		err = rows.Scan(&dl.Id, &dl.UserId, &dl.Accesstory, &dl.AccesstoryType, &dl.Text, &dl.Tag, &dl.Ptime, &dl.PlayNum, &dl.ShareNum,&dl.Title,&dl.Thumbnail,&dl.FileName,&dl.FileSize)
 		if err != nil {
 			sugar.Log.Error("Query scan data is failed.The err is ", err)
 			return art, err

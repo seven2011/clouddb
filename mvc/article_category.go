@@ -42,7 +42,7 @@ func ArticleCategory(db *Sql, value string)([]vo.ArticleResp, error) {
 		var sex interface{}
 		var NickName interface{}
 		var islike interface{}
-		err = rows.Scan(&dl.Id, &dl.UserId, &dl.Accesstory, &dl.AccesstoryType,&dl.Text, &dl.Tag, &dl.Ptime ,&dl.ShareNum,&dl.PlayNum,&dl.Title,&dl.Thumbnail,&dl.FileName,&dl.FileType,&peerId,&name,&phone,&sex,&NickName,&islike)
+		err = rows.Scan(&dl.Id, &dl.UserId, &dl.Accesstory, &dl.AccesstoryType,&dl.Text, &dl.Tag, &dl.Ptime ,&dl.ShareNum,&dl.PlayNum,&dl.Title,&dl.Thumbnail,&dl.FileName,&dl.FileSize,&peerId,&name,&phone,&sex,&NickName,&islike)
 		if err != nil {
 			sugar.Log.Error("Query scan data is failed.The err is ", err)
 			return art, err

@@ -73,7 +73,7 @@ type Article struct {
 	Title     string `json:"title"`
 	Thumbnail string `json:"thumbnail"`
 	FileName  string `json:"fileName"`
-	FileType  string `json:"fileType"`
+	FileSize  string `json:"fileSize"`
 }
 
 //article like

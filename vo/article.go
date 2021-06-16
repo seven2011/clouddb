@@ -10,7 +10,7 @@ type ArticleAddParams struct {
 	Title          string `json:"title"`
 	Thumbnail      string `json:"thumbnail"`
 	FileName       string `json:"fileName"`
-	FileType       string `json:"fileType"`
+	FileSize       string `json:"fileSize"`
 }
 
 //  返回 信息
@@ -27,7 +27,7 @@ type ArticleResp struct {
 	ShareNum       int64  `json:"shareNum"`
 	Thumbnail      string `json:"thumbnail"`
 	FileName       string `json:"fileName"`
-	FileType       string `json:"fileType"`
+	FileSize       string `json:"fileSize"`
 	Title          string `json:"title"`
 	PeerId         string `json:"peerId"`
 	Name           string `json:"name"`

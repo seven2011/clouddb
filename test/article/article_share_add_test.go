@@ -23,7 +23,7 @@ func TestAddArticleShareAdd(t *testing.T) {
 	ss:=Testdb(d)
 	// request json  params
 	// test 1
-	value:=`{"id":"411555061567590400"}
+	value:=`{"id":"411564791409152000"}
 `
 	t.Log("request value :=",value)
 	resp:= ss.ArticleShareAdd(value)
@@ -31,7 +31,7 @@ func TestAddArticleShareAdd(t *testing.T) {
 
 
 	// test 2
-	value2:=`{"id":"411555061567590400"}
+	value2:=`{"id":"411564791409152000"}
 `
 	t.Log("request value :=",value2)
 	resp2:= ss.ArticleShareAdd(value2)

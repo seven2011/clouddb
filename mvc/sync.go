@@ -32,7 +32,8 @@ func SyncUser(db *Sql,value string)(error){
 	//inExist insert into sys_user.
 //	id := utils.SnowId()
 	//create now time
-	t:=time.Now().Format("2006-01-02 15:04:05")
+	//t:=time.Now().Format("2006-01-02 15:04:05")
+	t:=time.Now().Unix()
 	stmt, err := db.DB.Prepare("INSERT INTO sys_user values(?,?,?,?,?,?,?,?)")
 	if err != nil {
 		sugar.Log.Error("Insert data to sys_user is failed.")
@@ -65,7 +66,9 @@ func SyncArticle(db *Sql,value string)(error) {
 	}
 	sugar.Log.Info("Marshal data is  ", art)
 	//id := utils.SnowId()
-	t := time.Now().Format("2006-01-02 15:04:05")
+	//t := time.Now().Format("2006-01-02 15:04:05")
+	t:=time.Now().Unix()
+
 	stmt, err := db.DB.Prepare("INSERT INTO article values(?,?,?,?,?,?,?,?,?,?)")
 
 	if err != nil {

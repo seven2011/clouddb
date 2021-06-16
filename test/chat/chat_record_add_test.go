@@ -26,5 +26,4 @@ func TestChatRecordAdd(t *testing.T) {
 `
 	resp:= ss.ChatRecordAdd(value)
 	t.Log("获取返回的数据 :=  ",resp)
-
 }

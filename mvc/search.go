@@ -115,7 +115,7 @@ func ARticleSearch(db *Sql, value string)(data []Article,e error) {
 	}
 	for rows.Next() {
 		var dl Article
-		err = rows.Scan(&dl.Id, &dl.UserId, &dl.Accesstory, &dl.AccesstoryType,&dl.Text, &dl.Tag, &dl.Ptime, &dl.PlayNum,&dl.ShareNum,&dl.Title,&dl.Thumbnail)
+		err = rows.Scan(&dl.Id, &dl.UserId, &dl.Accesstory, &dl.AccesstoryType,&dl.Text, &dl.Tag, &dl.Ptime, &dl.PlayNum,&dl.ShareNum,&dl.Title,&dl.Thumbnail,&dl.FileName,&dl.FileSize)
 		if err != nil {
 			sugar.Log.Error("Query scan data is failed.The err is ", err)
 			return arrfile,err

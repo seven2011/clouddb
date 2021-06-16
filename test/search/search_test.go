@@ -23,7 +23,7 @@ func TestFileList(t *testing.T) {
 	e:=d.Ping()
 	log.Println(" Ping is failed,err:=",e)
 	ss:=Testdb(d)
-	value:=`{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI0MDkzMzAyMDIxNjY5NTYwMzIiLCJleHAiOjE2MjU4ODk0NzZ9.OzEFVuB2FcRYurZiii1fpiAqX2KcesfS5arJfVJZQOI","content":"红"}
+	value:=`{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI0MDkzMzAyMDIxNjY5NTYwMzIiLCJleHAiOjE2MjU4ODk0NzZ9.OzEFVuB2FcRYurZiii1fpiAqX2KcesfS5arJfVJZQOI","content":"我爱"}
 `
 	resp:= ss.CloudSearch(value)
 	log.Println("这是返回的数据 =",resp)

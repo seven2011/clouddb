@@ -10,7 +10,6 @@ import (
 	"fmt"
 	_ "github.com/mattn/go-sqlite3"
 	"testing"
-	"time"
 )
 
 func TestUserLogin(t *testing.T) {
@@ -37,7 +36,7 @@ func TestUserLogin(t *testing.T) {
 		FileSize:   100,
 		FileType:   11,
 		IsFolder:   0,
-		Ptime:      time.Time{},
+		Ptime:      12324,
 	}
 	b1, e := json.Marshal(fi)
 	fmt.Println(e)
