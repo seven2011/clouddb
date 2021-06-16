@@ -327,6 +327,7 @@ func InItipfs() {
 		//"/ip4/127.0.0.1/udp/4010/quic/p2p/QmZp2fhDLxjYue2RiUvLwT9MWdnbDxam32qYFnGmxZDh5L",
 		"/ip4/127.0.0.1/tcp/4001/p2p/12D3KooWNfFx5Fgd1LjkcTT8Egz5yVT5e7orBrpGxXc8hzUKBBoA",
 		"/ip4/127.0.0.1/udp/4001/quic/p2p/12D3KooWNfFx5Fgd1LjkcTT8Egz5yVT5e7orBrpGxXc8hzUKBBoA",
+		"/ip4/182.150.116.150/tcp/4001/p2p/12D3KooWNfFx5Fgd1LjkcTT8Egz5yVT5e7orBrpGxXc8hzUKBBoA",
 	}
 
 	go connectToPeers(ctx, ipfs, bootstrapNodes)
@@ -356,12 +357,14 @@ func InItipfs() {
 
 	//
 	va:=`{"type":"userRegister","data":{"id":"324833623369797632","name":"22333","phone":"22333","sex":22333,"ptime":1623747170,"utime":1623747170,"nickname":"","peer_id":"22333","img":"www.baidu.com"}}`
-
-	for i := 0; i < 20000; i++ {
+	go func() {
+	for i := 0; i < 10; i++ {
 		time.Sleep(time.Second)
 		ipfs.PubSub().Publish(ctx, "/db-online-sync", []byte(va))
 		ipfs.PubSub().Publish(ctx, "fly", []byte(va))
 	}
+}()
+
 	go func() {
 		for {
 			p, err := ipfs.PubSub().Subscribe(ctx, "/db-online-sync")
@@ -369,6 +372,16 @@ func InItipfs() {
 				fmt.Println(" ipfs 发布 错误:", err)
 			}
 			fmt.Println("pub:", p)
+			p2, err := ipfs.PubSub().Subscribe(ctx, "/db-online-sync")
+			if err != nil {
+				fmt.Println(" ipfs 发布 错误:", err)
+			}
+
+			msg1,err:=p2.Next(ctx)
+			if err != nil {
+				fmt.Println("sub err:", err)
+			}
+			fmt.Println("msg1 data:", string(msg1.Data()))
 
 			msg, err := p.Next(ctx)
 			if err != nil {
@@ -396,17 +409,19 @@ func InItipfs() {
 				}
 				fmt.Println("转换为 json 串打印结果:%s", string(jsonBytes))
 				//打开数据库
-				d, err := sql.Open("sqlite3", "../../tables/foo.db")
+				d, err := sql.Open("sqlite3", "/Users/apple/winter/D-cloud/tables/foo.db")
 
 				ss := sqlitedb(d)
 
-				resp := ss.SyncArticle(string(jsonBytes))
+				resp := ss.SyncUser(string(jsonBytes))
 				log.Println("这是返回的数据 =", resp)
 			}
 
 		}
 	}()
+	select {
 
+		}
 
 }
 func sqlitedb(sq *sql.DB) mvc.Sql {

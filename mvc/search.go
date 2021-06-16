@@ -72,7 +72,7 @@ func Search(db *Sql, value string)(data []File,e error) {
 	sugar.Log.Info("Query all data is ", arrfile)
 	return arrfile,nil
 
-	sugar.Log.Info("Insert into article  is successful.")
+	sugar.Log.Info("Search  cloud_file  is successful.")
 
 	return arrfile,nil
 

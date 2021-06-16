@@ -31,7 +31,7 @@ func UserQuery(db *Sql, value string)(data SysUser,e error) {
 		return dl,err
 	}
 	for rows.Next() {
-		err = rows.Scan(&dl.Id, &dl.PeerId, &dl.Name, &dl.Phone, &dl.Sex, &dl.Ptime, &dl.Utime, &dl.NickName)
+		err = rows.Scan(&dl.Id, &dl.PeerId, &dl.Name, &dl.Phone, &dl.Sex, &dl.Ptime, &dl.Utime, &dl.NickName,&dl.Img)
 		if err != nil {
 			sugar.Log.Error("Query scan data is failed.The err is ", err)
 			return dl,err
