@@ -34,7 +34,7 @@ func UserLogin(db *Sql,value string) (vo.UserLoginRespParams,error) {
 	if err!=nil{
 		return resp,errors.New("生成token失败，请重新登录")
 	}
-
+   //1
 	resp.Token=token
 	resp.UserInfo=user
 	sugar.Log.Info("登录返回的信息:", resp)
