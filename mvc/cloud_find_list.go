@@ -34,9 +34,8 @@ func CloudFindList(db *Sql, value string)(data []File,e error) {
 		arrfile=append(arrfile,dl)
 	}
 	sugar.Log.Info("Query all data is ", arrfile)
-	return arrfile,nil
 
-	sugar.Log.Info("Insert into article  is successful.")
+	sugar.Log.Info("FindList article  is successful.")
 
 	return arrfile,nil
 

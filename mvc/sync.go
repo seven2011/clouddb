@@ -9,15 +9,14 @@ import (
 )
 
 func SyncUser(db *Sql,value string)(error){
-	//
-
+	
 	var user SysUser
 	err:=json.Unmarshal([]byte(value), &user)
 	if err!=nil{
-
+	sugar.Log.Error("解析失败:",err)
+		return err
 	}
 	sugar.Log.Info("params ：= ",user)
-
 	//l,e:= FindIsExistUser(db,user)
 	//if e!=nil{
 	//	sugar.Log.Error("FindIsExistUser info is Failed.")
@@ -29,7 +28,6 @@ func SyncUser(db *Sql,value string)(error){
 	//	sugar.Log.Error("user is exist.")
 	//	return errors.New("user is exist.")
 	//}
-
 
 	//inExist insert into sys_user.
 //	id := utils.SnowId()
@@ -48,7 +46,7 @@ func SyncUser(db *Sql,value string)(error){
 		return err
 	}
 	c,_:=res.RowsAffected()
-	sugar.Log.Info("~~~~~   Insert into sys_user data is Successful ~~~~~~",c)
+	sugar.Log.Info("~~~~~   Sync into sys_user data is Successful ~~~~~~",c)
 	//生成 token
 	// 手机号
 	//token,err:=jwt.GenerateToken(user.Phone,60)

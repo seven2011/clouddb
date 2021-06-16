@@ -23,7 +23,6 @@ func DeleteOneFile(db *Sql,value string)error {
 		stmt, err := db.DB.Prepare("delete from sys_user where id=?")
 		checkErr(err)
 		fmt.Println(" 这是 解析后的 数据 v.id=== ",v.Id)
-
 		res, err := stmt.Exec(v.Id)
 		if err != nil {
 			sugar.Log.Error("Insert into cloud_file table is failed.",err)
@@ -39,10 +38,5 @@ func DeleteOneFile(db *Sql,value string)error {
 		tx.Commit()
 	}
 	sugar.Log.Info("Insert into file  is successful.")
-
 	return nil
-
-
-
-
 }

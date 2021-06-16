@@ -13,21 +13,22 @@ import (
 )
 
 
-func ChatRecordAdd(db *Sql, value string)(string, error) {
+func ChatRecordAdd(db *Sql, value string)(ChatRecord, error) {
+	var resp ChatRecord
 
 	var record vo.ChatRecoredAddParams
 	err := json.Unmarshal([]byte(value), &record)
 
 	if err != nil {
 		sugar.Log.Error("Marshal is failed.Err is ", err)
-		return "",err
+		return resp,err
 	}
 	sugar.Log.Info("Marshal data is  ", record)
 	//
 	//校验 token 是否 满足
 	claim,b:=jwt.JwtVeriyToken(record.Token)
 	if !b{
-		return "", errors.New("token 失效")
+		return resp, errors.New("token 失效")
 
 	}
 	sugar.Log.Info("claim := ", claim)
@@ -47,23 +48,22 @@ func ChatRecordAdd(db *Sql, value string)(string, error) {
 	stmt, err := db.DB.Prepare("INSERT INTO chat_record values(?,?,?,?,?,?,?)")
 	if err != nil {
 		sugar.Log.Error("Insert into chat_msg table is failed.", err)
-		return "",err
+		return resp,err
 	}
 	stmt.QueryRow()
 	res, err := stmt.Exec(sid,record.Name,record.Img, record.FromId,t,record.LastMsg,record.ToId)
 	if err != nil {
 		sugar.Log.Error("Insert into chat_msg  is Failed.", err)
-		return "",err
+		return resp,err
 	}
 	sugar.Log.Info("Insert into chat_msg  is successful.")
 	l, _ := res.RowsAffected()
 	fmt.Println(" l =", l)
 	if l==0{
-		return "",errors.New("插入chat_msg数据失败")
+		return resp,errors.New("插入chat_msg数据失败")
 	}
 
 	//
-	var resp ChatRecord
 	resp.Id=sid
 	resp.Name=record.Name
 	resp.Img=record.Img
@@ -73,10 +73,10 @@ func ChatRecordAdd(db *Sql, value string)(string, error) {
 	resp.LastMsg=record.LastMsg
 	// json
 
-	b1, e := json.Marshal(resp)
-	if e!=nil{
-		return "",errors.New("解析失败")
-	}
+	//b1, e := json.Marshal(resp)
+	//if e!=nil{
+	//	return "",errors.New("解析失败")
+	//}
 
-	return string(b1) ,nil
+	return resp ,nil
 }

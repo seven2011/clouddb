@@ -34,7 +34,7 @@ func del(db *Sql, parent_id string,userId string) {
 			}
 		}
 	}
-	log.Println("打印 最终 的 数组 结果 delArray =-= ", delArray)
+	log.Println("删除的文件id数组信息:", delArray)
 }
 func Delete(db *Sql, value string) error {
 	//test
@@ -76,39 +76,36 @@ func Delete(db *Sql, value string) error {
 		}
 		delArray=append(delArray,string(v))
 		}
-
 		//删除 所有的 id
 		// 开启事务
-	log.Println(" =========== 数组 信息 ",delArray)
-
+	log.Println("删除的文件id数组信息:", delArray)
 	tx,err:=db.DB.Begin()
 		if err!=nil{
-			return errors.New("删除错误")
+			return errors.New("删除文件失败错误")
 		}
-
 		for _,v:=range delArray{
 			stmt, err := db.DB.Prepare("delete from cloud_file where id=?")
 			if err != nil {
-				sugar.Log.Info("删除文件失败，错误err:= ",err)
+				sugar.Log.Error("删除文件失败，错误:",err)
 				tx.Rollback()
-				return errors.New("删除错误")
+				return errors.New("删除文件失败")
 			}
 
 			res, err := stmt.Exec(v)
 			if err != nil {
-				sugar.Log.Error("删除文件失败，错误err:= ",err)
+				sugar.Log.Error("删除文件失败，错误:",err)
 				tx.Rollback()
 
-				return errors.New("删除错误")
+				return errors.New("删除文件失败")
 			}
 			log.Println(res)
 		}
 		err=tx.Commit()
 		if err!=nil{
-			sugar.Log.Info("删除文件失败，错误err:= ",err)
-			return errors.New("删除错误")
+			sugar.Log.Info("删除文件失败，错误: ",err)
+			return errors.New("删除文件失败")
 		}
-	    log.Println("数组 ：=",delArray)
+	log.Println("删除的文件id数组信息:", delArray)
 	return nil
 
 }
