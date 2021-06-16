@@ -23,7 +23,7 @@ func TestAddArticlePlayAdd(t *testing.T) {
 	ss:=Testdb(d)
 	// request json  params
 	// test 1
-	value:=`{"id":"411285804581654528"}
+	value:=`{"id":"411550229439975424"}
 `
 	t.Log("request value :=",value)
 	resp:= ss.ArticlePlayAdd(value)

@@ -1,9 +1,5 @@
 package vo
 
-import (
-	"time"
-)
-
 //  user login
 
 type UserLoginParams struct {
@@ -19,8 +15,8 @@ type RespSysUser struct {
 	Phone    string    `json:"phone"`
 	Sex      int64     `json:"sex"`
 	NickName string    `json:"nickName"`
-	Ptime    time.Time `json:"ptime"`
-	Utime    time.Time `json:"utime"`
+	Ptime    int64 `json:"ptime"`
+	Utime    int64 `json:"utime"`
 }
 
 type UserLoginRespParams struct {

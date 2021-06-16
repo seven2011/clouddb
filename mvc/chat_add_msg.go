@@ -1,12 +1,12 @@
 package mvc
 
 import (
+	"encoding/json"
+	"errors"
 	"github.com/cosmopolitann/clouddb/jwt"
 	"github.com/cosmopolitann/clouddb/sugar"
 	"github.com/cosmopolitann/clouddb/utils"
 	"github.com/cosmopolitann/clouddb/vo"
-	"encoding/json"
-	"errors"
 	"strconv"
 	"time"
 )
@@ -30,7 +30,8 @@ func AddChatMsg(db *Sql, value string) error {
 	sugar.Log.Info("claim := ", claim)
 	userid:=claim["UserId"].(string)
 	id := utils.SnowId()
-	t := time.Now().Format("2006-01-02 15:04:05")
+	//t := time.Now().Format("2006-01-02 15:04:05")
+	t:=time.Now().Unix()
 	stmt, err := db.DB.Prepare("INSERT INTO chat_msg values(?,?,?,?,?,?,?,?,?)")
 	if err != nil {
 		sugar.Log.Error("Insert into chat_msg table is failed.", err)

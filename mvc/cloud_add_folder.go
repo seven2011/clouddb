@@ -87,7 +87,8 @@ func InsertIntoData(db *Sql,f vo.CloudAddFolderParams,userId string)(c int64,e e
 	//insert into
 	//snowId
 	id := utils.SnowId()
-	t:=time.Now().Format("2006-01-02 15:04:05")
+	//t:=time.Now().Format("2006-01-02 15:04:05")
+	t:=time.Now().Unix()
 	stmt, err := db.DB.Prepare("INSERT INTO cloud_file values(?,?,?,?,?,?,?,?,?)")
 	if err != nil {
 		sugar.Log.Error("Insert into cloud_file table is failed.",err)

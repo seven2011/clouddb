@@ -1,9 +1,5 @@
 package vo
 
-import (
-	"time"
-)
-
 //前端传参过来的参数  查询列表信息
 
 type CloudFindListParams struct {
@@ -53,16 +49,16 @@ type CloudDeleteParams struct {
 //transferadd
 
 type TransferAdd struct {
-	Id           string `json:"id"`
-	FileName     string `json:"fileName"`
-	FileCid      string `json:"fileCid"`
-	FileSize     int64  `json:"fileSize"`
-	FilePath     string `json:"filePath"`
-	FileType     int64  `json:"fileType"`
-	TransferType int64  `json:"transferType"`
+	Id             string `json:"id"`
+	FileName       string `json:"fileName"`
+	FileCid        string `json:"fileCid"`
+	FileSize       int64  `json:"fileSize"`
+	FilePath       string `json:"filePath"`
+	FileType       int64  `json:"fileType"`
+	TransferType   int64  `json:"transferType"`
 	UploadParentId string `json:"uploadParentId"`
-	UploadFileId string `json:"uploadFileId"`
-	Token        string `json:"token"`
+	UploadFileId   string `json:"uploadFileId"`
+	Token          string `json:"token"`
 
 	//1 上传    2 下载
 }
@@ -72,7 +68,7 @@ type TransferAdd struct {
 type FileCategoryParams struct {
 	Token    string `json:"token"`
 	FileType int64  `json:"fileType"`
-	Order    string  `json:"order"`
+	Order    string `json:"order"`
 }
 
 //删除传输列表
@@ -99,7 +95,7 @@ type FileParam struct {
 	FileSize int64     `json:"fileSize"`
 	FileType int64     `json:"fileType"`
 	IsFolder int64     `json:"isFolder"`
-	Ptime    time.Time `json:"-`
+	Ptime    int64 `json:"-`
 }
 type CopyFileParams struct {
 	Token    string   `json:"token"`
@@ -115,20 +111,19 @@ type MoveFileParams struct {
 	Ids      []string `json:"ids"`
 }
 
-
 // 查询文件
 
 type SearchFileParams struct {
-	Token    string   `json:"token"`
-	Content  string   `json:"content"`
-	Order    string   `json:"order"`
+	Token   string `json:"token"`
+	Content string `json:"content"`
+	Order   string `json:"order"`
 }
 
 // 文章查询
 
 type ArticleSearchParams struct {
-	PageSize       int64  `json:"pageSize"`    // 一次多少条
-	PageNum        int64  `json:"pageNum"`    // 第几页
+	PageSize int64 `json:"pageSize"` // 一次多少条
+	PageNum  int64 `json:"pageNum"`  // 第几页
 	//Token    string   `json:"token"`
-	Title  string `json:"title"`
+	Title string `json:"title"`
 }

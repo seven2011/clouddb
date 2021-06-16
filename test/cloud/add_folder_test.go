@@ -27,7 +27,7 @@ func TestAddFolder(t *testing.T) {
 
 	var f1 =vo.CloudAddFolderParams{
 		Id:       "123",
-		FileName: "月亮湾",
+		FileName: "月亮湾123",
 		ParentId: "411193551548846080",
 		Token:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI0MTExOTI3MjA0NDc1MDg0ODAiLCJleHAiOjE2MjYzMzM1NzJ9.EDv7k__JEugp-57RU3wDsJ1Swa3C0t-Ofr4KeQQhzeA",
 	}

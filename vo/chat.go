@@ -11,31 +11,31 @@ type ChatAddMsgParams struct {
 	IsWithdraw  int64  `json:"isWithdraw"`  //require     coment 是否撤回         0 未撤回  1  撤回
 	IsRead      int64  `json:"isRead"`      // require     coment 是否已读
 	RecordId    string `json:"recordId"`    //require     coment 消息记录id
-	Token       string  `json:"token"`//token
+	Token       string `json:"token"`       //token
 }
 
 //获取消息分页
 
 type ChatMsgListParams struct {
-	PageSize       int64  `json:"pageSize"`
-	PageNum        int64  `json:"pageNum"`
-	RecordId       string  `json:"recordId"`
-	Token       string  `json:"token"`//token
+	PageSize int64  `json:"pageSize"`
+	PageNum  int64  `json:"pageNum"`
+	RecordId string `json:"recordId"`
+	Token    string `json:"token"` //token
 
 }
+
 //
 type ArticleListParams struct {
-	PageSize       int64  `json:"pageSize"`
-	PageNum        int64  `json:"pageNum"`
-	Token       string  `json:"token"`//token
+	PageSize int64  `json:"pageSize"`
+	PageNum  int64  `json:"pageNum"`
+	Token    string `json:"token"` //token
 }
-
 
 // 删除消息
 
 type ChatMsgDelParams struct {
-	Token       string `json:"token"`
-	Id          string `json:"id"`
+	Token string `json:"token"`
+	Id    string `json:"id"`
 }
 
 // 撤回消息
@@ -43,6 +43,6 @@ type ChatMsgDelParams struct {
 // 删除消息
 
 type ChatMsgWithDrawParams struct {
-	Id          string `json:"id"`
-	Token       string  `json:"token"`
+	Id    string `json:"id"`
+	Token string `json:"token"`
 }

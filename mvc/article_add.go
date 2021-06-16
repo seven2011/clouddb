@@ -20,7 +20,8 @@ func AddArticle(db *Sql, value string) error {
 	}
 	sugar.Log.Info("Marshal data is  ", art)
 	id := utils.SnowId()
-	t := time.Now().Format("2006-01-02 15:04:05")
+	t:=time.Now().Unix()
+	//t := time.Now().Format("2006-01-02 15:04:05")
 	stmt, err := db.DB.Prepare("INSERT INTO article values(?,?,?,?,?,?,?,?,?,?,?,?,?)")
 	if err != nil {
 		sugar.Log.Error("Insert into article table is failed.", err)

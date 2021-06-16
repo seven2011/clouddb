@@ -1,7 +1,5 @@
 package vo
 
-import "time"
-
 type ArticleAddParams struct {
 	Id             string `json:"id"`
 	UserId         string `json:"userId"`
@@ -11,32 +9,32 @@ type ArticleAddParams struct {
 	Tag            string `json:"tag"`
 	Title          string `json:"title"`
 	Thumbnail      string `json:"thumbnail"`
-	FileName      string `json:"fileName"`
-	FileType      string `json:"fileType"`
+	FileName       string `json:"fileName"`
+	FileType       string `json:"fileType"`
 }
 
 //  返回 信息
 
 type ArticleResp struct {
-	Id             string    `json:"id"`
-	UserId         string    `json:"userId"`
-	Accesstory     string    `json:"accesstory"`
-	AccesstoryType int64     `json:"accesstoryType"`
-	Text           string    `json:"text"`
-	Tag            string    `json:"tag"`
-	Ptime          time.Time `json:"ptime"`
-	PlayNum        int64     `json:"playNum"`
-	ShareNum       int64     `json:"shareNum"`
-	Thumbnail      string    `json:"thumbnail"`
-	FileName      string    `json:"fileName"`
-	FileType      string    `json:"fileType"`
-	Title          string    `json:"title"`
-	PeerId         string    `json:"peerId"`
-	Name           string    `json:"name"`
-	Phone          string    `json:"phone"`
-	Sex            int64     `json:"sex"`
-	NickName       string    `json:"nickName"`
-	IsLike         int64     `json:"isLike"`
+	Id             string `json:"id"`
+	UserId         string `json:"userId"`
+	Accesstory     string `json:"accesstory"`
+	AccesstoryType int64  `json:"accesstoryType"`
+	Text           string `json:"text"`
+	Tag            string `json:"tag"`
+	Ptime          int64  `json:"ptime"`
+	PlayNum        int64  `json:"playNum"`
+	ShareNum       int64  `json:"shareNum"`
+	Thumbnail      string `json:"thumbnail"`
+	FileName       string `json:"fileName"`
+	FileType       string `json:"fileType"`
+	Title          string `json:"title"`
+	PeerId         string `json:"peerId"`
+	Name           string `json:"name"`
+	Phone          string `json:"phone"`
+	Sex            int64  `json:"sex"`
+	NickName       string `json:"nickName"`
+	IsLike         int64  `json:"isLike"`
 }
 
 //1文本 2图片 3视频 4音乐
@@ -64,15 +62,13 @@ type ArticleAboutMeParams struct {
 	PageNum  int64  `json:"pageNum"`
 	Token    string `json:"token"`
 }
+
 //  文章推荐
 type ArticleRecommendParams struct {
-	PageSize       int64 `json:"pageSize"`
-	PageNum        int64 `json:"pageNum"`
-	 //int64 `json:"accesstoryType"`
+	PageSize int64 `json:"pageSize"`
+	PageNum  int64 `json:"pageNum"`
+	//int64 `json:"accesstoryType"`
 }
-
-
-
 
 // article play add
 
@@ -109,9 +105,9 @@ type ArticleQueryParams struct {
 // 文件重命名
 
 type CloudFileRenameParams struct {
-	Id     string `json:"id"`
-	Rename string `json:"rename"`
+	Id       string `json:"id"`
+	Rename   string `json:"rename"`
 	IsFolder int64  `json:"isFolder"`
-	Token  string `json:"token"`
+	Token    string `json:"token"`
 	ParentId string `json:"parentId"`
 }

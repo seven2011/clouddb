@@ -1,11 +1,11 @@
 package mvc
 
 import (
+	"encoding/json"
+	"errors"
 	"github.com/cosmopolitann/clouddb/jwt"
 	"github.com/cosmopolitann/clouddb/sugar"
 	"github.com/cosmopolitann/clouddb/vo"
-	"encoding/json"
-	"errors"
 )
 
 
@@ -24,15 +24,15 @@ func ArticleCancelLike(db *Sql, value string) error {
 	if !b{
 		return errors.New("token 失效")
 	}
-	userid:=claim["UserId"].(string)
+	//userid:=claim["UserId"].(string)
 	sugar.Log.Info("claim := ", claim)
 	//查询数据
-	stmt, err := db.DB.Prepare("UPDATE article_like set is_like=? where article_id=? and user_id=?")
+	stmt, err := db.DB.Prepare("UPDATE article_like set is_like=? where id=?")
 	if err!=nil{
 		sugar.Log.Error("update article_like is failed.Err is ", err)
 		return errors.New("更新数据失败")
 	}
-	res, err := stmt.Exec(int64(0),art.Id,userid)
+	res, err := stmt.Exec(int64(0),art.Id)
 	if err!=nil{
 		sugar.Log.Error("update article_like is failed.Err is ", err)
 		return err

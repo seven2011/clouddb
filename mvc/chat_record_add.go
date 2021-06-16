@@ -44,7 +44,8 @@ func ChatRecordAdd(db *Sql, value string)(ChatRecord, error) {
 	sugar.Log.Info("  雪花 Id  = ", sid)
 
 
-	t := time.Now().Format("2006-01-02 15:04:05")
+	//t := time.Now().Format("2006-01-02 15:04:05")
+	t:=time.Now().Unix()
 	stmt, err := db.DB.Prepare("INSERT INTO chat_record values(?,?,?,?,?,?,?)")
 	if err != nil {
 		sugar.Log.Error("Insert into chat_msg table is failed.", err)
@@ -69,7 +70,7 @@ func ChatRecordAdd(db *Sql, value string)(ChatRecord, error) {
 	resp.Img=record.Img
 	resp.FromId=record.FromId
 	resp.Toid=record.ToId
-	resp.Ptime=time.Now()
+	resp.Ptime=time.Now().Unix()
 	resp.LastMsg=record.LastMsg
 	// json
 

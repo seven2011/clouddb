@@ -25,19 +25,19 @@ func TestArticleQuery(t *testing.T) {
 	ss:=Testdb(d)
 	// request json  params
 	// test 1
-	value:=`{"id":"411285804581654528"}
+	value:=`{"id":"411550229439975424"}
 `
 	t.Log("request value :=",value)
 	resp:= ss.ArticleQuery(value)
 	t.Log("result:=",resp)
 
 
-	// test 2
-	value2:=`{"id":"411285804581654528"}
-`
-	t.Log("request value :=",value2)
-	resp2:= ss.ArticleQuery(value2)
-	t.Log("result:=",resp2)
+//	// test 2
+//	value2:=`{"id":"411555061567590400"}
+//`
+//	t.Log("request value :=",value2)
+//	resp2:= ss.ArticleQuery(value2)
+//	t.Log("result:=",resp2)
 
 
 }

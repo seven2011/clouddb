@@ -1,7 +1,5 @@
 package vo
 
-import "time"
-
 //消息记录新增 (类似房间)
 
 type ChatRecoredAddParams struct {
@@ -32,19 +30,18 @@ type ChatRecordDelParams struct {
 
 //
 type ChatRecordInfo struct {
-	Id      string    `json:"id"`
-	Name    string    `json:"name"`
-	Img     string    `json:"img"`
-	FromId  string    `json:"fromId"`
-	Ptime   time.Time `json:"ptime"`
-	LastMsg string     `json:"lastMsg"`
-	Toid    string    `json:"toId"`
-	UserName string  `json:"userName"`
+	Id       string `json:"id"`
+	Name     string `json:"name"`
+	Img      string `json:"img"`
+	FromId   string `json:"fromId"`
+	Ptime    int64  `json:"ptime"`
+	LastMsg  string `json:"lastMsg"`
+	Toid     string `json:"toId"`
+	UserName string `json:"userName"`
 	Phone    string `json:"phone"`
 	PeerId   string `json:"peerId"`
 	NickName string `json:"nickName"`
 	Sex      int64  `json:"sex"`
-
 }
 type ChatRecordRespListParams struct {
 	FromId       string `json:"fromId"`

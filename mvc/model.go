@@ -11,8 +11,8 @@ type SysUser struct {
 	Phone    string    `json:"phone"`    //手机号
 	Sex      int64     `json:"sex"`      //性别 0 未知  1 男  2 女
 	NickName string    `json:"nickName"` //昵称
-	Ptime    time.Time `json:"-"`        //时间
-	Utime    time.Time `json:"-"`        //更新时间
+	Ptime    int64 `json:"-"`        //时间
+	Utime    int64 `json:"-"`        //更新时间
 }
 
 //cloud_file
@@ -25,7 +25,7 @@ type File struct {
 	FileSize int64     `json:"fileSize"` //文件大小
 	FileType int64     `json:"fileType"` //文件类型
 	IsFolder int64     `json:"isFolder"` //是否是文件or 文件夹  0文件 1文件夹
-	Ptime    time.Time `json:"ptime"`    //时间
+	Ptime    int64 `json:"ptime"`    //时间
 }
 
 //DownLoadList
@@ -91,7 +91,7 @@ type ChatMsg struct {
 	Content     string    `json:"content"`
 	FromId      string    `json:"fromId"`
 	ToId        string    `json:"toId"`
-	Ptime       time.Time `json:"ptime"`
+	Ptime       int64 `json:"ptime"`
 	IsWithdraw  int64     `json:"isWithdraw"` //require     coment 是否撤回         0 未撤回  1  撤回
 	IsRead      int64     `json:"isRead"`
 	RecordId    string    `json:"recordId"`
@@ -104,7 +104,7 @@ type ChatRecord struct {
 	Name    string    `json:"name"`
 	Img     string    `json:"img"`
 	FromId  string    `json:"fromId"`
-	Ptime   time.Time `json:"ptime"`
+	Ptime   int64 `json:"ptime"`
 	LastMsg string    `json:"lastMsg"`
 	Toid    string    `json:"toId"`
 }
