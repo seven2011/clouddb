@@ -5,14 +5,13 @@ import (
 	"github.com/cosmopolitann/clouddb/sugar"
 )
 
-func tt(){
+func tt() {
 
 	//校验 token 是否 满足
-	claim,b:=jwt.JwtVeriyToken("")
-	if !b{
+	claim, b := jwt.JwtVeriyToken("")
+	if !b {
 		//return errors.New("token 失效")
 	}
 	sugar.Log.Info("claim := ", claim)
-
 
 }

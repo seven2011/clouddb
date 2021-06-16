@@ -1,7 +1,5 @@
 package mvc
 
-import "time"
-
 //sys_user
 
 type SysUser struct {
@@ -35,7 +33,7 @@ type DownLoad struct {
 	Id           string    `json:"id"`           //id
 	UserId       string    `json:"userId"`       //用户uersid
 	FileName     string    `json:"fileName"`     //文件名字
-	Ptime        time.Time `json:"ptime"`        //时间
+	Ptime        int64 `json:"ptime"`        //时间
 	FileCid      string    `json:"fileCid"`      //文件cid
 	FileSize     int64     `json:"fileSize"`     //文件大小
 	DownPath     string    `json:"downPath"`     //下载路径
@@ -46,17 +44,17 @@ type DownLoad struct {
 //
 //DownLoadList
 type TransferDownLoadParams struct {
-	Id             string    `json:"id"`             //id
-	UserId         string    `json:"userId"`         //用户userid
-	FileName       string    `json:"fileName"`       //文件名字
-	Ptime          time.Time `json:"ptime"`          //时间
-	FileCid        string    `json:"fileCid"`        //文件cid
-	FileSize       int64     `json:"fileSize"`       //文件大小
-	DownPath       string    `json:"downPath"`       //下载路径
-	FileType       int64     `json:"fileType"`       //文件类型
-	TransferType   int64     `json:"transferType"`   //传输类型
-	UploadParentId string    `json:"uploadParentId"` //下载父id
-	UploadFileId   string    `json:"uploadFileId"`   //下载文件的id
+	Id             string `json:"id"`             //id
+	UserId         string `json:"userId"`         //用户userid
+	FileName       string `json:"fileName"`       //文件名字
+	Ptime          int64  `json:"ptime"`          //时间
+	FileCid        string `json:"fileCid"`        //文件cid
+	FileSize       int64  `json:"fileSize"`       //文件大小
+	DownPath       string `json:"downPath"`       //下载路径
+	FileType       int64  `json:"fileType"`       //文件类型
+	TransferType   int64  `json:"transferType"`   //传输类型
+	UploadParentId string `json:"uploadParentId"` //下载父id
+	UploadFileId   string `json:"uploadFileId"`   //下载文件的id
 }
 
 //article

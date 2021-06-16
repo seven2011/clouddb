@@ -1,6 +1,5 @@
 package vo
 
-
 const (
 	FileType_Picture  = 1
 	FileType_video    = 2

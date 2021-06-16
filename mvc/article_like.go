@@ -1,16 +1,15 @@
 package mvc
 
 import (
+	"encoding/json"
+	"errors"
+	"fmt"
 	"github.com/cosmopolitann/clouddb/jwt"
 	"github.com/cosmopolitann/clouddb/sugar"
 	"github.com/cosmopolitann/clouddb/utils"
 	"github.com/cosmopolitann/clouddb/vo"
-	"encoding/json"
-	"errors"
-	"fmt"
 	"strconv"
 )
-
 
 //朋友圈点赞
 
@@ -26,15 +25,15 @@ func AddArticleLike(db *Sql, value string) error {
 	//
 	//查询是否存在记录
 	//校验 token 是否 满足
-	claim,b:=jwt.JwtVeriyToken(art.Token)
-	if !b{
+	claim, b := jwt.JwtVeriyToken(art.Token)
+	if !b {
 		return errors.New("token 失效")
 	}
-	userid:=claim["UserId"].(string)
+	userid := claim["UserId"].(string)
 	sugar.Log.Info("claim := ", claim)
 	//查询数据
-	rows, err := db.DB.Query("SELECT * FROM article_like where article_id=? and user_id=?",art.Id,userid)
-	if err!=nil{
+	rows, err := db.DB.Query("SELECT * FROM article_like where article_id=? and user_id=?", art.Id, userid)
+	if err != nil {
 		sugar.Log.Error("Query article_like is failed.Err is ", err)
 		return err
 	}
@@ -47,7 +46,7 @@ func AddArticleLike(db *Sql, value string) error {
 		}
 	}
 
-	if dl.Id==""{
+	if dl.Id == "" {
 		//插入新的一条记录
 		id := utils.SnowId()
 		stmt, err := db.DB.Prepare("INSERT INTO article_like values(?,?,?,?)")
@@ -57,7 +56,7 @@ func AddArticleLike(db *Sql, value string) error {
 		}
 		sid := strconv.FormatInt(id, 10)
 		stmt.QueryRow()
-		res, err := stmt.Exec(sid, userid,art.Id,int64(1))
+		res, err := stmt.Exec(sid, userid, art.Id, int64(1))
 		if err != nil {
 			sugar.Log.Error("Insert into article_like  is Failed.", err)
 			return err
@@ -65,24 +64,24 @@ func AddArticleLike(db *Sql, value string) error {
 		sugar.Log.Info("Insert into article_like  is successful.")
 		l, _ := res.RowsAffected()
 		fmt.Println(" l =", l)
-		if l==0{
+		if l == 0 {
 			return errors.New("插入数据失败")
 		}
 		return nil
-	}else{
+	} else {
 		//更新字段  is_ike = 1
 		stmt, err := db.DB.Prepare("update article_like set is_like=? where article_id=? and user_id=?")
 		if err != nil {
 			sugar.Log.Error("update  article_like  is Failed.", err)
 			return err
 		}
-		res, err := stmt.Exec(int64(1),art.Id,userid)
+		res, err := stmt.Exec(int64(1), art.Id, userid)
 		if err != nil {
 			sugar.Log.Error("update  article_like  is Failed.", err)
 			return err
 		}
 		affect, err := res.RowsAffected()
-		if affect==0{
+		if affect == 0 {
 			sugar.Log.Error("update article_like  is Failed.", err)
 			return err
 		}

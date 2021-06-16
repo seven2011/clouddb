@@ -13,16 +13,16 @@ func TestChatRecord(t *testing.T) {
 	//The path is default.
 	sugar.Log.Info("Start Open Sqlite3 Database.")
 	d, err := sql.Open("sqlite3", "/Users/apple/winter/D-cloud/tables/foo.db")
-	if err!=nil{
+	if err != nil {
 		panic(err)
 	}
 	sugar.Log.Info("Open Sqlite3 is ok.")
-	sugar.Log.Info("Db value is ",d)
-	e:=d.Ping()
-	log.Println(" Ping is failed,err:=",e)
-	ss:= Testdb(d)
-	value:=`{"Id":"2342","RecordName":"sfwer","RecordTopic":"20","RecordImg":"123","CreateBy":"1","LastMsg":"sfs"}
+	sugar.Log.Info("Db value is ", d)
+	e := d.Ping()
+	log.Println(" Ping is failed,err:=", e)
+	ss := Testdb(d)
+	value := `{"Id":"2342","RecordName":"sfwer","RecordTopic":"20","RecordImg":"123","CreateBy":"1","LastMsg":"sfs"}
 `
-	resp:= ss.AddChatRecord(value)
-	log.Println("这是返回的数据 =",resp)
+	resp := ss.AddChatRecord(value)
+	log.Println("这是返回的数据 =", resp)
 }

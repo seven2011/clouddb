@@ -13,29 +13,27 @@ func TestAddArticlePlayAdd(t *testing.T) {
 	//The path is default.
 	sugar.Log.Info("Start Open Sqlite3 Database.")
 	d, err := sql.Open("sqlite3", "/Users/apple/winter/D-cloud/tables/foo.db")
-	if err!=nil{
+	if err != nil {
 		panic(err)
 	}
 	sugar.Log.Info("Open Sqlite3 is ok.")
-	sugar.Log.Info("Db value is ",d)
-	e:=d.Ping()
-	sugar.Log.Info(" Ping is failed,err:= ",e)
-	ss:=Testdb(d)
+	sugar.Log.Info("Db value is ", d)
+	e := d.Ping()
+	sugar.Log.Info(" Ping is failed,err:= ", e)
+	ss := Testdb(d)
 	// request json  params
 	// test 1
-	value:=`{"id":"411550229439975424"}
+	value := `{"id":"411550229439975424"}
 `
-	t.Log("request value :=",value)
-	resp:= ss.ArticlePlayAdd(value)
-	t.Log("result:=",resp)
-
+	t.Log("request value :=", value)
+	resp := ss.ArticlePlayAdd(value)
+	t.Log("result:=", resp)
 
 	// test 2
-	value2:=`{"id":"411285804581654528"}
+	value2 := `{"id":"411285804581654528"}
 `
-	t.Log("request value :=",value2)
-	resp2:= ss.ArticlePlayAdd(value2)
-	t.Log("result:=",resp2)
-
+	t.Log("request value :=", value2)
+	resp2 := ss.ArticlePlayAdd(value2)
+	t.Log("result:=", resp2)
 
 }

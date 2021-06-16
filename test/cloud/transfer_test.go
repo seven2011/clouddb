@@ -1,4 +1,3 @@
-
 package cloud
 
 import (
@@ -14,18 +13,18 @@ func TestTransferAdd(t *testing.T) {
 	//The path is default.
 	sugar.Log.Info("Start Open Sqlite3 Database.")
 	d, err := sql.Open("sqlite3", "/Users/apple/winter/D-cloud/tables/foo.db")
-	if err!=nil{
+	if err != nil {
 		panic(err)
 	}
 	sugar.Log.Info("Open Sqlite3 is ok.")
-	sugar.Log.Info("Db value is ",d)
-	e:=d.Ping()
-	log.Println(" Ping is failed,err:=",e)
-	ss:=Testdb(d)
+	sugar.Log.Info("Db value is ", d)
+	e := d.Ping()
+	log.Println(" Ping is failed,err:=", e)
+	ss := Testdb(d)
 
-//	value:=`{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI0MDkzMzAyMDIxNjY5NTYwMzIiLCJleHAiOjE2MjU4ODk0NzZ9.OzEFVuB2FcRYurZiii1fpiAqX2KcesfS5arJfVJZQOI","parentId":"1"}
-//`
-	v:=`{
+	//	value:=`{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI0MDkzMzAyMDIxNjY5NTYwMzIiLCJleHAiOjE2MjU4ODk0NzZ9.OzEFVuB2FcRYurZiii1fpiAqX2KcesfS5arJfVJZQOI","parentId":"1"}
+	//`
+	v := `{
 "id":"123",
 "fileName":"321",
 "fileCid":"Qwer",
@@ -37,6 +36,6 @@ func TestTransferAdd(t *testing.T) {
 "uploadFileId":"410131661494161408",
 "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI0MDkzMzAyMDIxNjY5NTYwMzIiLCJleHAiOjE2MjU4ODk0NzZ9.OzEFVuB2FcRYurZiii1fpiAqX2KcesfS5arJfVJZQOI"
 }`
-	resp:= ss.TransferAdd(v)
-	log.Println("这是返回的数据 =",resp)
+	resp := ss.TransferAdd(v)
+	log.Println("这是返回的数据 =", resp)
 }

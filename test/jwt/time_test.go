@@ -6,9 +6,8 @@ import (
 	"time"
 )
 
-func TestTtime(t *testing.T){
-	value:=time.Now().Unix()
-	log.Println("value =",value)
-
+func TestTtime(t *testing.T) {
+	value := time.Now().Unix()
+	log.Println("value =", value)
 
 }

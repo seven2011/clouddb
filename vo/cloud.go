@@ -87,15 +87,15 @@ type TransferListParams struct {
 // 复制文件
 
 type FileParam struct {
-	Id       string    `json:"id"`
-	UserId   string    `json:"userId"`
-	FileName string    `json:"fileName"`
-	ParentId string    `json:"parentId"`
-	FileCid  string    `json:"fileCid"`
-	FileSize int64     `json:"fileSize"`
-	FileType int64     `json:"fileType"`
-	IsFolder int64     `json:"isFolder"`
-	Ptime    int64 `json:"-`
+	Id       string `json:"id"`
+	UserId   string `json:"userId"`
+	FileName string `json:"fileName"`
+	ParentId string `json:"parentId"`
+	FileCid  string `json:"fileCid"`
+	FileSize int64  `json:"fileSize"`
+	FileType int64  `json:"fileType"`
+	IsFolder int64  `json:"isFolder"`
+	Ptime    int64  `json:"-`
 }
 type CopyFileParams struct {
 	Token    string   `json:"token"`

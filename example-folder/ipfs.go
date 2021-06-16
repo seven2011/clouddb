@@ -50,9 +50,9 @@ func setupPlugins(externalPluginsPath string) error {
 	return nil
 }
 
-func createTempRepo(ctx context.Context) (string, error,string) {
+func createTempRepo(ctx context.Context) (string, error, string) {
 	//repoPath, err := ioutil.TempDir("", "ipfs-shell")
-	repoPath:= "./.ipfs"
+	repoPath := "./.ipfs"
 
 	//if err != nil {
 	//	return "", fmt.Errorf("failed to get temp dir: %s", err),""
@@ -61,16 +61,16 @@ func createTempRepo(ctx context.Context) (string, error,string) {
 	// Create a config with default options and a 2048 bit key
 	cfg, err := config.Init(ioutil.Discard, 2048)
 	if err != nil {
-		return "", err,""
+		return "", err, ""
 	}
 	peerId := cfg.Identity.PeerID
 	// Create the repo with the config
 	err = fsrepo.Init(repoPath, cfg)
 	if err != nil {
-		return "", fmt.Errorf("failed to init ephemeral node: %s", err),""
+		return "", fmt.Errorf("failed to init ephemeral node: %s", err), ""
 	}
 
-	return repoPath, nil,peerId
+	return repoPath, nil, peerId
 }
 
 /// ------ Spawning the node
@@ -121,20 +121,20 @@ func spawnDefault(ctx context.Context) (icore.CoreAPI, error) {
 }
 
 // Spawns a node to be used just for this run (i.e. creates a tmp repo)
-func spawnEphemeral(ctx context.Context) (icore.CoreAPI, error,string) {
+func spawnEphemeral(ctx context.Context) (icore.CoreAPI, error, string) {
 	if err := setupPlugins(""); err != nil {
-		return nil, err,""
+		return nil, err, ""
 	}
 
 	// Create a Temporary Repo
-	repoPath, err,peerId := createTempRepo(ctx)
+	repoPath, err, peerId := createTempRepo(ctx)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create temp repo: %s", err),""
+		return nil, fmt.Errorf("failed to create temp repo: %s", err), ""
 	}
 
 	// Spawning an ephemeral IPFS node
-	api,err:=createNode(ctx, repoPath)
-	return api,err,peerId
+	api, err := createNode(ctx, repoPath)
+	return api, err, peerId
 }
 
 //
@@ -356,14 +356,14 @@ func InItipfs() {
 	ipfs.PubSub().Publish(ctx, "fly", []byte("于欢 喜欢  打牌"))
 
 	//
-	va:=`{"type":"userRegister","data":{"id":"324833623369797632","name":"22333","phone":"22333","sex":22333,"ptime":1623747170,"utime":1623747170,"nickname":"","peer_id":"22333","img":"www.baidu.com"}}`
+	va := `{"type":"userRegister","data":{"id":"324833623369797632","name":"22333","phone":"22333","sex":22333,"ptime":1623747170,"utime":1623747170,"nickname":"","peer_id":"22333","img":"www.baidu.com"}}`
 	go func() {
-	for i := 0; i < 10; i++ {
-		time.Sleep(time.Second)
-		ipfs.PubSub().Publish(ctx, "/db-online-sync", []byte(va))
-		ipfs.PubSub().Publish(ctx, "fly", []byte(va))
-	}
-}()
+		for i := 0; i < 10; i++ {
+			time.Sleep(time.Second)
+			ipfs.PubSub().Publish(ctx, "/db-online-sync", []byte(va))
+			ipfs.PubSub().Publish(ctx, "fly", []byte(va))
+		}
+	}()
 
 	go func() {
 		for {
@@ -377,7 +377,7 @@ func InItipfs() {
 				fmt.Println(" ipfs 发布 错误:", err)
 			}
 
-			msg1,err:=p2.Next(ctx)
+			msg1, err := p2.Next(ctx)
 			if err != nil {
 				fmt.Println("sub err:", err)
 			}
@@ -419,12 +419,9 @@ func InItipfs() {
 
 		}
 	}()
-	select {
-
-		}
+	select {}
 
 }
 func sqlitedb(sq *sql.DB) mvc.Sql {
-		return mvc.Sql{DB: sq}
-	}
-
+	return mvc.Sql{DB: sq}
+}

@@ -8,21 +8,21 @@ import (
 	"github.com/cosmopolitann/clouddb/vo"
 )
 
-func ArticleAboutMe(db *Sql, value string)([]Article, error) {
+func ArticleAboutMe(db *Sql, value string) ([]Article, error) {
 	var art []Article
 	var result vo.ArticleAboutMeParams
 	err := json.Unmarshal([]byte(value), &result)
 	if err != nil {
 		sugar.Log.Error("Marshal is failed.Err is ", err)
-		return art,errors.New("解析错误")
+		return art, errors.New("解析错误")
 	}
 	sugar.Log.Info("Marshal data is  ", result)
 	if err != nil {
 		sugar.Log.Error("Insert into article table is failed.", err)
-		return art,err
+		return art, err
 	}
 	sugar.Log.Error("Marshal data is  result := ", result)
-	r:=(result.PageNum-1)*3
+	r := (result.PageNum - 1) * 3
 	sugar.Log.Info("pageSize := ", result.PageSize)
 	sugar.Log.Info("pageNum := ", result.PageNum)
 	//rows, err := db.DB.Query("SELECT * FROM article limit ?,?", r,result.PageSize)
@@ -34,13 +34,13 @@ func ArticleAboutMe(db *Sql, value string)([]Article, error) {
 	//token
 	//验证token 是否满足条件
 	//校验 token 是否 满足
-	claim,b:=jwt.JwtVeriyToken(result.Token)
-	if !b{
-		return art,err
+	claim, b := jwt.JwtVeriyToken(result.Token)
+	if !b {
+		return art, err
 	}
 	sugar.Log.Info("claim := ", claim)
-	userid:=claim["UserId"]
-	rows, err := db.DB.Query("SELECT b.* from article_like as a LEFT JOIN article as b on a.article_id=b.id WHERE a.is_like=1 and a.user_id=? ORDER BY ptime LIMIT ?,?",userid, r,result.PageSize)
+	userid := claim["UserId"]
+	rows, err := db.DB.Query("SELECT b.* from article_like as a LEFT JOIN article as b on a.article_id=b.id WHERE a.is_like=1 and a.user_id=? ORDER BY ptime LIMIT ?,?", userid, r, result.PageSize)
 
 	if err != nil {
 		sugar.Log.Error("Query data is failed.Err is ", err)
@@ -55,27 +55,27 @@ func ArticleAboutMe(db *Sql, value string)([]Article, error) {
 		//var sex interface{}
 		//var NickName interface{}
 		//var islike interface{}
-		err = rows.Scan(&id, &dl.UserId, &dl.Accesstory, &dl.AccesstoryType,&dl.Text, &dl.Tag, &dl.Ptime ,&dl.ShareNum,&dl.PlayNum,&dl.Title,&dl.Thumbnail,&dl.FileName,&dl.FileSize)
+		err = rows.Scan(&id, &dl.UserId, &dl.Accesstory, &dl.AccesstoryType, &dl.Text, &dl.Tag, &dl.Ptime, &dl.ShareNum, &dl.PlayNum, &dl.Title, &dl.Thumbnail, &dl.FileName, &dl.FileSize)
 		if err != nil {
 			sugar.Log.Error("Query scan data is failed.The err is ", err)
 			return art, err
 		}
-		if id!=""{
-			dl.Id=id.(string)
+		if id != "" {
+			dl.Id = id.(string)
 		}
 
 		sugar.Log.Info("Query a entire data is ", dl)
-		if dl.UserId==""{
-			dl.UserId="anonymity"
+		if dl.UserId == "" {
+			dl.UserId = "anonymity"
 		}
 		art = append(art, dl)
 	}
 	if err != nil {
 		sugar.Log.Error("Insert into article  is Failed.", err)
-		return art,err
+		return art, err
 	}
 	sugar.Log.Info("Query article  is successful.")
 
-	return art,nil
+	return art, nil
 
 }

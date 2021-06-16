@@ -26,14 +26,14 @@ func AddChatRecord(db *Sql, value string) error {
 	}
 	sid := strconv.FormatInt(id, 10)
 	stmt.QueryRow()
-	res, err := stmt.Exec(sid,msg.Name,msg.Toid,msg.Img,msg.FromId,t,msg.LastMsg )
+	res, err := stmt.Exec(sid, msg.Name, msg.Toid, msg.Img, msg.FromId, t, msg.LastMsg)
 	if err != nil {
 		sugar.Log.Error("Insert into chat_record  is Failed.", err)
 		return err
 	}
 	sugar.Log.Info("Insert into chat_record  is successful.")
 	l, _ := res.RowsAffected()
-	if l==0{
+	if l == 0 {
 		return errors.New("插入记录表数据错误")
 	}
 	return nil

@@ -4,15 +4,16 @@ package vo
 
 type SyncArticleAddParams struct {
 	Method string           `json:"method"`
-	Data ArticleAddParams  `json:"data"`
+	Data   ArticleAddParams `json:"data"`
 }
+
 // 同步 用户
 
 type SyncUserParams struct {
 	Method string           `json:"method"`
-	Data ArticleAddParams  `json:"data"`
+	Data   ArticleAddParams `json:"data"`
 }
 type SyncParams struct {
 	Method string           `json:"type"`
-	Data ArticleAddParams  `json:"data"`
+	Data   ArticleAddParams `json:"data"`
 }

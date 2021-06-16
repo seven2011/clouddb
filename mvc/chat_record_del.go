@@ -1,11 +1,11 @@
 package mvc
 
 import (
+	"encoding/json"
+	"errors"
 	"github.com/cosmopolitann/clouddb/jwt"
 	"github.com/cosmopolitann/clouddb/sugar"
 	"github.com/cosmopolitann/clouddb/vo"
-	"encoding/json"
-	"errors"
 )
 
 func ChatRecordDel(db *Sql, value string) error {
@@ -16,8 +16,8 @@ func ChatRecordDel(db *Sql, value string) error {
 		return err
 	}
 
-	claim,b:=jwt.JwtVeriyToken(rdel.Token)
-	if !b{
+	claim, b := jwt.JwtVeriyToken(rdel.Token)
+	if !b {
 		return errors.New("token 失效")
 	}
 	sugar.Log.Info("claim := ", claim)

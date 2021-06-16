@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func TestIpfsNode(t *testing.T){
+func TestIpfsNode(t *testing.T) {
 
 	//InitIpfs()
 

@@ -15,29 +15,28 @@ func TestAddArticleCategory(t *testing.T) {
 	sugar.Log.Info("Start Open Sqlite3 Database.")
 	d, err := sql.Open("sqlite3", "/Users/apple/winter/D-cloud/tables/foo.db")
 
-	if err!=nil{
+	if err != nil {
 		panic(err)
 	}
 	sugar.Log.Info("Open Sqlite3 is ok.")
-	sugar.Log.Info("Db value is ",d)
-	e:=d.Ping()
-	sugar.Log.Info(" Ping is failed,err:= ",e)
-	ss:=Testdb(d)
+	sugar.Log.Info("Db value is ", d)
+	e := d.Ping()
+	sugar.Log.Info(" Ping is failed,err:= ", e)
+	ss := Testdb(d)
 	// request json  params
 	// test 1
-	value:=`{"pageSize":10,"pageNum":1,"accesstoryType":2}
+	value := `{"pageSize":10,"pageNum":1,"accesstoryType":2}
 `
-	t.Log("request value :=",value)
-	resp:= ss.ArticleCategory(value)
-	t.Log("result:=",resp)
+	t.Log("request value :=", value)
+	resp := ss.ArticleCategory(value)
+	t.Log("result:=", resp)
 	// test 2
 	//value2:=`{"pageSize":3,"pageNum":1,"accesstoryType":1}
-//`
-//
-//	t.Log("request value :=",value2)
-//	resp2:= ss.ArticleCategory(value2)
-//	t.Log("result:=",resp2)
-
+	//`
+	//
+	//	t.Log("request value :=",value2)
+	//	resp2:= ss.ArticleCategory(value2)
+	//	t.Log("result:=",resp2)
 
 }
 func Testdb(sq *sql.DB) mvc.Sql {

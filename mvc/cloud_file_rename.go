@@ -19,8 +19,8 @@ func CloudFileRename(db *Sql, value string) error {
 	sugar.Log.Info("Marshal data is  ", art)
 	//查询是否存在记录
 	//校验 token 是否 满足
-	claim,b:=jwt.JwtVeriyToken(art.Token)
-	if !b{
+	claim, b := jwt.JwtVeriyToken(art.Token)
+	if !b {
 		return errors.New("token 失效")
 	}
 	//userid:=claim["UserId"].(string)
@@ -28,37 +28,37 @@ func CloudFileRename(db *Sql, value string) error {
 	var dl File
 	//查询数据
 	//stmt, err := db.DB.Query("select * from cloud_file where file_name=? and is_folder=? and parent_id",)
-	rows, err := db.DB.Query("select a.id from cloud_file as a where file_name=? and is_folder=? and parent_id",art.Rename,art.IsFolder,art.ParentId)
+	rows, err := db.DB.Query("select a.id from cloud_file as a where file_name=? and is_folder=? and parent_id", art.Rename, art.IsFolder, art.ParentId)
 	if err != nil {
 		sugar.Log.Error("Query data is failed.Err is ", err)
-		return  errors.New("查询下载列表信息失败")
+		return errors.New("查询下载列表信息失败")
 	}
 	for rows.Next() {
 		err = rows.Scan(&dl.Id)
 		if err != nil {
 			sugar.Log.Error("Query scan data is failed.The err is ", err)
-			return  err
+			return err
 		}
 		sugar.Log.Info("Query a entire data is ", dl)
 	}
 	sugar.Log.Info("查询到要重命名的文件是", dl)
 
-	if dl.Id==art.Id{
+	if dl.Id == art.Id {
 		return errors.New("文件已经存在")
-	}else{
+	} else {
 		//更新
 		stmt, err := db.DB.Prepare("update cloud_file set file_name=? where id=?")
-		if err!=nil{
+		if err != nil {
 			sugar.Log.Error("Update  data is failed.The err is ", err)
 			return err
 		}
-		res, err := stmt.Exec(art.Rename,art.Id)
-		if err!=nil{
+		res, err := stmt.Exec(art.Rename, art.Id)
+		if err != nil {
 			sugar.Log.Error("Update  is failed.The err is ", err)
 			return err
 		}
-		c,_:=res.RowsAffected()
-		if c==0{
+		c, _ := res.RowsAffected()
+		if c == 0 {
 			return errors.New("更新失败")
 		}
 	}

@@ -13,11 +13,12 @@ type ResponseModel struct {
 	Error   error       `json:"error"`
 	Count   int64       `json:"count"`
 }
+
 func BuildResp() *ResponseModel {
 	return &ResponseModel{
 		Code: 200}
 }
-func ResponseSuccess(item ...interface{})string {
+func ResponseSuccess(item ...interface{}) string {
 	resmodel := BuildResp()
 	if len(item) >= 1 {
 		resmodel.Data = item[0]
@@ -28,27 +29,26 @@ func ResponseSuccess(item ...interface{})string {
 	if len(item) >= 3 {
 		resmodel.Message = item[2].(string)
 	}
-	fmt.Printf("这是 返回数据的格式 %T\n",resmodel)
+	fmt.Printf("这是 返回数据的格式 %T\n", resmodel)
 	b, e := json.Marshal(resmodel)
 
-
-	if e!=nil{
+	if e != nil {
 		sugar.Log.Error("Marshal is failed.")
 	}
 	sugar.Log.Info("response info is successful.")
-	sugar.Log.Info("这是 返回数据 2 ",string(b))
+	sugar.Log.Info("这是 返回数据 2 ", string(b))
 	return string(b)
 }
-func ResponseErrorMsg(code int, msg string)string {
+func ResponseErrorMsg(code int, msg string) string {
 	resmodel := BuildResp()
 	resmodel.Message = msg
 	resmodel.Code = code
 	b, e := json.Marshal(resmodel)
 
-	if e!=nil{
+	if e != nil {
 		sugar.Log.Error("Marshal is failed.")
 	}
 	sugar.Log.Info("response info is successful.")
-	sugar.Log.Info("这是 返回数据 2 ",string(b))
+	sugar.Log.Info("这是 返回数据 2 ", string(b))
 	return string(b)
 }
