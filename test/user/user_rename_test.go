@@ -2,9 +2,7 @@ package user
 
 import (
 	"database/sql"
-	"encoding/json"
 	"fmt"
-	"github.com/cosmopolitann/clouddb/mvc"
 	"github.com/cosmopolitann/clouddb/sugar"
 	"testing"
 )
@@ -20,31 +18,18 @@ func TestUserRename(t *testing.T) {
 	}
 	sugar.Log.Info("Open Sqlite3 is ok.")
 	sugar.Log.Info("Db value is ", d)
-	e := d.Ping()
 	ss := Testdb(d)
-	//插入数据
-	var fi = mvc.File{
-		Id:       "1",
-		UserId:   "408217533556985856",
-		FileName: "红楼梦",
-		ParentId: "0",
-		FileCid:  "Qmcid",
-		FileSize: 100,
-		FileType: 11,
-		IsFolder: 0,
-		Ptime:    1232,
-	}
-	b1, e := json.Marshal(fi)
-	fmt.Println(e)
-	fmt.Println(b1)
 
-	//这里 改成 穿 json 字符串，字段 要改成更新之后的数据。
+/*
+	Id       string `json:"id"`
+	Rename   string `json:"rename"`
+	IsFolder int64  `json:"isFolder"`
+	Token    string `json:"token"`
+	ParentId string `json:"parentId"`
+ */
+	value := `{"id":"411826072401743872","rename":"月亮与六便士","isFolder":"0","token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI0MDkzMzAyMDIxNjY5NTYwMzIiLCJleHAiOjE2MjU4ODk0NzZ9.OzEFVuB2FcRYurZiii1fpiAqX2KcesfS5arJfVJZQOI","parentId":"123"}`
 
-	//{"id":"4324","peerId":"124","name":"20","phone":1,"sex":"1","nickName":"nick"}
-	value := `{"phone":"1888"}`
-	//resp:= ss.UserAdd(string(b1)
-
-	resp := ss.UserLogin(value)
+	resp := ss.FileRename(value)
 
 	fmt.Println("这是返回的数据 =", resp)
 

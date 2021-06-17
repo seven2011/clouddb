@@ -33,7 +33,7 @@ func TestAddFile(t *testing.T) {
 		FileCid:  "Qmcid12312",
 		FileSize: 100,
 		FileType: 0,
-		Token:    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI0MTExOTI3MjA0NDc1MDg0ODAiLCJleHAiOjE2MjYzMzM1NzJ9.EDv7k__JEugp-57RU3wDsJ1Swa3C0t-Ofr4KeQQhzeA",
+		Token:    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI0MDkzMzAyMDIxNjY5NTYwMzIiLCJleHAiOjE2MjU4ODk0NzZ9.OzEFVuB2FcRYurZiii1fpiAqX2KcesfS5arJfVJZQOI",
 	}
 
 	b1, e := json.Marshal(fi)

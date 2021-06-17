@@ -361,7 +361,7 @@ func InItipfs() {
 		for i := 0; i < 10; i++ {
 			time.Sleep(time.Second)
 			ipfs.PubSub().Publish(ctx, "/db-online-sync", []byte(va))
-			ipfs.PubSub().Publish(ctx, "fly", []byte(va))
+			ipfs.PubSub().Publish(ctx, "/db-online-sync", []byte(va))
 		}
 	}()
 
@@ -400,7 +400,7 @@ func InItipfs() {
 			if err != nil {
 				sugar.Log.Error("Marshal is failed.Err is ", err)
 			}
-			log.Println(" 解析的值 =", sc)
+			log.Println(" 解析的 /db-online-sync  值 =", sc)
 			if sc.Method == "SyncUser" {
 				//json 转成 string
 				jsonBytes, err := json.Marshal(sc.Data)

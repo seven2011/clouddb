@@ -22,7 +22,7 @@ func ArticleAboutMe(db *Sql, value string) ([]Article, error) {
 		return art, err
 	}
 	sugar.Log.Error("Marshal data is  result := ", result)
-	r := (result.PageNum - 1) * 3
+	r := (result.PageNum - 1) * result.PageSize
 	sugar.Log.Info("pageSize := ", result.PageSize)
 	sugar.Log.Info("pageNum := ", result.PageNum)
 	//rows, err := db.DB.Query("SELECT * FROM article limit ?,?", r,result.PageSize)
