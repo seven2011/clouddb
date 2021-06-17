@@ -29,7 +29,7 @@ func ArticleCategory(db *Sql, value string) ([]vo.ArticleResp, error) {
 	//rows, err := db.DB.Query("SELECT * FROM article limit ?,?", r,result.PageSize)
 	//SELECT * from article as a LEFT JOIN sys_user as b on a.user_id=b.id  LIMIT 0,4;
 	//userid:=cla
-	rows, err := db.DB.Query("SELECT a.*,b.peer_id ,b.name,b.phone,b.sex,b.nickname,c.is_like  from article as a LEFT JOIN sys_user as b on a.user_id=b.id LEFT JOIN article_like as c on a.user_id=c.user_id where a.accesstory_type=? ORDER BY ptime LIMIT ?,?", result.AccesstoryType, r, r1)
+	rows, err := db.DB.Query("SELECT a.*,b.peer_id,b.name,b.phone,b.sex,b.nickname ,(SELECT count(*) FROM article_like AS d  WHERE d.article_id = a.id AND d.is_like = 1 ) AS likeNum FROM article AS a LEFT JOIN sys_user AS b ON a.user_id = b.id WHERE a.accesstory_type =?  ORDER BY ptime desc LIMIT ?,?", result.AccesstoryType, r, r1)
 
 	if err != nil {
 		sugar.Log.Error("Query data is failed.Err is ", err)
@@ -42,29 +42,28 @@ func ArticleCategory(db *Sql, value string) ([]vo.ArticleResp, error) {
 		var phone interface{}
 		var sex interface{}
 		var NickName interface{}
-		var islike interface{}
-		err = rows.Scan(&dl.Id, &dl.UserId, &dl.Accesstory, &dl.AccesstoryType, &dl.Text, &dl.Tag, &dl.Ptime, &dl.PlayNum, &dl.ShareNum, &dl.Title, &dl.Thumbnail, &dl.FileName, &dl.FileSize, &peerId, &name, &phone, &sex, &NickName, &islike)
+		//var likeNum int64
+		err = rows.Scan(&dl.Id, &dl.UserId, &dl.Accesstory, &dl.AccesstoryType, &dl.Text, &dl.Tag, &dl.Ptime, &dl.PlayNum, &dl.ShareNum, &dl.Title, &dl.Thumbnail, &dl.FileName, &dl.FileSize, &peerId, &name, &phone, &sex, &NickName, &dl.IsLike)
 		if err != nil { //PlayNum
 			sugar.Log.Error("Query scan data is failed.The err is ", err)
 			return art, err
 		}
+		sugar.Log.Info("数据  dl=== ", dl)
 
 		var k = ""
-		if peerId == nil || islike == nil {
+		if peerId == nil  {
 			dl.PeerId = k
 			dl.PeerId = k
 			dl.Name = k
 			dl.Phone = k
 			dl.Sex = 0
 			dl.NickName = k
-			dl.IsLike = 0
 		} else {
 			dl.PeerId = peerId.(string)
 			dl.Name = name.(string)
 			dl.Phone = phone.(string)
 			dl.Sex = sex.(int64)
 			dl.NickName = NickName.(string)
-			dl.IsLike = islike.(int64)
 		}
 		//dl.PeerId = peerId.(string)
 		//dl.Name = name.(string)
