@@ -42,14 +42,19 @@ func AddFolder(db *Sql, value string) error {
 	sugar.Log.Info("校验 token 成功   Token:", claim["UserId"])
 
 	sugar.Log.Info("claim := ", claim)
+
 	userId := claim["UserId"].(string)
+
+	sugar.Log.Info("  查看 user id  ",userId)
+
+	sugar.Log.Info("判断文件夹 是否 不满足 格式 成功 1")
 
 	e := IsFormat(f)
 
 	if e != nil {
 		return err
 	}
-	sugar.Log.Info("判断文件夹 是否 不满足 格式 成功")
+	sugar.Log.Info("判断文件夹 是否 不满足 格式 成功  2")
 
 	//count,in:= InsertIntoData(db,f,userId.(string))
 	//	if in!=nil || count==0{
@@ -57,7 +62,6 @@ func AddFolder(db *Sql, value string) error {
 	//	}
 
 	sugar.Log.Info("-- 查找是否有 相同名字的文件夹 ---")
-
 	c, _ := FindOneDirIsExist(db, f)
 	sugar.Log.Info("--  c == ---",c)
 
@@ -137,6 +141,8 @@ func InsertIntoData(db *Sql, f vo.CloudAddFolderParams, userId string) (c int64,
 }
 
 func IsFormat(f vo.CloudAddFolderParams) error {
+	sugar.Log.Info("判断文件夹 是否 不满足 格式 成功 3")
+
 	pId, err := strconv.Atoi(f.ParentId)
 	if err != nil {
 		return err
@@ -144,6 +150,8 @@ func IsFormat(f vo.CloudAddFolderParams) error {
 	if pId < 0 {
 		return errors.New("参数不能为负数")
 	}
+	sugar.Log.Info("判断文件夹 是否 不满足 格式 成功 4")
+
 	if IsEmptyRename(f.FileName) {
 		return errors.New("文件夹名称不能为空")
 	}
@@ -162,6 +170,8 @@ func IsFormat(f vo.CloudAddFolderParams) error {
 	if find := strings.Contains(f.FileName, "*"); find {
 		return errors.New("文件夹不能为包含非法字符")
 	}
+	sugar.Log.Info("判断文件夹 是否 不满足 格式 成功 5")
+
 	return nil
 }
 
