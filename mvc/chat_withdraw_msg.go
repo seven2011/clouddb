@@ -36,6 +36,8 @@ func ChatWithdrawMsg(icapi icore.CoreAPI, db *Sql, value string) error {
 		return errors.New("token is not msg.from_id")
 	}
 
+	msg.Token = ""
+
 	// 查询会话是否存在
 	var recordID string
 	var toID string

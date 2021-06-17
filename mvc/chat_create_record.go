@@ -1,7 +1,6 @@
 package mvc
 
 import (
-	"context"
 	"encoding/json"
 	"errors"
 	"time"
@@ -10,10 +9,10 @@ import (
 	"github.com/cosmopolitann/clouddb/sugar"
 	"github.com/cosmopolitann/clouddb/vo"
 
-	icore "github.com/ipfs/interface-go-ipfs-core"
+	ipfsCore "github.com/ipfs/go-ipfs/core"
 )
 
-func ChatCreateRecord(icapi icore.CoreAPI, db *Sql, value string) (vo.ChatRecordParams, error) {
+func ChatCreateRecord(ipfsNode *ipfsCore.IpfsNode, db *Sql, value string) (vo.ChatRecordParams, error) {
 
 	var msg vo.ChatRecordParams
 	err := json.Unmarshal([]byte(value), &msg)
@@ -36,6 +35,7 @@ func ChatCreateRecord(icapi icore.CoreAPI, db *Sql, value string) (vo.ChatRecord
 		return msg, errors.New("token is not msg.from_id")
 	}
 
+	msg.Token = ""
 	msg.Id = genRecordID(msg.FromId, msg.ToId)
 	if msg.Ptime == 0 {
 		msg.Ptime = time.Now().Unix()
@@ -78,9 +78,7 @@ func ChatCreateRecord(icapi icore.CoreAPI, db *Sql, value string) (vo.ChatRecord
 
 	sugar.Log.Info("publish data: ", string(msgBytes))
 
-	ctx := context.Background()
-
-	err = icapi.PubSub().Publish(ctx, topic, msgBytes)
+	err = ipfsNode.PubSub.Publish(topic, msgBytes)
 	if err != nil {
 		sugar.Log.Error("publish failed.", err)
 		return msg, err
