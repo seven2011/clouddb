@@ -1,13 +1,16 @@
 package mvc
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"github.com/cosmopolitann/clouddb/sugar"
 	"github.com/cosmopolitann/clouddb/vo"
+	ipfsCore "github.com/ipfs/go-ipfs/core"
+	pubsub "github.com/libp2p/go-libp2p-pubsub"
 )
 
-func ArticlePlayAdd(db *Sql, value string) error {
+func ArticlePlayAdd(ipfsNode *ipfsCore.IpfsNode,db *Sql, value string) error {
 	var dl Article
 	var art vo.ArticlePlayAddParams
 	err := json.Unmarshal([]byte(value), &art)
@@ -62,13 +65,41 @@ func ArticlePlayAdd(db *Sql, value string) error {
 		sugar.Log.Error("Update  is failed.The err is ", err)
 		return err
 	}
+	//=========
+
+	// publish msg
+	topic:="/db-online-sync"
+	sugar.Log.Info("发布主题:","/db-online-sync")
+	sugar.Log.Info("发布消息:",value)
+	//判断是否弃用
+	var tp *pubsub.Topic
+	var ok bool
+	ctx := context.Background()
+	if tp,ok = Topicmp["/db-online-sync"];ok == false {
+		tp, err = ipfsNode.PubSub.Join(topic)
+		if err != nil {
+			return err
+		}
+		Topicmp[topic] = tp
+
+	}
+	sugar.Log.Info("--- 开始 发布的消息 ---")
+
+	sugar.Log.Info("发布的消息:", value)
+
+	err = tp.Publish(ctx,[]byte(value))
+	if err != nil {
+		sugar.Log.Error("发布错误:", err)
+		return err
+	}
+	sugar.Log.Error("---  发布的消息  完成  ---")
 
 	return nil
 }
 
 // share add
 
-func ArticleShareAdd(db *Sql, value string) error {
+func ArticleShareAdd(ipfsNode *ipfsCore.IpfsNode,db *Sql, value string) error {
 	var dl Article
 	var art vo.ArticlePlayAddParams
 	err := json.Unmarshal([]byte(value), &art)
@@ -122,5 +153,33 @@ func ArticleShareAdd(db *Sql, value string) error {
 		return err
 	}
 
+
+	//=====
+	// publish msg
+	topic:="/db-online-sync"
+	sugar.Log.Info("发布主题:","/db-online-sync")
+	sugar.Log.Info("发布消息:",value)
+	//判断是否弃用
+	var tp *pubsub.Topic
+	var ok bool
+	ctx := context.Background()
+	if tp,ok = Topicmp["/db-online-sync"];ok == false {
+		tp, err = ipfsNode.PubSub.Join(topic)
+		if err != nil {
+			return err
+		}
+		Topicmp[topic] = tp
+
+	}
+	sugar.Log.Info("--- 开始 发布的消息 ---")
+
+	sugar.Log.Info("发布的消息:", value)
+
+	err = tp.Publish(ctx,[]byte(value))
+	if err != nil {
+		sugar.Log.Error("发布错误:", err)
+		return err
+	}
+	sugar.Log.Error("---  发布的消息  完成  ---")
 	return nil
 }

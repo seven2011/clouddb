@@ -58,9 +58,9 @@ func AddArticle(ipfsNode *ipfsCore.IpfsNode,db *Sql, value string) error {
 		Topicmp[topic] = tp
 
 	}
-	sugar.Log.Error("--- 开始 发布的消息 ---")
+	sugar.Log.Info("--- 开始 发布的消息 ---")
 
-	sugar.Log.Error("发布的消息:", value)
+	sugar.Log.Info("发布的消息:", value)
 
 	err = tp.Publish(ctx,[]byte(value))
 	if err != nil {
