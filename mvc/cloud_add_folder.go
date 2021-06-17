@@ -143,7 +143,8 @@ func InsertIntoData(db *Sql, f vo.CloudAddFolderParams, userId string) (c int64,
 func IsFormat(f vo.CloudAddFolderParams) error {
 	sugar.Log.Info("判断文件夹 是否 不满足 格式 成功 3")
 
-	pId, err := strconv.Atoi(f.ParentId)
+	//pId, err := strconv.Atoi(f.ParentId)
+	pId,err := strconv.ParseInt(f.ParentId,10,64)
 	if err != nil {
 		return err
 	}
