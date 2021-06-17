@@ -83,6 +83,24 @@ func ArticlePlayAdd(ipfsNode *ipfsCore.IpfsNode,db *Sql, value string) error {
 		Topicmp[topic] = tp
 
 	}
+	rows1, err := db.DB.Query("select * from article where id=?", art.Id)
+	if err != nil {
+		sugar.Log.Error("Query data is failed.Err is ", err)
+		return err
+	}
+
+	for rows1.Next() {
+		err = rows.Scan(&dl.Id, &dl.UserId, &dl.Accesstory, &dl.AccesstoryType, &dl.Text, &dl.Tag, &dl.Ptime, &dl.PlayNum, &dl.ShareNum, &dl.Title, &dl.Thumbnail, &dl.FileName, &dl.FileSize)
+		if err != nil {
+			sugar.Log.Error("Query scan data is failed.The err is ", err)
+			return err
+		}
+
+		sugar.Log.Info("Query a entire data is ", dl)
+	}
+	if dl.Id == "" {
+		return errors.New(" update is failed .")
+	}
 	sugar.Log.Info("--- 开始 发布的消息 ---")
 
 	sugar.Log.Info("发布的消息:", value)
@@ -90,7 +108,7 @@ func ArticlePlayAdd(ipfsNode *ipfsCore.IpfsNode,db *Sql, value string) error {
 	//第一步
 	var s3 PlayAdd
 	s3.Type = "receiveArticlePlayAdd"
-	s3.Data = art
+	s3.Data = dl
 	//
 
 	jsonBytes, err := json.Marshal(s3)
@@ -125,7 +143,7 @@ func ArticlePlayAdd(ipfsNode *ipfsCore.IpfsNode,db *Sql, value string) error {
 
 type PlayAdd struct {
 	Type string `json:"type"`
-	Data vo.ArticlePlayAddParams `json:"data"`
+	Data  Article `json:"data"`
 }
 
 
@@ -204,10 +222,38 @@ func ArticleShareAdd(ipfsNode *ipfsCore.IpfsNode,db *Sql, value string) error {
 	sugar.Log.Info("--- 开始 发布的消息 ---")
 
 	sugar.Log.Info("发布的消息:", value)
+	//
+	//查询数据
+	//查询数据
+
+	//select the data is exist.
+	rows1, err := db.DB.Query("select * from article where id=?", art.Id)
+	if err != nil {
+		sugar.Log.Error("Query data is failed.Err is ", err)
+		return err
+	}
+
+	for rows1.Next() {
+		err = rows.Scan(&dl.Id, &dl.UserId, &dl.Accesstory, &dl.AccesstoryType, &dl.Text, &dl.Tag, &dl.Ptime, &dl.PlayNum, &dl.ShareNum, &dl.Title, &dl.Thumbnail, &dl.FileName, &dl.FileSize)
+		if err != nil {
+			sugar.Log.Error("Query scan data is failed.The err is ", err)
+			return err
+		}
+
+		sugar.Log.Info("Query a entire data is ", dl)
+	}
+	if dl.Id == "" {
+		return errors.New(" update is failed .")
+	}
+	//
+
+
+
+	//
 	//第一步
 	var s3 ShareAdd
 	s3.Type = "receiveArticleShareAdd"
-	s3.Data = art
+	s3.Data = dl
 	//
 
 	jsonBytes, err := json.Marshal(s3)
@@ -230,5 +276,5 @@ func ArticleShareAdd(ipfsNode *ipfsCore.IpfsNode,db *Sql, value string) error {
 type ShareAdd struct {
 	Type string `json:"type"`
 
-	Data  vo.ArticlePlayAddParams `json:"data"`
+	Data  Article `json:"data"`
 }

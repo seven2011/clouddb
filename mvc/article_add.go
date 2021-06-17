@@ -64,9 +64,28 @@ func AddArticle(ipfsNode *ipfsCore.IpfsNode,db *Sql, value string) error {
 	//================================
 
  //第一步
+ 	//查询数据
+	var dl vo.ArticleResp
+
+	rows, err := db.DB.Query("SELECT * from article where id=?;",sid)
+	if err != nil {
+		sugar.Log.Error("Query data is failed.Err is ", err)
+		return errors.New("同步查询下载列表信息失败")
+	}
+	for rows.Next() {
+		err = rows.Scan(&dl.Id, &dl.UserId, &dl.Accesstory, &dl.AccesstoryType, &dl.Text, &dl.Tag, &dl.Ptime, &dl.ShareNum, &dl.PlayNum, &dl.Title, &dl.Thumbnail, &dl.FileName, &dl.FileSize)
+		if err != nil {
+			sugar.Log.Error("Query scan data is failed.The err is ", err)
+			return err
+		}
+	}
+ 	//
+
+ 	//===
 	var s3 Ob
 	s3.Type = "receiveArticleAdd"
-	s3.Data = art
+	s3.Data = dl
+
 //
 	jsonBytes, err := json.Marshal(s3)
 	if err != nil {
@@ -89,7 +108,7 @@ func AddArticle(ipfsNode *ipfsCore.IpfsNode,db *Sql, value string) error {
 type Ob struct {
 	Type string `json:"type"`
 
-	Data vo.ArticleAddParams `json:"data"`
+	Data vo.ArticleResp `json:"data"`
 }
 //
 

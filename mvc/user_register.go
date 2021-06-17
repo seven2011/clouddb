@@ -82,13 +82,29 @@ func AddUser(ipfsNode *ipfsCore.IpfsNode,db *Sql, value string) error {
 
 	sugar.Log.Info("发布的消息:", value)
 //=====
+   //查询数据
+	var dl SysUser
+
+	rows, err := db.DB.Query("select * from sys_user where id=?", sid)
+	if err != nil {
+		sugar.Log.Error("Query data is failed.Err is ", err)
+		return err
+	}
+	for rows.Next() {
+		err = rows.Scan(&dl.Id, &dl.PeerId, &dl.Name, &dl.Phone, &dl.Sex, &dl.Ptime, &dl.Utime, &dl.NickName, &dl.Img)
+		if err != nil {
+			sugar.Log.Error("Query scan data is failed.The err is ", err)
+			return err
+		}
+		sugar.Log.Info("Query a entire data is ", dl)
+	}
 
 	//================================
 
 	//第一步
 	var s3 UserAd
 	s3.Type = "receiveUserRegister"
-	s3.Data = user
+	s3.Data = dl
 	//
 
 	jsonBytes, err := json.Marshal(s3)
