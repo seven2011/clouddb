@@ -8,6 +8,8 @@ import (
 	"github.com/cosmopolitann/clouddb/vo"
 
 	icore "github.com/ipfs/interface-go-ipfs-core"
+
+	ipfsCore "github.com/ipfs/go-ipfs/core"
 )
 
 //|-------------------------------------------------\
@@ -517,9 +519,9 @@ func (db *Sql) AddChatRecord(dInfo string) string {
 }
 
 // ChatCreateRecord  创建会话
-func (db *Sql) ChatCreateRecord(icapi icore.CoreAPI, msg string) string {
+func (db *Sql) ChatCreateRecord(ipfsNode *ipfsCore.IpfsNode, msg string) string {
 
-	data, err := ChatCreateRecord(icapi, db, msg)
+	data, err := ChatCreateRecord(ipfsNode, db, msg)
 	if err != nil {
 		return vo.ResponseErrorMsg(400, err.Error())
 	}
