@@ -61,8 +61,23 @@ func AddArticle(ipfsNode *ipfsCore.IpfsNode,db *Sql, value string) error {
 	sugar.Log.Info("--- 开始 发布的消息 ---")
 
 	sugar.Log.Info("发布的消息:", value)
+	//================================
 
-	err = tp.Publish(ctx,[]byte(value))
+ //第一步
+	var s3 Ob
+	s3.Type = "receiveArticleAdd"
+	s3.Data = art
+//
+	jsonBytes, err := json.Marshal(s3)
+	if err != nil {
+		sugar.Log.Info("--- 开始 发布的消息 ---")
+	return err
+	}
+	sugar.Log.Info("--- 解析后的数据 返回给 转接服务器 ---",string(jsonBytes))
+
+
+  //============================
+	err = tp.Publish(ctx,jsonBytes)
 	if err != nil {
 		sugar.Log.Error("发布错误:", err)
 		return err
@@ -71,7 +86,11 @@ func AddArticle(ipfsNode *ipfsCore.IpfsNode,db *Sql, value string) error {
 
 	return nil
 }
+type Ob struct {
+	Type string `json:"type"`
 
+	Data vo.ArticleAddParams `json:"data"`
+}
 //
 
 func ArticleList(db *Sql, value string) ([]Article, error) {

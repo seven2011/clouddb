@@ -367,23 +367,59 @@ func SyncTopicData(ipfsNode *ipfsCore.IpfsNode, db *Sql, value string) error {
 
 		if recieve.Method == "receiveArticleAdd" {
 			//  添加 文章  入库
+			//第一步 解析
+
+			var syn vo.SyncRecieveArticleParams
+			err = json.Unmarshal(msg.Data, &syn)
+			if err != nil {
+				sugar.Log.Error("同步 解析 用户字段 错误:",err)
+				continue
+			}
+			// string
+
+
+			userInfo, err := json.Marshal(syn.Data)
+			if err != nil {
+				sugar.Log.Error("同步添加文章失败:",err)
+				continue
+			}
 			sugar.Log.Info("解析收到 同步消息的receiveArticleAdd 消息是", recieve.Method)
-			err:=db.SyncArticle(value)
+			err=db.SyncArticle(string(userInfo))
 			if err!=nil{
 				sugar.Log.Error("同步添加文章失败:",err)
 				continue
 			}
+
+
 			sugar.Log.Info("同步添加文章成功")
 		} else if recieve.Method == "receiveArticlePlayAdd" {
 			sugar.Log.Info("-----  同步增加播放次数  -----")
 
 			sugar.Log.Info("-----  同步增加播放次数 的数据  -----",value)
+//---
+			//第一步 解析
 
-			err:=db.SyncArticlePlay(value)
+			var syn vo.SyncRecievePlayParams
+			err = json.Unmarshal(msg.Data, &syn)
+			if err != nil {
+				sugar.Log.Error("同步 解析 用户字段 错误:",err)
+				continue
+			}
+			// string
+			userInfo, err := json.Marshal(syn.Data)
+			if err != nil {
+				sugar.Log.Error("同步 播放 数量 失败:",err)
+				continue
+			}
+			sugar.Log.Info("解析收到 receiveArticlePlayAdd 消息类型是", recieve.Method)
+
+			sugar.Log.Info("解析收到 receiveArticlePlayAdd 消息内容是", string(userInfo))
+
+
+			err=db.SyncArticlePlay(string(userInfo))
 			if err!=nil{
 				sugar.Log.Error("-----  同步增加播放次数 失败  -----",err)
 				continue
-
 			}
 			//  增加播放次数
 			//var tmp vo.ChatMsgParams
@@ -404,8 +440,25 @@ func SyncTopicData(ipfsNode *ipfsCore.IpfsNode, db *Sql, value string) error {
 			sugar.Log.Info("-----  同步  增加 分享 次数  -----")
 
 			sugar.Log.Info("-----  同步  增加 分享 次数  的数据  -----",value)
+			//--
+			//第一步 解析
 
-			err:=db.SyncArticleShareAdd(value)
+			var syn vo.SyncRecievePlayParams
+			err = json.Unmarshal(msg.Data, &syn)
+			if err != nil {
+				sugar.Log.Error("同步 解析 用户字段 错误:",err)
+				continue
+			}
+			// string
+			userInfo, err := json.Marshal(syn.Data)
+			if err != nil {
+				sugar.Log.Error("同步 播放 数量 失败:",err)
+				continue
+			}
+			sugar.Log.Info("解析收到 receiveArticlePlayAdd 消息是", recieve.Method)
+
+			//----
+			err=db.SyncArticleShareAdd(string(userInfo))
 			if err!=nil{
 				sugar.Log.Error("-----  同步  增加 分享 次数  失败  -----",err)
 				continue
@@ -419,12 +472,31 @@ func SyncTopicData(ipfsNode *ipfsCore.IpfsNode, db *Sql, value string) error {
 
 			sugar.Log.Info("-----  同步  添加用户 信息  -----",value)
 
-			err:=db.SyncUser(value)
+			//----
+
+			//第一步 解析
+
+			var syn vo.SyncRecieveUsesrParams
+			err = json.Unmarshal(msg.Data, &syn)
+			if err != nil {
+				sugar.Log.Error("同步 解析 用户字段 错误:",err)
+				continue
+			}
+			// string
+			userInfo, err := json.Marshal(syn.Data)
+			if err != nil {
+				sugar.Log.Error("同步 播放 数量 失败:",err)
+				continue
+			}
+			sugar.Log.Info("解析收到 receiveArticlePlayAdd 消息是", recieve.Method)
+
+			//-------
+			err=db.SyncUser(string(userInfo))
 			if err!=nil{
 				sugar.Log.Error("----- 添加用户 信息 失败  -----",err)
 				continue
 			}
-			sugar.Log.Info(" 添加用户 信息")
+			sugar.Log.Info(" 添加用户 信息 成功")
 		} else {
 			sugar.Log.Info("不满足条件，继续:")
 			continue
