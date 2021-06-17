@@ -1,6 +1,7 @@
 package mvc
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"time"
@@ -63,10 +64,6 @@ func ChatCreateRecord(ipfsNode *ipfsCore.IpfsNode, db *Sql, value string) (vo.Ch
 		}
 	}
 
-	topic := vo.MSG_LISTEN_PREFIX + msg.ToId
-
-	sugar.Log.Info("publish topic: ", topic)
-
 	msgBytes, err := json.Marshal(map[string]interface{}{
 		"type": vo.MSG_TYPE_RECORD,
 		"data": msg,
@@ -78,7 +75,20 @@ func ChatCreateRecord(ipfsNode *ipfsCore.IpfsNode, db *Sql, value string) (vo.Ch
 
 	sugar.Log.Info("publish data: ", string(msgBytes))
 
-	err = ipfsNode.PubSub.Publish(topic, msgBytes)
+	ipfsTopic, ok := TopicJoin.Load(vo.CHAT_MSG_SWAP_TOPIC)
+	if !ok {
+		ipfsTopic, err = ipfsNode.PubSub.Join(vo.CHAT_MSG_SWAP_TOPIC)
+		if err != nil {
+			sugar.Log.Error("PubSub.Join .Err is", err)
+			return msg, err
+		}
+
+		TopicJoin.Store(vo.CHAT_MSG_SWAP_TOPIC, ipfsTopic)
+	}
+
+	ctx := context.Background()
+
+	err = ipfsTopic.Publish(ctx, msgBytes)
 	if err != nil {
 		sugar.Log.Error("publish failed.", err)
 		return msg, err
@@ -90,9 +100,5 @@ func ChatCreateRecord(ipfsNode *ipfsCore.IpfsNode, db *Sql, value string) (vo.Ch
 }
 
 func genRecordID(fromID, toID string) string {
-	if fromID < toID {
-		return toID + "_" + fromID
-	} else {
-		return fromID + "_" + toID
-	}
+	return fromID + "_" + toID
 }

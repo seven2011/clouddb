@@ -1,6 +1,7 @@
 package mvc
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"strconv"
@@ -63,8 +64,6 @@ func ChatSendMsg(ipfsNode *ipfsCore.IpfsNode, db *Sql, value string) (vo.ChatMsg
 		return msg, err
 	}
 
-	topic := vo.MSG_LISTEN_PREFIX + msg.ToId
-
 	msgBytes, err := json.Marshal(map[string]interface{}{
 		"type": vo.MSG_TYPE_NEW,
 		"data": msg,
@@ -74,9 +73,20 @@ func ChatSendMsg(ipfsNode *ipfsCore.IpfsNode, db *Sql, value string) (vo.ChatMsg
 		return msg, err
 	}
 
-	sugar.Log.Info("publish topic: ", topic)
+	ipfsTopic, ok := TopicJoin.Load(vo.CHAT_MSG_SWAP_TOPIC)
+	if !ok {
+		ipfsTopic, err = ipfsNode.PubSub.Join(vo.CHAT_MSG_SWAP_TOPIC)
+		if err != nil {
+			sugar.Log.Error("PubSub.Join .Err is", err)
+			return msg, err
+		}
 
-	err = ipfsNode.PubSub.Publish(topic, msgBytes)
+		TopicJoin.Store(vo.CHAT_MSG_SWAP_TOPIC, ipfsTopic)
+	}
+
+	ctx := context.Background()
+
+	err = ipfsTopic.Publish(ctx, msgBytes)
 	if err != nil {
 		sugar.Log.Error("publish failed.", err)
 		return msg, err

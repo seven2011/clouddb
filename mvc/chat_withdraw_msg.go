@@ -1,6 +1,7 @@
 package mvc
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 
@@ -74,11 +75,20 @@ func ChatWithdrawMsg(ipfsNode *ipfsCore.IpfsNode, db *Sql, value string) error {
 		return err
 	}
 
-	topic := vo.MSG_LISTEN_PREFIX + toID
+	ipfsTopic, ok := TopicJoin.Load(vo.CHAT_MSG_SWAP_TOPIC)
+	if !ok {
+		ipfsTopic, err = ipfsNode.PubSub.Join(vo.CHAT_MSG_SWAP_TOPIC)
+		if err != nil {
+			sugar.Log.Error("PubSub.Join .Err is", err)
+			return err
+		}
 
-	sugar.Log.Info("publish topic: ", topic)
+		TopicJoin.Store(vo.CHAT_MSG_SWAP_TOPIC, ipfsTopic)
+	}
 
-	err = ipfsNode.PubSub.Publish(topic, msgBytes)
+	ctx := context.Background()
+
+	err = ipfsTopic.Publish(ctx, msgBytes)
 	if err != nil {
 		sugar.Log.Error("publish failed.", err)
 		return err

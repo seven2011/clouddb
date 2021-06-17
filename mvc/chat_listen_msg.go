@@ -9,13 +9,10 @@ import (
 	"github.com/cosmopolitann/clouddb/jwt"
 	"github.com/cosmopolitann/clouddb/sugar"
 	"github.com/cosmopolitann/clouddb/vo"
+	pubsub "github.com/libp2p/go-libp2p-pubsub"
 
 	ipfsCore "github.com/ipfs/go-ipfs/core"
 )
-
-var ErrorAffectZero error = errors.New("row affect zero")
-var ErrorRowNotExists error = errors.New("row not exists")
-var ErrorRowIsExists error = errors.New("row is exists")
 
 func ChatListenMsg(ipfsNode *ipfsCore.IpfsNode, db *Sql, token string, clh vo.ChatListenHandler) error {
 
@@ -25,32 +22,41 @@ func ChatListenMsg(ipfsNode *ipfsCore.IpfsNode, db *Sql, token string, clh vo.Ch
 		return errors.New("token 失效")
 	}
 	sugar.Log.Info("claim := ", claim)
-	userid := claim["UserId"].(string)
+	userId := claim["UserId"].(string)
 
-	topic := vo.MSG_LISTEN_PREFIX + userid
-	sugar.Log.Info("subscrib topic: ", topic)
+	var err error
+	ctx := context.Background()
 
-	go func(topic string) {
-		ctx := context.Background()
+	ipfsTopic, ok := TopicJoin.Load(vo.CHAT_MSG_SWAP_TOPIC)
+	if !ok {
+		ipfsTopic, err = ipfsNode.PubSub.Join(vo.CHAT_MSG_SWAP_TOPIC)
+		if err != nil {
+			sugar.Log.Error("PubSub.Join .Err is", err)
+			return err
+		}
 
-		sub, err := ipfsNode.PubSub.Subscribe(topic)
-		// defer sub.Close()
+		TopicJoin.Store(vo.CHAT_MSG_SWAP_TOPIC, ipfsTopic)
+	}
 
+	go func(userId string, ipfsTopic *pubsub.Topic) {
+
+		sub, err := ipfsTopic.Subscribe()
 		if err != nil {
 			sugar.Log.Error("subscribe failed.", err)
 			return
 		}
 
+		var msg vo.ChatListenParams
+
 		for {
 			data, err := sub.Next(ctx)
 			if err != nil {
 				sugar.Log.Error("subscribe failed.", err)
-				break
+				return
 			}
-
-			var msg vo.ChatListenParams
-
 			sugar.Log.Debugf("receive: %s\n", data.Data)
+
+			msg = vo.ChatListenParams{}
 
 			err = json.Unmarshal(data.Data, &msg)
 			if err != nil {
@@ -64,9 +70,16 @@ func ChatListenMsg(ipfsNode *ipfsCore.IpfsNode, db *Sql, token string, clh vo.Ch
 				json1, _ := json.Marshal(msg.Data)
 				json.Unmarshal(json1, &tmp)
 
+				if tmp.ToId != userId {
+					// not me
+					continue
+				}
+
 				res, err := handleAddRecordMsg(db, tmp)
 				if err != nil {
-					sugar.Log.Error("handle add record failed.", err)
+					if err != vo.ErrorRowIsExists {
+						sugar.Log.Error("handle add record failed.", err)
+					}
 					continue
 				}
 
@@ -80,9 +93,16 @@ func ChatListenMsg(ipfsNode *ipfsCore.IpfsNode, db *Sql, token string, clh vo.Ch
 				json1, _ := json.Marshal(msg.Data)
 				json.Unmarshal(json1, &tmp)
 
+				if tmp.ToId != userId {
+					// not me
+					continue
+				}
+
 				res, err := handleNewMsg(db, tmp)
 				if err != nil {
-					sugar.Log.Error("handle add message failed.", err)
+					if err != vo.ErrorRowIsExists {
+						sugar.Log.Error("handle add message failed.", err)
+					}
 					continue
 				}
 				msg.Data = res
@@ -94,6 +114,11 @@ func ChatListenMsg(ipfsNode *ipfsCore.IpfsNode, db *Sql, token string, clh vo.Ch
 				var tmp vo.ChatMsgParams
 				json1, _ := json.Marshal(msg.Data)
 				json.Unmarshal(json1, &tmp)
+
+				if tmp.ToId != userId {
+					// not me
+					continue
+				}
 
 				res, err := handleWithdrawMsg(db, tmp)
 				if err != nil {
@@ -109,9 +134,8 @@ func ChatListenMsg(ipfsNode *ipfsCore.IpfsNode, db *Sql, token string, clh vo.Ch
 				continue
 			}
 		}
-	}(topic)
+	}(userId, ipfsTopic)
 
-	// 发布消息
 	return nil
 }
 
@@ -123,26 +147,22 @@ func handleAddRecordMsg(db *Sql, msg vo.ChatRecordParams) (vo.ChatRecordParams, 
 
 	switch err {
 	case bsql.ErrNoRows:
+		// swap from_id and to_id
+		msg.FromId, msg.ToId = msg.ToId, msg.FromId
 		res, err := db.DB.Exec("INSERT INTO chat_record (id, name, img, from_id, to_id, ptime, last_msg) values (?, ?, ?, ?, ?, ?, ?)",
 			msg.Id, msg.Name, msg.Img, msg.FromId, msg.ToId, msg.Ptime, msg.LastMsg)
 		if err != nil {
 			return msg, err
 		}
-		num, err := res.LastInsertId()
+		_, err = res.LastInsertId()
 		if err != nil {
-			return msg, err
-		} else if num == 0 {
 			return msg, err
 		}
 
 		return msg, nil
 	case nil:
-		if err != nil {
-			return msg, err
-		}
-
-		if record.Ptime > msg.Ptime && record.FromId != msg.FromId {
-			res, err := db.DB.Exec("UPDATE chat_record SET from_id = ?, to_id = ?, ptime = ?, last_msg = ? WHERE id = ?", msg.FromId, msg.ToId, msg.Ptime, msg.LastMsg, msg.Id)
+		if record.Ptime > msg.Ptime {
+			res, err := db.DB.Exec("UPDATE chat_record SET ptime = ?, last_msg = ? WHERE id = ?", msg.Ptime, msg.LastMsg, msg.Id)
 			if err != nil {
 				return msg, err
 			}
@@ -153,7 +173,7 @@ func handleAddRecordMsg(db *Sql, msg vo.ChatRecordParams) (vo.ChatRecordParams, 
 				return msg, err
 			}
 		}
-		return msg, nil
+		return msg, vo.ErrorRowIsExists
 
 	default:
 		return msg, err
@@ -179,7 +199,7 @@ func handleWithdrawMsg(db *Sql, msg vo.ChatMsgParams) (vo.ChatMsgParams, error) 
 		if err != nil {
 			return msg, err
 		} else if num == 0 {
-			return msg, ErrorAffectZero
+			return msg, vo.ErrorAffectZero
 		}
 
 		cMsg.IsWithdraw = 1
@@ -193,8 +213,24 @@ func handleWithdrawMsg(db *Sql, msg vo.ChatMsgParams) (vo.ChatMsgParams, error) 
 func handleNewMsg(db *Sql, msg vo.ChatMsgParams) (vo.ChatMsgParams, error) {
 
 	var cMsg vo.ChatMsgParams
+	var count int64
 
-	err := db.DB.QueryRow("SELECT id, content_type, content, from_id, to_id, ptime, is_with_draw, is_read, record_id FROM chat_msg WHERE id = ?", msg.Id).Scan(&cMsg.Id, &cMsg.ContentType, &cMsg.Content, &cMsg.FromId, &cMsg.ToId, &cMsg.Ptime, &cMsg.IsWithdraw, &cMsg.IsRead, &cMsg.RecordId)
+	err := db.DB.QueryRow("SELECT count(id) WHERE id = ?", msg.Id).Scan(&count)
+
+	if err == bsql.ErrNoRows {
+		// swap from_id and to_id
+		res, err := db.DB.Exec("INSERT INTO chat_record (id, name, img, from_id, to_id, ptime, last_msg) values (?, ?, ?, ?, ?, ?, ?)",
+			msg.RecordId, "", "", msg.ToId, msg.FromId, msg.Ptime, msg.Content)
+		if err != nil {
+			return msg, err
+		}
+		_, err = res.LastInsertId()
+		if err != nil {
+			return msg, err
+		}
+	}
+
+	err = db.DB.QueryRow("SELECT id, content_type, content, from_id, to_id, ptime, is_with_draw, is_read, record_id FROM chat_msg WHERE id = ?", msg.Id).Scan(&cMsg.Id, &cMsg.ContentType, &cMsg.Content, &cMsg.FromId, &cMsg.ToId, &cMsg.Ptime, &cMsg.IsWithdraw, &cMsg.IsRead, &cMsg.RecordId)
 	switch err {
 	case bsql.ErrNoRows:
 		res, err := db.DB.Exec("INSERT INTO chat_msg (id, content_type, content, from_id, to_id, ptime, is_with_draw, is_read, record_id) values (?, ?, ?, ?, ?, ?, ?, ?, ?)",
@@ -215,7 +251,7 @@ func handleNewMsg(db *Sql, msg vo.ChatMsgParams) (vo.ChatMsgParams, error) {
 		return msg, nil
 
 	case nil:
-		return msg, ErrorRowIsExists
+		return msg, vo.ErrorRowIsExists
 	default:
 		return msg, err
 	}
