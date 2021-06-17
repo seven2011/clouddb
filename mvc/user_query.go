@@ -62,12 +62,12 @@ func UserUpdate(db *Sql, value string) (e error) {
 	// 判断 逻辑
 
 	//更新数据
-	stmt, err := db.DB.Prepare("update sys_user set name=?,sex=?,nickname=? where id=?")
+	stmt, err := db.DB.Prepare("update sys_user set sex=?,nickname=?,img=? where id=?")
 	if err != nil {
 
 		return err
 	}
-	res, err := stmt.Exec(userlist.Name, userlist.Sex, userlist.NickName, userid)
+	res, err := stmt.Exec(userlist.Sex, userlist.NickName,userlist.Img, userid)
 	if err != nil {
 
 		return err

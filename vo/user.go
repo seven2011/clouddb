@@ -38,7 +38,7 @@ type UserListParams struct {
 	Token string `json:"token"`
 }
 type UserUpdateParams struct {
-	Name     string `json:"name"`
+	Img     string `json:"img"`
 	Phone    string `json:"phone"`
 	Sex      int64  `json:"sex"`
 	NickName string `json:"nickName"`
