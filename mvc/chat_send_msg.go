@@ -39,6 +39,7 @@ func ChatSendMsg(icapi icore.CoreAPI, db *Sql, value string) (vo.ChatMsgParams, 
 		return msg, errors.New("token is not msg.from_id")
 	}
 
+	msg.Token = ""
 	msg.Id = strconv.FormatInt(utils.SnowId(), 10)
 
 	if len(msg.RecordId) == 0 {
