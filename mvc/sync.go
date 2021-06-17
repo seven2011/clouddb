@@ -6,6 +6,7 @@ import (
 	"github.com/cosmopolitann/clouddb/sugar"
 	"github.com/cosmopolitann/clouddb/vo"
 	ipfsCore "github.com/ipfs/go-ipfs/core"
+	"log"
 
 	"context"
 	pubsub "github.com/libp2p/go-libp2p-pubsub"
@@ -333,26 +334,33 @@ func SyncTopicData(ipfsNode *ipfsCore.IpfsNode, db *Sql, value string) error {
 	}
 
 	for {
+		sugar.Log.Info("------------------------------------------------")
+		sugar.Log.Info("开始 同步 消息")
+
 		data, err := sub.Next(ctx)
 		if err != nil {
 			sugar.Log.Error("subscribe failed.", err)
 			continue
 		}
 		msg := data.Message
+		log.Println("------ 收到的消息的内容---",msg.Data)
 
+		log.Printf("------ 收到的消息的类型 %T\n----",msg.Data)
 		fromId := msg.From
 		sugar.Log.Info("来自谁的消息:", string(fromId))
+
 		peerId := ipfsNode.Identity.String()
 		sugar.Log.Info("本地节点peerId:", peerId)
+
 		if string(fromId) == peerId {
-			sugar.Log.Info("本地节点peerId  等于 本地节点  break ")
+			sugar.Log.Info("本地节点peerId  等于 本地节点  continue ")
 			continue
 		}
-
+		//
 		var recieve vo.SyncMsgParams
 		err = json.Unmarshal(msg.Data, &recieve)
 		if err != nil {
-			sugar.Log.Error("data unmarshal failed", err)
+			sugar.Log.Error("解析失败:", err)
 			continue
 		}
 		sugar.Log.Info("-- 解析收到同步消息是:", recieve)
