@@ -14,36 +14,24 @@ import (
 func AddFile(db *Sql, value string) (string, error) {
 	//add file
 	var f vo.CloudAddFileParams
-
 	err := json.Unmarshal([]byte(value), &f)
-
 	if err != nil {
 		sugar.Log.Error("Marshal is failed.Err is ", err)
 	}
-
-	sugar.Log.Info("解析数据  是 ", f)
+	sugar.Log.Info("解析数据:", f)
 	if err != nil {
 		sugar.Log.Error("Decode is failed.", err)
 		return "", errors.New("decode is failed")
 	}
-	//c,_:= FindOneFileIsExist(mvc,f1,f)
-	//if c!=0{
-	//	return errors.New("this file is exist")
-	//}
-	//snowId
 
 	//token verify
 	claim, b := jwt.JwtVeriyToken(f.Token)
 	if !b {
 		return "", err
 	}
-
-	sugar.Log.Info("claim := ", claim)
 	userId := claim["UserId"]
-
 	id := utils.SnowId()
 	t := time.Now().Unix()
-	//t:=time.Now().Format("2006-01-02 15:04:05")
 	stmt, err := db.DB.Prepare("INSERT INTO cloud_file values(?,?,?,?,?,?,?,?,?)")
 	if err != nil {
 		sugar.Log.Error("Insert into cloud_file table is failed.", err)
@@ -60,9 +48,6 @@ func AddFile(db *Sql, value string) (string, error) {
 	if l == 0 {
 		return "", err
 	}
-
-	sugar.Log.Info("fileId is ", sid)
-
 	return sid, nil
 
 }

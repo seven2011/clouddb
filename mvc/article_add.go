@@ -1,17 +1,20 @@
 package mvc
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"github.com/cosmopolitann/clouddb/jwt"
 	"github.com/cosmopolitann/clouddb/sugar"
 	"github.com/cosmopolitann/clouddb/utils"
 	"github.com/cosmopolitann/clouddb/vo"
+	ipfsCore "github.com/ipfs/go-ipfs/core"
+	pubsub "github.com/libp2p/go-libp2p-pubsub"
 	"strconv"
 	"time"
 )
 
-func AddArticle(db *Sql, value string) error {
+func AddArticle(ipfsNode *ipfsCore.IpfsNode,db *Sql, value string) error {
 	var art vo.ArticleAddParams
 	err := json.Unmarshal([]byte(value), &art)
 	if err != nil {
@@ -21,12 +24,10 @@ func AddArticle(db *Sql, value string) error {
 	sugar.Log.Info("Marshal data is  ", art)
 	id := utils.SnowId()
 	t := time.Now().Unix()
-	//t := time.Now().Format("2006-01-02 15:04:05")
 	stmt, err := db.DB.Prepare("INSERT INTO article values(?,?,?,?,?,?,?,?,?,?,?,?,?)")
 	if err != nil {
 		sugar.Log.Error("Insert into article table is failed.", err)
 		return errors.New("插入article 表数据 失败")
-
 	}
 	sid := strconv.FormatInt(id, 10)
 	stmt.QueryRow()
@@ -35,13 +36,43 @@ func AddArticle(db *Sql, value string) error {
 		sugar.Log.Error("Insert into article  is Failed.", err)
 		return errors.New("插入数据失败")
 	}
-	sugar.Log.Info("Insert into article  is successful.")
 	l, _ := res.RowsAffected()
 	if l == 0 {
 		return errors.New("插入数据失败")
 	}
+
+
+	// publish msg
+	topic:="/db-online-sync"
+	sugar.Log.Info("发布主题:","/db-online-sync")
+	sugar.Log.Info("发布消息:",value)
+	//判断是否弃用
+	var tp *pubsub.Topic
+	var ok bool
+	ctx := context.Background()
+	if tp,ok = Topicmp["/db-online-sync"];ok == false {
+		tp, err = ipfsNode.PubSub.Join(topic)
+		if err != nil {
+			return err
+		}
+		Topicmp[topic] = tp
+
+	}
+	sugar.Log.Error("--- 开始 发布的消息 ---")
+
+	sugar.Log.Error("发布的消息:", value)
+
+	err = tp.Publish(ctx,[]byte(value))
+	if err != nil {
+		sugar.Log.Error("发布错误:", err)
+		return err
+	}
+	sugar.Log.Error("---  发布的消息  完成  ---")
+
 	return nil
 }
+
+//
 
 func ArticleList(db *Sql, value string) ([]Article, error) {
 	var art []Article
@@ -98,7 +129,6 @@ func ArticleList(db *Sql, value string) ([]Article, error) {
 		return art, err
 	}
 	sugar.Log.Info("Query  article  is successful.")
-
 
 	return art, nil
 

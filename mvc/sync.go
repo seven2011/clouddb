@@ -5,6 +5,10 @@ import (
 	"errors"
 	"github.com/cosmopolitann/clouddb/sugar"
 	"github.com/cosmopolitann/clouddb/vo"
+	ipfsCore "github.com/ipfs/go-ipfs/core"
+
+	"context"
+	pubsub "github.com/libp2p/go-libp2p-pubsub"
 	"time"
 )
 
@@ -165,5 +169,108 @@ func SyncArticleShare(db *Sql, value string) error {
 }
 
 func SyncUserUpdate(db *Sql, value string) error {
+
+	return nil
+}
+
+type sycn struct {
+}
+var Topicmp map[string]*pubsub.Topic
+
+func SyncTopicData(ipfsNode *ipfsCore.IpfsNode,db *Sql, value string) error {
+	//监听topic
+	topic := "/db-online-sync"
+	sugar.Log.Info("开始监听主题 : ", topic)
+	sugar.Log.Info("subscrib topic: ", topic)
+
+
+
+
+	go func(topic string) {
+		ctx := context.Background()
+		sugar.Log.Info("加入 主题 房间  : ", topic)
+		// 判断 map 是否存在 当前 主题
+
+
+		tp, err := ipfsNode.PubSub.Join(topic)
+		if err != nil {
+			sugar.Log.Error("subscribe Join failed.", err)
+			return
+		}
+		//
+		sugar.Log.Info("将tp 加入 到 map中  : ", topic)
+		Topicmp["/db-online-sync"]=tp
+		sugar.Log.Info("主题map :", Topicmp)
+
+		sugar.Log.Info(" Subscribe topic  tp :", tp)
+
+		sub,err:=tp.Subscribe()
+		if err != nil {
+			sugar.Log.Error("subscribe failed.", err)
+			return
+		}
+
+		for {
+			data, err := sub.Next(ctx)
+			if err != nil {
+				sugar.Log.Error("subscribe failed.", err)
+				break
+			}
+			msg := data.Message
+
+			fromId:=msg.From
+			sugar.Log.Info("来自谁的消息:",string(fromId))
+			peerId:=ipfsNode.Identity.String()
+			sugar.Log.Info("本地节点peerId:",peerId)
+			if string(fromId)==peerId{
+				sugar.Log.Info("本地节点peerId  等于 本地节点  break ")
+				continue
+			}
+
+			var recieve vo.SyncMsgParams
+			err = json.Unmarshal(msg.Data, &recieve)
+			if err != nil {
+				sugar.Log.Error("data unmarshal failed", err)
+				continue
+			}
+			sugar.Log.Info("解析收到的消息是:",recieve)
+
+
+			if recieve.Method == "receiveArticleAdd" {
+				//  添加 文章  入库
+				sugar.Log.Info("添加 文章  入库:")
+
+
+			} else if recieve.Method =="receiveArticlePlayAdd" {
+				sugar.Log.Info("增加播放次数")
+
+				//  增加播放次数
+				//var tmp vo.ChatMsgParams
+				//json1, _ := json.Marshal(msg.Data)
+				//json.Unmarshal(json1, &tmp)
+				//
+				//res, err := handleNewMsg(db, tmp)
+				//if err != nil {
+				//	sugar.Log.Error("handle add message failed.", err)
+				//	continue
+				//}
+				//msg.Data = res
+				//jsonStr, _ := json.Marshal(msg)
+				//clh.HandlerChat(string(jsonStr))
+			} else if  recieve.Method =="receiveArticleShareAdd" {
+				//  增加 分享 次数
+				sugar.Log.Info("增加播放次数:")
+
+
+			} else if  recieve.Method =="receiveUserRegister"{
+				// 添加用户 信息
+				sugar.Log.Info("添加用户 信息:")
+
+			}else{
+				sugar.Log.Info("不满足条件，继续:")
+				continue
+			}
+		}
+	}(topic)
 	return nil
 }

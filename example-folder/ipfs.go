@@ -3,11 +3,8 @@ package example_folder
 import (
 	"context"
 	"database/sql"
-	"encoding/json"
 	"fmt"
 	"github.com/cosmopolitann/clouddb/mvc"
-	"github.com/cosmopolitann/clouddb/sugar"
-	"github.com/cosmopolitann/clouddb/vo"
 	config "github.com/ipfs/go-ipfs-config"
 	files "github.com/ipfs/go-ipfs-files"
 	"github.com/ipfs/go-ipfs/core"
@@ -305,22 +302,6 @@ func InItipfs() {
 		//"/dnsaddr/bootstrap.libp2p.io/p2p/QmbLHAnMoJPWSCR5Zhtx6BHJX9KiKNN6tpvbUcqanj75Nb",
 		//"/dnsaddr/bootstrap.libp2p.io/p2p/QmcZf59bWwK5XFi76CZX8cbJ4BhTzzA3gU1ZjYZcYW3dwt",
 		//==
-		"/dnsaddr/bootstrap.libp2p.io/p2p/QmNnooDu7bfjPFoTZYxMNLWUQJyrVwtbZg5gBMjTezGAJN",
-		"/dnsaddr/bootstrap.libp2p.io/p2p/QmQCU2EcMqAqQPR2i9bChDtGNJchTbq5TbXJJ16u19uLTa",
-		"/dnsaddr/bootstrap.libp2p.io/p2p/QmbLHAnMoJPWSCR5Zhtx6BHJX9KiKNN6tpvbUcqanj75Nb",
-		"/dnsaddr/bootstrap.libp2p.io/p2p/QmcZf59bWwK5XFi76CZX8cbJ4BhTzzA3gU1ZjYZcYW3dwt",
-		"/ip4/104.131.131.82/tcp/4001/p2p/QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ",
-		"/ip4/104.131.131.82/udp/4001/quic/p2p/QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ",
-		//=
-		// IPFS Cluster Pinning nodes
-		"/ip4/138.201.67.219/tcp/4001/p2p/QmUd6zHcbkbcs7SMxwLs48qZVX3vpcM8errYS7xEczwRMA",
-		"/ip4/138.201.67.219/udp/4001/quic/p2p/QmUd6zHcbkbcs7SMxwLs48qZVX3vpcM8errYS7xEczwRMA",
-		"/ip4/138.201.67.220/tcp/4001/p2p/QmNSYxZAiJHeLdkBg38roksAR9So7Y5eojks1yjEcUtZ7i",
-		"/ip4/138.201.67.220/udp/4001/quic/p2p/QmNSYxZAiJHeLdkBg38roksAR9So7Y5eojks1yjEcUtZ7i",
-		"/ip4/138.201.68.74/tcp/4001/p2p/QmdnXwLrC8p1ueiq2Qya8joNvk3TVVDAut7PrikmZwubtR",
-		"/ip4/138.201.68.74/udp/4001/quic/p2p/QmdnXwLrC8p1ueiq2Qya8joNvk3TVVDAut7PrikmZwubtR",
-		"/ip4/94.130.135.167/tcp/4001/p2p/QmUEMvxS2e7iDrereVYc5SWPauXPyNwxcy9BXZrC1QTcHE",
-		"/ip4/94.130.135.167/udp/4001/quic/p2p/QmUEMvxS2e7iDrereVYc5SWPauXPyNwxcy9BXZrC1QTcHE",
 
 		// You can add more nodes here, for example, another IPFS node you might have running locally, mine was:
 		//"/ip4/127.0.0.1/tcp/4010/p2p/QmZp2fhDLxjYue2RiUvLwT9MWdnbDxam32qYFnGmxZDh5L",
@@ -328,7 +309,19 @@ func InItipfs() {
 		"/ip4/127.0.0.1/tcp/4001/p2p/12D3KooWNfFx5Fgd1LjkcTT8Egz5yVT5e7orBrpGxXc8hzUKBBoA",
 		"/ip4/127.0.0.1/udp/4001/quic/p2p/12D3KooWNfFx5Fgd1LjkcTT8Egz5yVT5e7orBrpGxXc8hzUKBBoA",
 		"/ip4/182.150.116.150/tcp/4001/p2p/12D3KooWNfFx5Fgd1LjkcTT8Egz5yVT5e7orBrpGxXc8hzUKBBoA",
+
+
+		"/ip4/47.108.183.230/tcp/4004/ws/p2p/12D3KooWDoBhdQwGT6oq2EG8rsduRCmyTZtHaBCowFZ7enwP4i8J",
+		"/ip4/47.108.183.230/tcp/4001/p2p/12D3KooWDoBhdQwGT6oq2EG8rsduRCmyTZtHaBCowFZ7enwP4i8J",
+		"/ip4/47.108.183.230/udp/4001/quic/p2p/12D3KooWDoBhdQwGT6oq2EG8rsduRCmyTZtHaBCowFZ7enwP4i8J",
 	}
+	//peerss:=[]string{}
+
+
+
+
+
+
 
 	go connectToPeers(ctx, ipfs, bootstrapNodes)
 
@@ -357,68 +350,107 @@ func InItipfs() {
 
 	//
 	va := `{"type":"userRegister","data":{"id":"324833623369797632","name":"22333","phone":"22333","sex":22333,"ptime":1623747170,"utime":1623747170,"nickname":"","peer_id":"22333","img":"www.baidu.com"}}`
+	v1:=`{"type":"article","data":{"id":"4324","userId":"124","accesstory":"20","accesstoryType":1,"text":"1","tag":"1","playNum":3,"title":"成都","shareNum":4,"thumbnail":"刘亦菲"}}`
+	v2:=`{"type":"articlePlayAdd","data":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI0MDkzMzAyMDIxNjY5NTYwMzIiLCJleHAiOjE2MjU4ODk0NzZ9.OzEFVuB2FcRYurZiii1fpiAqX2KcesfS5arJfVJZQOI","id":"408968540008222720"}}`
+	//v3:=``
+	v3:=`{"type":"articleShareAdd","data":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI0MDkzMzAyMDIxNjY5NTYwMzIiLCJleHAiOjE2MjU4ODk0NzZ9.OzEFVuB2FcRYurZiii1fpiAqX2KcesfS5arJfVJZQOI","id":"408968540008222720"}}`
+	//
+
+	perrs,err:=ipfs.Swarm().Peers(ctx)
+	if  err!=nil{
+		fmt.Println(" connet err is",err)
+
+	}
+	fmt.Println(" perrs ",perrs)
+
+
+	arr,err:=ipfs.PubSub().Ls(ctx)
+	if err!=nil{
+		fmt.Println(" connet err is",err)
+
+	}
+	fmt.Println(" arr ",arr)
+
 	go func() {
-		for i := 0; i < 10; i++ {
+		for i := 0; i < 10000; i++ {
 			time.Sleep(time.Second)
+
+
 			ipfs.PubSub().Publish(ctx, "/db-online-sync", []byte(va))
-			ipfs.PubSub().Publish(ctx, "/db-online-sync", []byte(va))
+			ipfs.PubSub().Publish(ctx, "/db-online-sync", []byte(v1))
+			ipfs.PubSub().Publish(ctx, "/db-online-sync", []byte(v2))
+			ipfs.PubSub().Publish(ctx, "/db-online-sync", []byte(v3))
+			ipfs.PubSub().Publish(ctx, "fly", []byte(v3))
+
 		}
 	}()
 
-	go func() {
-		for {
-			p, err := ipfs.PubSub().Subscribe(ctx, "/db-online-sync")
-			if err != nil {
-				fmt.Println(" ipfs 发布 错误:", err)
-			}
-			fmt.Println("pub:", p)
-			p2, err := ipfs.PubSub().Subscribe(ctx, "/db-online-sync")
-			if err != nil {
-				fmt.Println(" ipfs 发布 错误:", err)
-			}
-
-			msg1, err := p2.Next(ctx)
-			if err != nil {
-				fmt.Println("sub err:", err)
-			}
-			fmt.Println("msg1 data:", string(msg1.Data()))
-
-			msg, err := p.Next(ctx)
-			if err != nil {
-				fmt.Println("sub err:", err)
-			}
-			fmt.Println("msg data:", string(msg.Data()))
-			fmt.Println("msg from peerId:", msg.From())
-			fmt.Println("msg from Topics:", msg.Topics())
-			fmt.Println("msg from Seq:", string(msg.Seq()))
-			// 解析数据,调用同步方法
-			// 判断 peer id 是否是自己的
-			// todo
-
-			var sc vo.SyncParams
-			err = json.Unmarshal([]byte(msg.Data()), &sc)
-			if err != nil {
-				sugar.Log.Error("Marshal is failed.Err is ", err)
-			}
-			log.Println(" 解析的 /db-online-sync  值 =", sc)
-			if sc.Method == "SyncUser" {
-				//json 转成 string
-				jsonBytes, err := json.Marshal(sc.Data)
-				if err != nil {
-					fmt.Println("解析错误:", err)
-				}
-				fmt.Println("转换为 json 串打印结果:%s", string(jsonBytes))
-				//打开数据库
-				d, err := sql.Open("sqlite3", "/Users/apple/winter/D-cloud/tables/foo.db")
-
-				ss := sqlitedb(d)
-
-				resp := ss.SyncUser(string(jsonBytes))
-				log.Println("这是返回的数据 =", resp)
-			}
-
-		}
-	}()
+	//go func() {
+	//	for {
+	//		//监听
+	//		p, err := ipfs.PubSub().Subscribe(ctx, "/db-online-sync")
+	//		if err != nil {
+	//			fmt.Println(" ipfs 发布 错误:", err)
+	//		}
+	//
+	//		fmt.Println("pub:", p)
+	//		p2, err := ipfs.PubSub().Subscribe(ctx, "/db-online-sync")
+	//		if err != nil {
+	//			fmt.Println(" ipfs 发布 错误:", err)
+	//		}
+	//
+	//		msg1, err := p2.Next(ctx)
+	//		if err != nil {
+	//			fmt.Println("sub err:", err)
+	//		}
+	//		fmt.Println("msg1 data:", string(msg1.Data()))
+	//
+	//		msg, err := p.Next(ctx)
+	//		if err != nil {
+	//			fmt.Println("sub err:", err)
+	//		}
+	//		fmt.Println("msg data:", string(msg.Data()))
+	//		fmt.Println("msg from peerId:", msg.From())
+	//		fmt.Println("msg from Topics:", msg.Topics())
+	//		fmt.Println("msg from Seq:", string(msg.Seq()))
+	//		//var from =msg.From()
+	//		//  判断 来自 的 节点id
+	//		//if from !=peerId && from == "12D3KooWDoBhdQwGT6oq2EG8rsduRCmyTZtHaBCowFZ7enwP4i8J" {
+	//		//	//执行 同步数据库
+	//		//
+	//		//
+	//		//
+	//		//}
+	//
+	//
+	//		// 解析数据,调用同步方法
+	//		// 判断 peer id 是否是自己的
+	//		// todo
+	//
+	//		var sc vo.SyncParams
+	//		err = json.Unmarshal([]byte(msg.Data()), &sc)
+	//		if err != nil {
+	//			sugar.Log.Error("Marshal is failed.Err is ", err)
+	//		}
+	//		log.Println(" 解析的 /db-online-sync  值 =", sc)
+	//		if sc.Method == "SyncUser" {
+	//			//json 转成 string
+	//			jsonBytes, err := json.Marshal(sc.Data)
+	//			if err != nil {
+	//				fmt.Println("解析错误:", err)
+	//			}
+	//			fmt.Println("转换为 json 串打印结果:%s", string(jsonBytes))
+	//			//打开数据库
+	//			d, err := sql.Open("sqlite3", "/Users/apple/winter/D-cloud/tables/foo.db")
+	//
+	//			ss := sqlitedb(d)
+	//
+	//			resp := ss.SyncUser(string(jsonBytes))
+	//			log.Println("这是返回的数据 =", resp)
+	//		}
+	//
+	//	}
+	//}()
 	select {}
 
 }

@@ -17,3 +17,8 @@ type SyncParams struct {
 	Method string           `json:"type"`
 	Data   ArticleAddParams `json:"data"`
 }
+
+type SyncMsgParams struct {
+	Method string           `json:"type"`
+	Data   interface{}     `json:"data"`
+}

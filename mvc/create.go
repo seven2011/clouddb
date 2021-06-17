@@ -12,16 +12,20 @@ import (
 	ipfsCore "github.com/ipfs/go-ipfs/core"
 )
 
-//|-------------------------------------------------\
-// 初始化数据库                                      //|
-func (db *Sql) Ping() error { //|
-	err := db.DB.Ping() //|
-	if err != nil {     //|
-		sugar.Log.Error("Ping is Failed.", err) //|
+//|-------------------------------------------------|
+// 初始化数据库
+
+func (db *Sql) Ping() error {
+	err := db.DB.Ping()
+	if err != nil {
+		sugar.Log.Error("Ping is Failed.", err)
 	} //|
 	return err //|
-} //|
-//---------------------------------------------------/
+}
+//---------------------------------------------------|
+
+
+
 
 /*
 ------------------------------------------------------
@@ -288,12 +292,11 @@ func (db *Sql) CloudSearch(dInfo string) string {
 
 //  添加 朋友圈文章
 
-func (db *Sql) ArticleAdd(dInfo string) string {
-	e := AddArticle(db, dInfo)
+func (db *Sql) ArticleAdd(ipfsNode *ipfsCore.IpfsNode,dInfo string) string {
+	e := AddArticle(ipfsNode,db, dInfo)
 	if e != nil {
 		return vo.ResponseErrorMsg(400, e.Error())
 	}
-
 	return vo.ResponseSuccess()
 }
 
@@ -624,6 +627,19 @@ func (db *Sql) SyncArticleShare(dInfo string) string {
 	}
 	return vo.ResponseSuccess()
 }
+func (db *Sql) SyncData(ipfsNode *ipfsCore.IpfsNode,dInfo string) string {
+	sugar.Log.Info("---- 开始 同步 消息 ------")
+	e := SyncTopicData(ipfsNode,db, dInfo)
+	if e != nil {
+		return vo.ResponseErrorMsg(400, e.Error())
+	}
+	return vo.ResponseSuccess()
+}
+
+
+
+
+
 
 /*
 ------------------------------------------------------
@@ -636,6 +652,10 @@ func (db *Sql) SyncArticleShare(dInfo string) string {
 |                       Other                        |
 ------------------------------------------------------
 */
+
+
+
+
 
 //convert
 
