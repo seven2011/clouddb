@@ -401,7 +401,6 @@ func SyncTopicData(ipfsNode *ipfsCore.IpfsNode, db *Sql, value string) error {
 			if err!=nil{
 				sugar.Log.Error("-----  同步  增加 分享 次数  失败  -----",err)
 				continue
-
 			}
 			sugar.Log.Info(" 增加 分享 次数")
 

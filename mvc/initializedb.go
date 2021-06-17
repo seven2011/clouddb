@@ -32,12 +32,7 @@ func (n *NewTestNode) Add() error {
 	return err
 }
 
-//
-func (n *NewTestNode) UserRegister(value string) string {
-	//
-	data := n.db.UserRegister(value)
-	return data
-}
+
 
 func (n *NewTestNode) UserLogin(value string) string {
 	//
