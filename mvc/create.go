@@ -7,8 +7,6 @@ import (
 	"github.com/cosmopolitann/clouddb/sugar"
 	"github.com/cosmopolitann/clouddb/vo"
 
-	icore "github.com/ipfs/interface-go-ipfs-core"
-
 	ipfsCore "github.com/ipfs/go-ipfs/core"
 )
 
@@ -529,9 +527,9 @@ func (db *Sql) ChatCreateRecord(ipfsNode *ipfsCore.IpfsNode, msg string) string 
 }
 
 // ChatSendMsg  发送消息
-func (db *Sql) ChatSendMsg(icapi icore.CoreAPI, msg string) string {
+func (db *Sql) ChatSendMsg(ipfsNode *ipfsCore.IpfsNode, msg string) string {
 
-	data, err := ChatSendMsg(icapi, db, msg)
+	data, err := ChatSendMsg(ipfsNode, db, msg)
 	if err != nil {
 		return vo.ResponseErrorMsg(400, err.Error())
 	}
@@ -539,9 +537,9 @@ func (db *Sql) ChatSendMsg(icapi icore.CoreAPI, msg string) string {
 }
 
 // ChatWithdrawMsg  撤回消息
-func (db *Sql) ChatWithdrawMsg(icapi icore.CoreAPI, msg string) string {
+func (db *Sql) ChatWithdrawMsg(ipfsNode *ipfsCore.IpfsNode, msg string) string {
 
-	err := ChatWithdrawMsg(icapi, db, msg)
+	err := ChatWithdrawMsg(ipfsNode, db, msg)
 	if err != nil {
 		return vo.ResponseErrorMsg(400, err.Error())
 	}
@@ -549,9 +547,9 @@ func (db *Sql) ChatWithdrawMsg(icapi icore.CoreAPI, msg string) string {
 }
 
 // ChatListenMsg  监听消息
-func (db *Sql) ChatListenMsg(icapi icore.CoreAPI, token string, clh vo.ChatListenHandler) string {
+func (db *Sql) ChatListenMsg(ipfsNode *ipfsCore.IpfsNode, token string, clh vo.ChatListenHandler) string {
 
-	err := ChatListenMsg(icapi, db, token, clh)
+	err := ChatListenMsg(ipfsNode, db, token, clh)
 	if err != nil {
 		return vo.ResponseErrorMsg(400, err.Error())
 	}

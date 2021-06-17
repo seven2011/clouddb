@@ -10,14 +10,14 @@ import (
 	"github.com/cosmopolitann/clouddb/sugar"
 	"github.com/cosmopolitann/clouddb/vo"
 
-	icore "github.com/ipfs/interface-go-ipfs-core"
+	ipfsCore "github.com/ipfs/go-ipfs/core"
 )
 
 var ErrorAffectZero error = errors.New("row affect zero")
 var ErrorRowNotExists error = errors.New("row not exists")
 var ErrorRowIsExists error = errors.New("row is exists")
 
-func ChatListenMsg(icapi icore.CoreAPI, db *Sql, token string, clh vo.ChatListenHandler) error {
+func ChatListenMsg(ipfsNode *ipfsCore.IpfsNode, db *Sql, token string, clh vo.ChatListenHandler) error {
 
 	//校验 token 是否 满足
 	claim, b := jwt.JwtVeriyToken(token)
@@ -32,7 +32,8 @@ func ChatListenMsg(icapi icore.CoreAPI, db *Sql, token string, clh vo.ChatListen
 
 	go func(topic string) {
 		ctx := context.Background()
-		sub, err := icapi.PubSub().Subscribe(ctx, topic)
+
+		sub, err := ipfsNode.PubSub.Subscribe(topic)
 		// defer sub.Close()
 
 		if err != nil {
@@ -49,9 +50,9 @@ func ChatListenMsg(icapi icore.CoreAPI, db *Sql, token string, clh vo.ChatListen
 
 			var msg vo.ChatListenParams
 
-			sugar.Log.Debugf("receive: %s\n", data.Data())
+			sugar.Log.Debugf("receive: %s\n", data.Data)
 
-			err = json.Unmarshal(data.Data(), &msg)
+			err = json.Unmarshal(data.Data, &msg)
 			if err != nil {
 				sugar.Log.Error("data unmarshal failed", err)
 				continue
