@@ -99,7 +99,10 @@ func InsertIntoData(db *Sql, f vo.CloudAddFolderParams, userId string) (c int64,
 		return 0, err
 	}
 	sugar.Log.Info("Insert into file  is successful.")
-	l, _ := res.RowsAffected()
+	l, err := res.RowsAffected()
+	if l==0{
+		return 0,err
+	}
 	return l, nil
 }
 
