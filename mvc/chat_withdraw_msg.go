@@ -1,7 +1,6 @@
 package mvc
 
 import (
-	"context"
 	"encoding/json"
 	"errors"
 
@@ -10,10 +9,10 @@ import (
 
 	"github.com/cosmopolitann/clouddb/jwt"
 
-	icore "github.com/ipfs/interface-go-ipfs-core"
+	ipfsCore "github.com/ipfs/go-ipfs/core"
 )
 
-func ChatWithdrawMsg(icapi icore.CoreAPI, db *Sql, value string) error {
+func ChatWithdrawMsg(ipfsNode *ipfsCore.IpfsNode, db *Sql, value string) error {
 
 	var msg vo.ChatWithdrawMsgParams
 	err := json.Unmarshal([]byte(value), &msg)
@@ -79,8 +78,7 @@ func ChatWithdrawMsg(icapi icore.CoreAPI, db *Sql, value string) error {
 
 	sugar.Log.Info("publish topic: ", topic)
 
-	ctx := context.Background()
-	err = icapi.PubSub().Publish(ctx, topic, msgBytes)
+	err = ipfsNode.PubSub.Publish(topic, msgBytes)
 	if err != nil {
 		sugar.Log.Error("publish failed.", err)
 		return err
