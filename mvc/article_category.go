@@ -83,6 +83,7 @@ func ArticleCategory(db *Sql, value string) ([]vo.ArticleResp, error) {
 		return art, err
 	}
 	sugar.Log.Info("Query article  is successful.")
+	sugar.Log.Info("查出来的结果：len ",len(art))
 
 	return art, nil
 

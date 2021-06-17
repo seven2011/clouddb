@@ -24,10 +24,10 @@ func TestRenameFile(t *testing.T) {
 	//插入数据
 	value := `{
 "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI0MDkzMzAyMDIxNjY5NTYwMzIiLCJleHAiOjE2MjU4ODk0NzZ9.OzEFVuB2FcRYurZiii1fpiAqX2KcesfS5arJfVJZQOI",
-    "rename":"西游记",
-    "id":"411261637169778688",
-"isFolder":0,
-"parentId":"411193551548846080"
+    "rename":"星星",
+    "id":"411908608159125504",
+"isFolder":1,
+"parentId":"411905426192338944"
 }`
 	//b1, e := json.Marshal(fi)
 	//fmt.Println(ss)
