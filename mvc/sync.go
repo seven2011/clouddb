@@ -404,7 +404,7 @@ func SyncTopicData(ipfsNode *ipfsCore.IpfsNode, db *Sql, value string) error {
 		sugar.Log.Info("---- 这是 谁发来的消息 fromId    msg.From:", msg.From)
 		sugar.Log.Infof("----这是  string(fromId)的类型  %T \n---:", string(fromId))
 		wayId:="12D3KooWDoBhdQwGT6oq2EG8rsduRCmyTZtHaBCowFZ7enwP4i8J"
-		if string(fromId) != peerId && string(fromId) != recieve.FromId && string(fromId)==wayId {
+		if peerId != string(fromId) && recieve.FromId != peerId && string(fromId)==wayId {
 
 			sugar.Log.Error("发送消息的节点  等于 本地节点  continue ")
 			//if recieve.FromId == string(fromId) {
