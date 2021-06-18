@@ -7,5 +7,5 @@ import (
 var TopicJoin *vo.TopicJoinMap
 
 func init() {
-	TopicJoin = new(vo.TopicJoinMap)
+	TopicJoin = vo.NewTopicJoin()
 }

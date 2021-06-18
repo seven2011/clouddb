@@ -5,6 +5,7 @@ import (
 	bsql "database/sql"
 	"encoding/json"
 	"errors"
+	"runtime/debug"
 
 	"github.com/cosmopolitann/clouddb/jwt"
 	"github.com/cosmopolitann/clouddb/sugar"
@@ -39,6 +40,14 @@ func ChatListenMsg(ipfsNode *ipfsCore.IpfsNode, db *Sql, token string, clh vo.Ch
 	}
 
 	go func(userId string, ipfsTopic *pubsub.Topic) {
+
+		defer func() {
+			// 错误捕获
+			if r := recover(); r != nil {
+				sugar.Log.Error("ChatListenMsg goroutine panic occure, err:", r)
+				sugar.Log.Error("stack:", debug.Stack())
+			}
+		}()
 
 		sub, err := ipfsTopic.Subscribe()
 		if err != nil {

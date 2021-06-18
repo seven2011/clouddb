@@ -12,6 +12,12 @@ type TopicJoinMap struct {
 	sync.RWMutex
 }
 
+func NewTopicJoin() *TopicJoinMap {
+	return &TopicJoinMap{
+		topicmp: make(map[string]*pubsub.Topic),
+	}
+}
+
 func (t *TopicJoinMap) Load(key string) (*pubsub.Topic, bool) {
 	t.RLock()
 	defer t.RUnlock()
