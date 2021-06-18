@@ -20,20 +20,20 @@ func TestAddArticlePlayAdd(t *testing.T) {
 	sugar.Log.Info("Db value is ", d)
 	e := d.Ping()
 	sugar.Log.Info(" Ping is failed,err:= ", e)
-	ss := Testdb(d)
+	//ss := Testdb(d)
 	// request json  params
 	// test 1
 	value := `{"id":"411550229439975424"}
 `
 	t.Log("request value :=", value)
-	resp := ss.ArticlePlayAdd(value)
-	t.Log("result:=", resp)
-
-	// test 2
-	value2 := `{"id":"411285804581654528"}
-`
-	t.Log("request value :=", value2)
-	resp2 := ss.ArticlePlayAdd(value2)
-	t.Log("result:=", resp2)
+//	resp := ss.ArticlePlayAdd(value)
+//	t.Log("result:=", resp)
+//
+//	// test 2
+//	value2 := `{"id":"411285804581654528"}
+//`
+//	t.Log("request value :=", value2)
+//	resp2 := ss.ArticlePlayAdd(value2)
+//	t.Log("result:=", resp2)
 
 }

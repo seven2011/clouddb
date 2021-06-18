@@ -15,40 +15,37 @@ import (
 )
 
 func AddArticle(ipfsNode *ipfsCore.IpfsNode,db *Sql, value string) error {
+	sugar.Log.Error(" ----  AddArticle Method ----")
 	var art vo.ArticleAddParams
 	err := json.Unmarshal([]byte(value), &art)
 	if err != nil {
-		sugar.Log.Error("Marshal is failed.Err is ", err)
-		return errors.New("解析字段错误")
+		sugar.Log.Error("Marshal is failed.Err:", err)
+		return errors.New(" Marshal article params is failed. ")
 	}
-	sugar.Log.Info("Marshal data is  ", art)
+	sugar.Log.Info("Marshal article params data : ", art)
 	id := utils.SnowId()
 	t := time.Now().Unix()
 	stmt, err := db.DB.Prepare("INSERT INTO article values(?,?,?,?,?,?,?,?,?,?,?,?,?)")
 	if err != nil {
-		sugar.Log.Error("Insert into article table is failed.", err)
-		return errors.New("插入article 表数据 失败")
+		sugar.Log.Error("Insert into article table is failed.Err: ", err)
+		return errors.New(" Insert into article table is failed. ")
 	}
 	sid := strconv.FormatInt(id, 10)
-	stmt.QueryRow()
+	//stmt.QueryRow()
 	res, err := stmt.Exec(sid, art.UserId, art.Accesstory, art.AccesstoryType, art.Text, art.Tag, t, 0, 0, art.Title, art.Thumbnail, art.FileName, art.FileSize)
 	if err != nil {
-		sugar.Log.Error("Insert into article  is Failed.", err)
-		return errors.New("插入数据失败")
+		sugar.Log.Error(" Insert into article  is Failed.", err)
+		return errors.New(" Execute query article table is failed. ")
 	}
 	l, _ := res.RowsAffected()
 	if l == 0 {
-		return errors.New("插入数据失败")
+		return errors.New(" Insert into article table is failed. ")
 	}
 
-
 	// publish msg
-	topic:="/db-online-sync"
-	sugar.Log.Info("发布主题:","/db-online-sync")
-	sugar.Log.Info("发布消息:",value)
-	//判断是否弃用
-	var tp *pubsub.Topic
 	var ok bool
+	topic:="/db-online-sync"
+	var tp *pubsub.Topic
 	ctx := context.Background()
 	if tp,ok = Topicmp["/db-online-sync"];ok == false {
 		tp, err = ipfsNode.PubSub.Join(topic)
@@ -56,21 +53,15 @@ func AddArticle(ipfsNode *ipfsCore.IpfsNode,db *Sql, value string) error {
 			return err
 		}
 		Topicmp[topic] = tp
-
 	}
-	sugar.Log.Info("--- 开始 发布的消息 ---")
-
-	sugar.Log.Info("发布的消息:", value)
-	//================================
-
- //第一步
- 	//查询数据
+	sugar.Log.Info("Publish topic name :","/db-online-sync")
+    //step 1
+ 	//query a article data
 	var dl vo.ArticleResp
-
 	rows, err := db.DB.Query("SELECT * from article where id=?;",sid)
 	if err != nil {
 		sugar.Log.Error("Query data is failed.Err is ", err)
-		return errors.New("同步查询下载列表信息失败")
+		return errors.New(" Sync query article table is failed. ")
 	}
 	for rows.Next() {
 		err = rows.Scan(&dl.Id, &dl.UserId, &dl.Accesstory, &dl.AccesstoryType, &dl.Text, &dl.Tag, &dl.Ptime, &dl.ShareNum, &dl.PlayNum, &dl.Title, &dl.Thumbnail, &dl.FileName, &dl.FileSize)
@@ -79,69 +70,60 @@ func AddArticle(ipfsNode *ipfsCore.IpfsNode,db *Sql, value string) error {
 			return err
 		}
 	}
- 	//
-
- 	//===
-	var s3 Ob
-	s3.Type = "receiveArticleAdd"
-	s3.Data = dl
-
-//
-	jsonBytes, err := json.Marshal(s3)
+	var g PubSyncArticle
+	g.Data = dl
+	g.Type = "receiveArticleAdd"
+	g.FromId=ipfsNode.Identity.String()
+   //struct => json
+	jsonBytes, err := json.Marshal(g)
 	if err != nil {
-		sugar.Log.Info("--- 开始 发布的消息 ---")
+		sugar.Log.Error("Marshal struct => json is failed.")
 	return err
 	}
-	sugar.Log.Info("--- 解析后的数据 返回给 转接服务器 ---",string(jsonBytes))
-
-
-  //============================
+	sugar.Log.Info("Forward the data to the public gateway.data:=",string(jsonBytes))
 	err = tp.Publish(ctx,jsonBytes)
 	if err != nil {
-		sugar.Log.Error("发布错误:", err)
+		sugar.Log.Error("Publish info failed.Err:", err)
 		return err
 	}
-	sugar.Log.Error("---  发布的消息  完成  ---")
-
+	sugar.Log.Info("---  Publish to other device  ---")
+	sugar.Log.Info(" ----  AddArticle Method  End ----")
 	return nil
 }
-type Ob struct {
+type PubSyncArticle struct {
 	Type string `json:"type"`
-
 	Data vo.ArticleResp `json:"data"`
+	FromId string `json:"from"`
 }
 //
 
 func ArticleList(db *Sql, value string) ([]Article, error) {
+	sugar.Log.Info(" ----  ArticleList Method   ----")
 	var art []Article
 	var result vo.ArticleListParams
 	err := json.Unmarshal([]byte(value), &result)
-
 	if err != nil {
-		sugar.Log.Error("Marshal is failed.Err is ", err)
+		sugar.Log.Error("Marshal is failed.Err:", err)
+		return art,err
 	}
-	sugar.Log.Info("Marshal data is  ", result)
-
 	//校验 token 是否 满足
 	claim, b := jwt.JwtVeriyToken(result.Token)
 	if !b {
-		return art, errors.New("token 失效")
+		return art, errors.New(" Token is invalid. ")
 	}
-	sugar.Log.Info("claim := ", claim)
-	sugar.Log.Error("Marshal data is  result := ", result)
-	r := (result.PageNum - 1) * result.PageSize
-	sugar.Log.Info("pageSize := ", result.PageSize)
-	sugar.Log.Info("pageNum := ", result.PageNum)
-	sugar.Log.Info("r := ", r)
 	userid := claim["UserId"]
-	sugar.Log.Info("userid := ", userid)
-
+	r := (result.PageNum - 1) * result.PageSize
+	sugar.Log.Info("r:=", r)
+	sugar.Log.Info("Claim:=", claim)
+	sugar.Log.Info("userid :=", userid)
+	sugar.Log.Info("Marshal data: ", result)
+	sugar.Log.Info("PageNum:= ", result.PageNum)
+	sugar.Log.Info("PageSize:= ", result.PageSize)
 	//这里 要修改   加上 where  参数 判断
-	//todo
 	rows, err := db.DB.Query("SELECT * FROM article where user_id=? limit ?,?",userid,r,result.PageSize)
 	if err != nil {
-		sugar.Log.Error("Query data is failed.Err is ", err)
-		return art, errors.New("查询下载列表信息失败")
+		sugar.Log.Error("Query article table is failed.Err:", err)
+		return art, errors.New(" Query article list is failed.")
 	}
 	for rows.Next() {
 		var dl Article
@@ -157,17 +139,15 @@ func ArticleList(db *Sql, value string) ([]Article, error) {
 		}else {
 			dl.UserId=userId.(string)
 		}
-
-
-		sugar.Log.Info("Query a entire data is ", dl)
+		sugar.Log.Info("Query a data from article once.", dl)
 		art = append(art, dl)
 	}
 	if err != nil {
 		sugar.Log.Error("Query  article  is Failed.", err)
 		return art, err
 	}
-	sugar.Log.Info("Query  article  is successful.")
-
+	sugar.Log.Info("Query  article list is successful.")
+	sugar.Log.Info(" ----  ArticleList  Method  End ----")
 	return art, nil
 
 }

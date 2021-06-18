@@ -400,6 +400,11 @@ func SyncTopicData(ipfsNode *ipfsCore.IpfsNode, db *Sql, value string) error {
 			continue
 		}
 		sugar.Log.Info("-- 解析收到同步消息是:", recieve)
+		if recieve.FromId == peerId {
+			sugar.Log.Info("发送消息的节点  等于 本地节点  continue ")
+			continue
+		}
+
 
 		if recieve.Method == "receiveArticleAdd" {
 			//  添加 文章  入库
@@ -413,7 +418,6 @@ func SyncTopicData(ipfsNode *ipfsCore.IpfsNode, db *Sql, value string) error {
 			}
 			// string
 
-
 			userInfo, err := json.Marshal(syn.Data)
 			if err != nil {
 				sugar.Log.Error("同步添加文章失败:",err)
@@ -425,7 +429,6 @@ func SyncTopicData(ipfsNode *ipfsCore.IpfsNode, db *Sql, value string) error {
 				sugar.Log.Error("同步添加文章失败:",err)
 				continue
 			}
-
 
 			sugar.Log.Info("同步添加文章成功")
 		} else if recieve.Method == "receiveArticlePlayAdd" {

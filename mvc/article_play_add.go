@@ -29,8 +29,6 @@ func ArticlePlayAdd(ipfsNode *ipfsCore.IpfsNode,db *Sql, value string) error {
 		sugar.Log.Error("Query data is failed.Err is ", err)
 		return err
 	}
-	vl, _ := rows.Columns()
-	sugar.Log.Info("vl ", vl)
 
 	for rows.Next() {
 		err = rows.Scan(&dl.Id, &dl.UserId, &dl.Accesstory, &dl.AccesstoryType, &dl.Text, &dl.Tag, &dl.Ptime, &dl.PlayNum, &dl.ShareNum, &dl.Title, &dl.Thumbnail, &dl.FileName, &dl.FileSize)
@@ -38,7 +36,6 @@ func ArticlePlayAdd(ipfsNode *ipfsCore.IpfsNode,db *Sql, value string) error {
 			sugar.Log.Error("Query scan data is failed.The err is ", err)
 			return err
 		}
-
 		sugar.Log.Info("Query a entire data is ", dl)
 	}
 	if dl.Id == "" {
@@ -65,7 +62,6 @@ func ArticlePlayAdd(ipfsNode *ipfsCore.IpfsNode,db *Sql, value string) error {
 		sugar.Log.Error("Update  is failed.The err is ", err)
 		return err
 	}
-	//=========
 
 	// publish msg
 	topic:="/db-online-sync"
@@ -81,14 +77,12 @@ func ArticlePlayAdd(ipfsNode *ipfsCore.IpfsNode,db *Sql, value string) error {
 			return err
 		}
 		Topicmp[topic] = tp
-
 	}
 	rows1, err := db.DB.Query("select * from article where id=?", art.Id)
 	if err != nil {
 		sugar.Log.Error("Query data is failed.Err is ", err)
 		return err
 	}
-
 	for rows1.Next() {
 		err = rows.Scan(&dl.Id, &dl.UserId, &dl.Accesstory, &dl.AccesstoryType, &dl.Text, &dl.Tag, &dl.Ptime, &dl.PlayNum, &dl.ShareNum, &dl.Title, &dl.Thumbnail, &dl.FileName, &dl.FileSize)
 		if err != nil {
@@ -109,7 +103,7 @@ func ArticlePlayAdd(ipfsNode *ipfsCore.IpfsNode,db *Sql, value string) error {
 	var s3 PlayAdd
 	s3.Type = "receiveArticlePlayAdd"
 	s3.Data = dl
-	//
+	s3.FromId=ipfsNode.Identity.String()
 
 	jsonBytes, err := json.Marshal(s3)
 	if err != nil {
@@ -126,8 +120,6 @@ func ArticlePlayAdd(ipfsNode *ipfsCore.IpfsNode,db *Sql, value string) error {
 	}
 	sugar.Log.Error("---  发布的消息  完成  ---")
 
-
-
 	//==
 	err = tp.Publish(ctx,jsonBytes)
 	if err != nil {
@@ -142,8 +134,9 @@ func ArticlePlayAdd(ipfsNode *ipfsCore.IpfsNode,db *Sql, value string) error {
 // share add
 
 type PlayAdd struct {
-	Type string `json:"type"`
+	Type string   `json:"type"`
 	Data  Article `json:"data"`
+	FromId string `json:"from"`
 }
 
 
@@ -254,6 +247,7 @@ func ArticleShareAdd(ipfsNode *ipfsCore.IpfsNode,db *Sql, value string) error {
 	var s3 ShareAdd
 	s3.Type = "receiveArticleShareAdd"
 	s3.Data = dl
+	s3.FromId=ipfsNode.Identity.String()
 	//
 
 	jsonBytes, err := json.Marshal(s3)
@@ -275,6 +269,6 @@ func ArticleShareAdd(ipfsNode *ipfsCore.IpfsNode,db *Sql, value string) error {
 
 type ShareAdd struct {
 	Type string `json:"type"`
-
 	Data  Article `json:"data"`
+	FromId string  `json:"from"`
 }
