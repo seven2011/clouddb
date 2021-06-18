@@ -389,10 +389,11 @@ func SyncTopicData(ipfsNode *ipfsCore.IpfsNode, db *Sql, value string) error {
 
 		sugar.Log.Info("本地节点peerId:", peerId)
 
-		if string(fromId) == peerId {
-			sugar.Log.Info("本地节点peerId  等于 本地节点  continue ")
-			continue
-		}
+
+
+
+
+
 		//
 		var recieve vo.SyncMsgParams
 		err = json.Unmarshal(msg.Data, &recieve)
@@ -401,148 +402,153 @@ func SyncTopicData(ipfsNode *ipfsCore.IpfsNode, db *Sql, value string) error {
 			continue
 		}
 		sugar.Log.Info("---- 解析收到同步消息是---:", recieve)
-		sugar.Log.Info("---- 收到消息的 peerId ---:", string(fromId))
-		sugar.Log.Info("---- 收到消息的 recieve.FromId ---:", recieve.FromId)
-
+		sugar.Log.Info("---- 这是 谁发来的消息 fromId    peerId:", string(fromId))
+		sugar.Log.Info("---- 这是消息内容里面的 recieve.FromId    ---:", recieve.FromId)
 		sugar.Log.Info("---- 本机  peerId ---:", peerId)
+		sugar.Log.Infof("----这是  string(fromId)  %v \n---:", string(fromId))
+		sugar.Log.Info("---- 这是 谁发来的消息 fromId    msg.From:", msg.From)
+		sugar.Log.Infof("----这是  string(fromId)的类型  %T \n---:", string(fromId))
 
-
-		if recieve.FromId == string(fromId) {
+		if string(fromId) != peerId && string(fromId) != recieve.FromId {
 			sugar.Log.Error("发送消息的节点  等于 本地节点  continue ")
-			continue
-		}
-
-		if recieve.Method == "receiveArticleAdd" {
-			//  添加 文章  入库
-			//第一步 解析
-
-			var syn vo.SyncRecieveArticleParams
-			err = json.Unmarshal(msg.Data, &syn)
-			if err != nil {
-				sugar.Log.Error("同步 解析 用户字段 错误:",err)
-				continue
-			}
-			// string
-
-			userInfo, err := json.Marshal(syn.Data)
-			if err != nil {
-				sugar.Log.Error("同步添加文章失败:",err)
-				continue
-			}
-			sugar.Log.Info("解析收到 同步消息的receiveArticleAdd 消息是", recieve.Method)
-			err=db.SyncArticle(string(userInfo))
-			if err!=nil{
-				sugar.Log.Error("同步添加文章失败:",err)
-				continue
-			}
-
-			sugar.Log.Info("同步添加文章成功")
-		} else if recieve.Method == "receiveArticlePlayAdd" {
-			sugar.Log.Info("-----  同步增加播放次数  -----")
-
-			sugar.Log.Info("-----  同步增加播放次数 的数据  -----",value)
-//---
-			//第一步 解析
-
-			var syn vo.SyncRecievePlayParams
-			err = json.Unmarshal(msg.Data, &syn)
-			if err != nil {
-				sugar.Log.Error("同步 解析 用户字段 错误:",err)
-				continue
-			}
-			// string
-			userInfo, err := json.Marshal(syn.Data)
-			if err != nil {
-				sugar.Log.Error("同步 播放 数量 失败:",err)
-				continue
-			}
-			sugar.Log.Info("解析收到 receiveArticlePlayAdd 消息类型是", recieve.Method)
-
-			sugar.Log.Info("解析收到 receiveArticlePlayAdd 消息内容是", string(userInfo))
-
-
-			err=db.SyncArticlePlay(string(userInfo))
-			if err!=nil{
-				sugar.Log.Error("-----  同步增加播放次数 失败  -----",err)
-				continue
-			}
-			//  增加播放次数
-			//var tmp vo.ChatMsgParams
-			//json1, _ := json.Marshal(msg.Data)
-			//json.Unmarshal(json1, &tmp)
-			//
-			//res, err := handleNewMsg(db, tmp)
-			//if err != nil {
-			//	sugar.Log.Error("handle add message failed.", err)
+			//if recieve.FromId == string(fromId) {
+			//	sugar.Log.Error("发送消息的节点  等于 本地节点  continue ")
 			//	continue
 			//}
-			//msg.Data = res
-			//jsonStr, _ := json.Marshal(msg)
-			//clh.HandlerChat(string(jsonStr))
-		} else if recieve.Method == "receiveArticleShareAdd" {
-			//  增加 分享 次数
+			if recieve.Method == "receiveArticleAdd" {
+				//  添加 文章  入库
+				//第一步 解析
 
-			sugar.Log.Info("-----  同步  增加 分享 次数  -----")
+				var syn vo.SyncRecieveArticleParams
+				err = json.Unmarshal(msg.Data, &syn)
+				if err != nil {
+					sugar.Log.Error("同步 解析 用户字段 错误:", err)
+					continue
+				}
+				// string
 
-			sugar.Log.Info("-----  同步  增加 分享 次数  的数据  -----",value)
-			//--
-			//第一步 解析
+				userInfo, err := json.Marshal(syn.Data)
+				if err != nil {
+					sugar.Log.Error("同步添加文章失败:", err)
+					continue
+				}
+				sugar.Log.Info("解析收到 同步消息的receiveArticleAdd 消息是", recieve.Method)
+				err = db.SyncArticle(string(userInfo))
+				if err != nil {
+					sugar.Log.Error("同步添加文章失败:", err)
+					continue
+				}
 
-			var syn vo.SyncRecievePlayParams
-			err = json.Unmarshal(msg.Data, &syn)
-			if err != nil {
-				sugar.Log.Error("同步 解析 用户字段 错误:",err)
+				sugar.Log.Info("同步添加文章成功")
+			} else if recieve.Method == "receiveArticlePlayAdd" {
+				sugar.Log.Info("-----  同步增加播放次数  -----")
+
+				sugar.Log.Info("-----  同步增加播放次数 的数据  -----", value)
+				//---
+				//第一步 解析
+
+				var syn vo.SyncRecievePlayParams
+				err = json.Unmarshal(msg.Data, &syn)
+				if err != nil {
+					sugar.Log.Error("同步 解析 用户字段 错误:", err)
+					continue
+				}
+				// string
+				userInfo, err := json.Marshal(syn.Data)
+				if err != nil {
+					sugar.Log.Error("同步 播放 数量 失败:", err)
+					continue
+				}
+				sugar.Log.Info("解析收到 receiveArticlePlayAdd 消息类型是", recieve.Method)
+
+				sugar.Log.Info("解析收到 receiveArticlePlayAdd 消息内容是", string(userInfo))
+
+				err = db.SyncArticlePlay(string(userInfo))
+				if err != nil {
+					sugar.Log.Error("-----  同步增加播放次数 失败  -----", err)
+					continue
+				}
+				//  增加播放次数
+				//var tmp vo.ChatMsgParams
+				//json1, _ := json.Marshal(msg.Data)
+				//json.Unmarshal(json1, &tmp)
+				//
+				//res, err := handleNewMsg(db, tmp)
+				//if err != nil {
+				//	sugar.Log.Error("handle add message failed.", err)
+				//	continue
+				//}
+				//msg.Data = res
+				//jsonStr, _ := json.Marshal(msg)
+				//clh.HandlerChat(string(jsonStr))
+			} else if recieve.Method == "receiveArticleShareAdd" {
+				//  增加 分享 次数
+
+				sugar.Log.Info("-----  同步  增加 分享 次数  -----")
+
+				sugar.Log.Info("-----  同步  增加 分享 次数  的数据  -----", value)
+				//--
+				//第一步 解析
+
+				var syn vo.SyncRecievePlayParams
+				err = json.Unmarshal(msg.Data, &syn)
+				if err != nil {
+					sugar.Log.Error("同步 解析 用户字段 错误:", err)
+					continue
+				}
+				// string
+				userInfo, err := json.Marshal(syn.Data)
+				if err != nil {
+					sugar.Log.Error("同步 播放 数量 失败:", err)
+					continue
+				}
+				sugar.Log.Info("解析收到 receiveArticlePlayAdd 消息是", recieve.Method)
+
+				//----
+				err = db.SyncArticleShareAdd(string(userInfo))
+				if err != nil {
+					sugar.Log.Error("-----  同步  增加 分享 次数  失败  -----", err)
+					continue
+				}
+				sugar.Log.Info(" 增加 分享 次数")
+
+			} else if recieve.Method == "receiveUserRegister" {
+				// 添加用户 信息
+				sugar.Log.Info("-----  同步  添加用户 信息  -----")
+
+				sugar.Log.Info("-----  同步  添加用户 信息  -----", value)
+
+				//----
+
+				//第一步 解析
+
+				var syn vo.SyncRecieveUsesrParams
+				err = json.Unmarshal(msg.Data, &syn)
+				if err != nil {
+					sugar.Log.Error("同步 解析 用户字段 错误:", err)
+					continue
+				}
+				// string
+				userInfo, err := json.Marshal(syn.Data)
+				if err != nil {
+					sugar.Log.Error("同步 播放 数量 失败:", err)
+					continue
+				}
+				sugar.Log.Info("解析收到 receiveArticlePlayAdd 消息是", recieve.Method)
+
+				//-------
+				err = db.SyncUser(string(userInfo))
+				if err != nil {
+					sugar.Log.Error("----- 添加用户 信息 失败  -----", err)
+					continue
+				}
+				sugar.Log.Info(" 添加用户 信息 成功")
+			} else {
+				sugar.Log.Info("不满足条件，继续:")
 				continue
 			}
-			// string
-			userInfo, err := json.Marshal(syn.Data)
-			if err != nil {
-				sugar.Log.Error("同步 播放 数量 失败:",err)
-				continue
-			}
-			sugar.Log.Info("解析收到 receiveArticlePlayAdd 消息是", recieve.Method)
 
-			//----
-			err=db.SyncArticleShareAdd(string(userInfo))
-			if err!=nil{
-				sugar.Log.Error("-----  同步  增加 分享 次数  失败  -----",err)
-				continue
-			}
-			sugar.Log.Info(" 增加 分享 次数")
-
-
-		} else if recieve.Method == "receiveUserRegister" {
-			// 添加用户 信息
-			sugar.Log.Info("-----  同步  添加用户 信息  -----")
-
-			sugar.Log.Info("-----  同步  添加用户 信息  -----",value)
-
-			//----
-
-			//第一步 解析
-
-			var syn vo.SyncRecieveUsesrParams
-			err = json.Unmarshal(msg.Data, &syn)
-			if err != nil {
-				sugar.Log.Error("同步 解析 用户字段 错误:",err)
-				continue
-			}
-			// string
-			userInfo, err := json.Marshal(syn.Data)
-			if err != nil {
-				sugar.Log.Error("同步 播放 数量 失败:",err)
-				continue
-			}
-			sugar.Log.Info("解析收到 receiveArticlePlayAdd 消息是", recieve.Method)
-
-			//-------
-			err=db.SyncUser(string(userInfo))
-			if err!=nil{
-				sugar.Log.Error("----- 添加用户 信息 失败  -----",err)
-				continue
-			}
-			sugar.Log.Info(" 添加用户 信息 成功")
-		} else {
+		}else {
 			sugar.Log.Info("不满足条件，继续:")
 			continue
 		}
