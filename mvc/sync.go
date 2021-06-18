@@ -383,9 +383,10 @@ func SyncTopicData(ipfsNode *ipfsCore.IpfsNode, db *Sql, value string) error {
 
 		log.Printf("------ 收到的消息的类型 %T\n----",msg.Data)
 		fromId := msg.From
-		sugar.Log.Info("来自谁的消息:", string(fromId))
+		sugar.Log.Info("-----来自谁的消息-----:", string(fromId))
 
 		peerId := ipfsNode.Identity.String()
+
 		sugar.Log.Info("本地节点peerId:", peerId)
 
 		if string(fromId) == peerId {
@@ -399,12 +400,17 @@ func SyncTopicData(ipfsNode *ipfsCore.IpfsNode, db *Sql, value string) error {
 			sugar.Log.Error("解析失败:", err)
 			continue
 		}
-		sugar.Log.Info("-- 解析收到同步消息是:", recieve)
+		sugar.Log.Info("---- 解析收到同步消息是---:", recieve)
+		sugar.Log.Info("---- 收到消息的 peerId ---:", string(fromId))
+		sugar.Log.Info("---- 收到消息的 recieve.FromId ---:", recieve.FromId)
+
+		sugar.Log.Info("---- 本机  peerId ---:", peerId)
+
+
 		if recieve.FromId == peerId {
-			sugar.Log.Info("发送消息的节点  等于 本地节点  continue ")
+			sugar.Log.Error("发送消息的节点  等于 本地节点  continue ")
 			continue
 		}
-
 
 		if recieve.Method == "receiveArticleAdd" {
 			//  添加 文章  入库

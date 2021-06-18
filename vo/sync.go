@@ -21,7 +21,7 @@ type SyncParams struct {
 type SyncMsgParams struct {
 	Method string           `json:"type"`
 	Data   interface{}     `json:"data"`
-	FromId string   `json:"fromId"`
+	FromId string         `json:"from"`
 }
 
 //用户
