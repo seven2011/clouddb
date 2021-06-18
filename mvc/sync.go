@@ -407,7 +407,7 @@ func SyncTopicData(ipfsNode *ipfsCore.IpfsNode, db *Sql, value string) error {
 		sugar.Log.Info("---- 本机  peerId ---:", peerId)
 
 
-		if recieve.FromId == peerId {
+		if recieve.FromId == string(fromId) {
 			sugar.Log.Error("发送消息的节点  等于 本地节点  continue ")
 			continue
 		}
