@@ -105,6 +105,7 @@ func AddUser(ipfsNode *ipfsCore.IpfsNode,db *Sql, value string) error {
 	var s3 UserAd
 	s3.Type = "receiveUserRegister"
 	s3.Data = dl
+	s3.FromId=ipfsNode.Identity.String()
 	//
 
 	jsonBytes, err := json.Marshal(s3)
@@ -113,10 +114,7 @@ func AddUser(ipfsNode *ipfsCore.IpfsNode,db *Sql, value string) error {
 		return err
 	}
 	sugar.Log.Info("--- 解析后的数据 返回给 转接服务器 ---",string(jsonBytes))
-
-
-	//============================
-
+	sugar.Log.Info("--- 这是 节点的id 信息 ---",ipfsNode.Identity.String())
 
 //====
 
@@ -135,6 +133,8 @@ type UserAd struct {
 	Type string `json:"type"`
 
 	Data SysUser `json:"data"`
+
+	FromId string `json:"from"`
 }
 
 func FindIsExistUser(db *Sql, user SysUser) (int64, error) {
