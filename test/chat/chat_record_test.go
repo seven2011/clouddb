@@ -2,9 +2,10 @@ package chat
 
 import (
 	"database/sql"
-	"github.com/cosmopolitann/clouddb/sugar"
 	"log"
 	"testing"
+
+	"github.com/cosmopolitann/clouddb/sugar"
 )
 
 func TestChatRecord(t *testing.T) {
@@ -20,9 +21,9 @@ func TestChatRecord(t *testing.T) {
 	sugar.Log.Info("Db value is ", d)
 	e := d.Ping()
 	log.Println(" Ping is failed,err:=", e)
-	ss := Testdb(d)
-	value := `{"Id":"2342","RecordName":"sfwer","RecordTopic":"20","RecordImg":"123","CreateBy":"1","LastMsg":"sfs"}
-`
-	resp := ss.AddChatRecord(value)
-	log.Println("这是返回的数据 =", resp)
+	// 	ss := Testdb(d)
+	// 	value := `{"Id":"2342","RecordName":"sfwer","RecordTopic":"20","RecordImg":"123","CreateBy":"1","LastMsg":"sfs"}
+	// `
+	// 	resp := ss.AddChatRecord(value)
+	// 	log.Println("这是返回的数据 =", resp)
 }

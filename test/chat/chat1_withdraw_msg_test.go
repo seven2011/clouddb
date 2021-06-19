@@ -1,55 +1,47 @@
 package chat
 
-// import (
-// 	"database/sql"
-// 	"encoding/json"
-// 	"testing"
+import (
+	"database/sql"
+	"encoding/json"
+	"testing"
 
-// 	"github.com/cosmopolitann/clouddb/sugar"
-// 	"github.com/cosmopolitann/clouddb/vo"
+	"github.com/cosmopolitann/clouddb/sugar"
+	"github.com/cosmopolitann/clouddb/vo"
 
-// 	"github.com/cosmopolitann/clouddb/jwt"
-// 	_ "github.com/mattn/go-sqlite3"
+	"github.com/cosmopolitann/clouddb/jwt"
+	_ "github.com/mattn/go-sqlite3"
+)
 
-// 	shell "github.com/ipfs/go-ipfs-api"
-// )
+func TestChatWithdrawMsg(t *testing.T) {
+	sugar.InitLogger()
+	sugar.Log.Info("~~~~  Connecting to the sqlite3 database. ~~~~")
+	//The path is default.
+	sugar.Log.Info("Start Open Sqlite3 Database.")
+	d, err := sql.Open("sqlite3", "/Users/apple/Projects/clouddb/tables/foo.db")
+	if err != nil {
+		panic(err)
+	}
+	sugar.Log.Info("Open Sqlite3 is ok.")
+	sugar.Log.Info("Db value is ", d)
+	err = d.Ping()
+	if err != nil {
+		panic(err)
+	}
 
-// func TestChatWithdrawMsg(t *testing.T) {
-// 	sugar.InitLogger()
-// 	sugar.Log.Info("~~~~  Connecting to the sqlite3 database. ~~~~")
-// 	//The path is default.
-// 	sugar.Log.Info("Start Open Sqlite3 Database.")
-// 	d, err := sql.Open("sqlite3", "/data/projects/clouddb/tables/foo.db")
-// 	if err != nil {
-// 		panic(err)
-// 	}
-// 	sugar.Log.Info("Open Sqlite3 is ok.")
-// 	sugar.Log.Info("Db value is ", d)
-// 	err = d.Ping()
-// 	if err != nil {
-// 		panic(err)
-// 	}
+	token, _ := jwt.GenerateToken("411647506288480256", 30*24*60*60)
 
-// 	token, _ := jwt.GenerateToken("409330202166956089", 30*24*60*60)
+	req := vo.ChatWithdrawMsgParams{
+		MsgId:  "412578662399873024",
+		FromId: "411647506288480256",
+		ToId:   "411642059200401408",
+		Token:  token,
+	}
 
-// 	req := vo.ChatMsgParams{
-// 		Id:          "411620972894883840",
-// 		RecordId:    "409330202166956089_323733228975432704",
-// 		ContentType: 2,
-// 		Content:     "content 22222222",
-// 		FromId:      "409330202166956089",
-// 		ToId:        "323733228975432704",
-// 		IsWithdraw:  0,
-// 		IsRead:      0,
-// 		Ptime:       1623810928,
-// 		Token:       token,
-// 	}
-// 	value, _ := json.Marshal(req)
+	value, _ := json.Marshal(req)
 
-// 	ss := Testdb(d)
-// 	sh := shell.NewShell("localhost:5001")
+	ss := Testdb(d)
 
-// 	resp := ss.ChatWithdrawMsg(sh, string(value))
-// 	t.Log("获取返回的数据 :=  ", resp)
+	resp := ss.ChatWithdrawMsg(nil, string(value))
+	t.Log("获取返回的数据 :=  ", resp)
 
-// }
+}

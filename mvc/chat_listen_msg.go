@@ -75,7 +75,7 @@ func ChatListenMsg(ipfsNode *ipfsCore.IpfsNode, db *Sql, token string, clh vo.Ch
 
 			if msg.Type == vo.MSG_TYPE_RECORD {
 
-				var tmp vo.ChatRecordParams
+				var tmp vo.ChatSwapRecordParams
 				json1, _ := json.Marshal(msg.Data)
 				json.Unmarshal(json1, &tmp)
 
@@ -98,7 +98,7 @@ func ChatListenMsg(ipfsNode *ipfsCore.IpfsNode, db *Sql, token string, clh vo.Ch
 
 			} else if msg.Type == vo.MSG_TYPE_NEW {
 
-				var tmp vo.ChatMsgParams
+				var tmp vo.ChatSwapMsgParams
 				json1, _ := json.Marshal(msg.Data)
 				json.Unmarshal(json1, &tmp)
 
@@ -120,7 +120,7 @@ func ChatListenMsg(ipfsNode *ipfsCore.IpfsNode, db *Sql, token string, clh vo.Ch
 
 			} else if msg.Type == vo.MSG_TYPE_WITHDRAW {
 
-				var tmp vo.ChatMsgParams
+				var tmp vo.ChatSwapWithdrawMsgParams
 				json1, _ := json.Marshal(msg.Data)
 				json.Unmarshal(json1, &tmp)
 
@@ -149,119 +149,161 @@ func ChatListenMsg(ipfsNode *ipfsCore.IpfsNode, db *Sql, token string, clh vo.Ch
 }
 
 // handleAddRecordMsg 创建会话
-func handleAddRecordMsg(db *Sql, msg vo.ChatRecordParams) (vo.ChatRecordParams, error) {
+func handleAddRecordMsg(db *Sql, msg vo.ChatSwapRecordParams) (vo.ChatRecordInfo, error) {
 
-	var record vo.ChatRecordParams
-	err := db.DB.QueryRow("SELECT id, name, img, from_id, to_id, ptime, last_msg FROM chat_record WHERE id = ?", msg.Id).Scan(&record.Id, &record.Name, &record.Img, &record.FromId, &record.ToId, &record.Ptime, &record.LastMsg)
+	ret := vo.ChatRecordInfo{
+		Id:      msg.Id,
+		Name:    msg.Name,
+		Img:     msg.Img,
+		FromId:  msg.FromId,
+		Toid:    msg.ToId,
+		Ptime:   msg.Ptime,
+		LastMsg: msg.LastMsg,
+
+		UserName: "",
+		Phone:    "",
+		PeerId:   "",
+		NickName: "",
+		Sex:      0,
+	}
+
+	var ptime int64
+	err := db.DB.QueryRow("SELECT ptime FROM chat_record WHERE id = ?", msg.Id).Scan(&ptime)
 
 	switch err {
 	case bsql.ErrNoRows:
-		// swap from_id and to_id
-		msg.FromId, msg.ToId = msg.ToId, msg.FromId
-		res, err := db.DB.Exec("INSERT INTO chat_record (id, name, img, from_id, to_id, ptime, last_msg) values (?, ?, ?, ?, ?, ?, ?)",
-			msg.Id, msg.Name, msg.Img, msg.FromId, msg.ToId, msg.Ptime, msg.LastMsg)
+		res, err := db.DB.Exec("INSERT INTO chat_record (id, name, from_id, to_id, ptime, last_msg) values (?, ?, ?, ?, ?, ?)",
+			msg.Id, msg.Name, msg.FromId, msg.ToId, msg.Ptime, msg.LastMsg)
 		if err != nil {
-			return msg, err
+			return ret, err
 		}
 		_, err = res.LastInsertId()
 		if err != nil {
-			return msg, err
+			return ret, err
 		}
 
-		return msg, nil
+		// 查询对方信息
+		err = db.DB.QueryRow("SELECT peer_id, name, phone, sex, nickname, img FROM cloud_user WHERE id = ?", msg.FromId).Scan(&ret.PeerId, &ret.UserName, &ret.Phone, &ret.Sex, &ret.NickName, &ret.Img)
+		if err != nil {
+			sugar.Log.Error("Query Peer User Failed. Err:", err)
+			return ret, err
+		}
+
+		return ret, nil
 	case nil:
-		if record.Ptime > msg.Ptime {
-			res, err := db.DB.Exec("UPDATE chat_record SET ptime = ?, last_msg = ? WHERE id = ?", msg.Ptime, msg.LastMsg, msg.Id)
+		if ptime > msg.Ptime {
+			res, err := db.DB.Exec("UPDATE chat_record SET from_id, to_id, ptime = ?, last_msg = ? WHERE id = ?", msg.FromId, msg.ToId, msg.Ptime, msg.LastMsg, msg.Id)
 			if err != nil {
-				return msg, err
+				return ret, err
 			}
 			num, err := res.RowsAffected()
 			if err != nil {
-				return msg, err
+				return ret, err
 			} else if num == 0 {
-				return msg, err
+				return ret, err
 			}
 		}
-		return msg, vo.ErrorRowIsExists
+		return ret, vo.ErrorRowIsExists
 
 	default:
-		return msg, err
+		return ret, err
 	}
 
 }
 
 // handleWithdrawMsg 撤销消息
-func handleWithdrawMsg(db *Sql, msg vo.ChatMsgParams) (vo.ChatMsgParams, error) {
-	var cMsg vo.ChatMsgParams
+func handleWithdrawMsg(db *Sql, msg vo.ChatSwapWithdrawMsgParams) (ChatMsg, error) {
 
-	err := db.DB.QueryRow("SELECT id, content_type, content, from_id, to_id, ptime, is_with_draw, is_read, record_id FROM chat_msg WHERE id = ?", msg.Id).Scan(&cMsg.Id, &cMsg.ContentType, &cMsg.Content, &cMsg.FromId, &cMsg.ToId, &cMsg.Ptime, &cMsg.IsWithdraw, &cMsg.IsRead, &cMsg.RecordId)
+	ret := ChatMsg{
+		Id:     msg.MsgId,
+		FromId: msg.FromId,
+		ToId:   msg.ToId,
+	}
+
+	err := db.DB.QueryRow("SELECT id, content_type, content, from_id, to_id, ptime, is_with_draw, is_read, record_id FROM chat_msg WHERE id = ?", ret.Id).Scan(&ret.Id, &ret.ContentType, &ret.Content, &ret.FromId, &ret.ToId, &ret.Ptime, &ret.IsWithdraw, &ret.IsRead, &ret.RecordId)
 
 	switch err {
 	case bsql.ErrNoRows:
-		return msg, err
+		return ret, err
 	case nil:
-		res, err := db.DB.Exec("UPDATE chat_msg SET is_with_draw = 1 WHERE id = ? and from_id = ?", msg.Id, msg.FromId)
+		res, err := db.DB.Exec("UPDATE chat_msg SET is_with_draw = 1 WHERE id = ? and from_id = ?", ret.Id, ret.FromId)
 		if err != nil {
-			return msg, err
+			return ret, err
 		}
 		num, err := res.RowsAffected()
 		if err != nil {
-			return msg, err
+			return ret, err
 		} else if num == 0 {
-			return msg, vo.ErrorAffectZero
+			return ret, vo.ErrorAffectZero
 		}
 
-		cMsg.IsWithdraw = 1
-		return cMsg, nil
+		ret.IsWithdraw = 1
+		return ret, nil
 	default:
-		return msg, err
+		return ret, err
 	}
 }
 
 // handleNewMsg 新增消息
-func handleNewMsg(db *Sql, msg vo.ChatMsgParams) (vo.ChatMsgParams, error) {
+func handleNewMsg(db *Sql, msg vo.ChatSwapMsgParams) (ChatMsg, error) {
 
-	var cMsg vo.ChatMsgParams
-	var count int64
+	var recordId string
 
-	err := db.DB.QueryRow("SELECT count(id) WHERE id = ?", msg.Id).Scan(&count)
+	ret := ChatMsg{
+		Id:          msg.Id,
+		ContentType: msg.ContentType,
+		Content:     msg.Content,
+		FromId:      msg.FromId,
+		ToId:        msg.ToId,
+		Ptime:       msg.Ptime,
+		IsWithdraw:  msg.IsWithdraw,
+		IsRead:      msg.IsRead,
+		RecordId:    msg.RecordId,
+	}
 
-	if err == bsql.ErrNoRows {
-		// swap from_id and to_id
-		res, err := db.DB.Exec("INSERT INTO chat_record (id, name, img, from_id, to_id, ptime, last_msg) values (?, ?, ?, ?, ?, ?, ?)",
-			msg.RecordId, "", "", msg.ToId, msg.FromId, msg.Ptime, msg.Content)
+	// 检查房间是否存在
+	err := db.DB.QueryRow("SELECT id FROM chat_record WHERE id = ?", ret.RecordId).Scan(&recordId)
+	switch err {
+	case bsql.ErrNoRows:
+		res, err := db.DB.Exec("INSERT INTO chat_record (id, name, from_id, to_id, ptime, last_msg) values (?, ?, ?, ?, ?, ?)",
+			ret.RecordId, "...", ret.FromId, ret.ToId, ret.Ptime, ret.Content)
 		if err != nil {
-			return msg, err
+			return ret, err
 		}
 		_, err = res.LastInsertId()
 		if err != nil {
-			return msg, err
+			return ret, err
 		}
+	case nil:
+		// nothing
+	default:
+		return ret, err
 	}
 
-	err = db.DB.QueryRow("SELECT id, content_type, content, from_id, to_id, ptime, is_with_draw, is_read, record_id FROM chat_msg WHERE id = ?", msg.Id).Scan(&cMsg.Id, &cMsg.ContentType, &cMsg.Content, &cMsg.FromId, &cMsg.ToId, &cMsg.Ptime, &cMsg.IsWithdraw, &cMsg.IsRead, &cMsg.RecordId)
+	// 检查消息是否重复
+	err = db.DB.QueryRow("SELECT id, content_type, content, from_id, to_id, ptime, is_with_draw, is_read, record_id FROM chat_msg WHERE id = ?", ret.Id).Scan(&ret.Id, &ret.ContentType, &ret.Content, &ret.FromId, &ret.ToId, &ret.Ptime, &ret.IsWithdraw, &ret.IsRead, &ret.RecordId)
 	switch err {
 	case bsql.ErrNoRows:
 		res, err := db.DB.Exec("INSERT INTO chat_msg (id, content_type, content, from_id, to_id, ptime, is_with_draw, is_read, record_id) values (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-			msg.Id, msg.ContentType, msg.Content, msg.FromId, msg.ToId, msg.Ptime, msg.IsWithdraw, msg.IsRead, msg.RecordId)
+			ret.Id, ret.ContentType, ret.Content, ret.FromId, ret.ToId, ret.Ptime, ret.IsWithdraw, ret.IsRead, ret.RecordId)
 		if err != nil {
-			return msg, err
+			return ret, err
 		}
 		_, err = res.LastInsertId()
 		if err != nil {
-			return msg, err
+			return ret, err
 		}
 
-		_, err = db.DB.Exec("UPDATE chat_record SET last_msg = ? WHERE id = ?", msg.Content, msg.RecordId)
+		_, err = db.DB.Exec("UPDATE chat_record SET last_msg = ?, ptime = ? WHERE id = ?", ret.Content, ret.Ptime, ret.RecordId)
 		if err != nil {
-			return msg, err
+			return ret, err
 		}
 
-		return msg, nil
+		return ret, nil
 
 	case nil:
-		return msg, vo.ErrorRowIsExists
+		return ret, vo.ErrorRowIsExists
 	default:
-		return msg, err
+		return ret, err
 	}
 }
