@@ -403,10 +403,19 @@ func SyncTopicData(ipfsNode *ipfsCore.IpfsNode, db *Sql, value string) error {
 		sugar.Log.Infof("----这是  string(fromId)  %v \n---:", string(fromId))
 		sugar.Log.Info("---- 这是 谁发来的消息 fromId    msg.From:", msg.From)
 		sugar.Log.Infof("----这是  string(fromId)的类型  %T \n---:", string(fromId))
-		wayId:="12D3KooWDoBhdQwGT6oq2EG8rsduRCmyTZtHaBCowFZ7enwP4i8J"
-			if string(fromId)==wayId{
 
+		wayId:="12D3KooWDoBhdQwGT6oq2EG8rsduRCmyTZtHaBCowFZ7enwP4i8J"
+		sugar.Log.Info("----公共网关节点 id =---:", wayId)
+
+		if string(fromId)==wayId{
+				sugar.Log.Info("---- 因为 公共网关 节点id 等于 i8j 所以满足条件进来 ---:", peerId)
+
+				
 				if peerId==recieve.FromId{
+
+					sugar.Log.Info("---- 因为 本地 节点id 等于 recieve fromId  所以不满足 ---:")
+					sugar.Log.Info("---- 因为 本地 节点id  ---",peerId)
+					sugar.Log.Info("---- 因为 本地 recieve.FromId  ---",recieve.FromId)
 
 					continue
 				}else {
