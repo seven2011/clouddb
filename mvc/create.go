@@ -20,10 +20,8 @@ func (db *Sql) Ping() error {
 	} //|
 	return err //|
 }
+
 //---------------------------------------------------|
-
-
-
 
 /*
 ------------------------------------------------------
@@ -33,8 +31,8 @@ func (db *Sql) Ping() error {
 
 //  用户注册
 
-func (db *Sql) UserRegister(ipfsNode *ipfsCore.IpfsNode,user string) string {
-	err := AddUser(ipfsNode,db, user)
+func (db *Sql) UserRegister(ipfsNode *ipfsCore.IpfsNode, user string) string {
+	err := AddUser(ipfsNode, db, user)
 	//返回封装成方法
 	// 返回的时候 要改东西
 	if err != nil {
@@ -290,8 +288,8 @@ func (db *Sql) CloudSearch(dInfo string) string {
 
 //  添加 朋友圈文章
 
-func (db *Sql) ArticleAdd(ipfsNode *ipfsCore.IpfsNode,dInfo string) string {
-	e := AddArticle(ipfsNode,db, dInfo)
+func (db *Sql) ArticleAdd(ipfsNode *ipfsCore.IpfsNode, dInfo string) string {
+	e := AddArticle(ipfsNode, db, dInfo)
 	if e != nil {
 		return vo.ResponseErrorMsg(400, e.Error())
 	}
@@ -323,9 +321,9 @@ func (db *Sql) ArticleCategory(dInfo string) string {
 
 // 文章增加播放次数
 
-func (db *Sql) ArticlePlayAdd(ipfsNode *ipfsCore.IpfsNode,dInfo string) string {
+func (db *Sql) ArticlePlayAdd(ipfsNode *ipfsCore.IpfsNode, dInfo string) string {
 
-	e := ArticlePlayAdd(ipfsNode,db, dInfo)
+	e := ArticlePlayAdd(ipfsNode, db, dInfo)
 	if e != nil {
 		return vo.ResponseErrorMsg(400, e.Error())
 	}
@@ -335,9 +333,9 @@ func (db *Sql) ArticlePlayAdd(ipfsNode *ipfsCore.IpfsNode,dInfo string) string {
 
 // 增加播放量
 
-func (db *Sql) ArticleShareAdd(ipfsNode *ipfsCore.IpfsNode,dInfo string) string {
+func (db *Sql) ArticleShareAdd(ipfsNode *ipfsCore.IpfsNode, dInfo string) string {
 
-	e := ArticleShareAdd(ipfsNode,db, dInfo)
+	e := ArticleShareAdd(ipfsNode, db, dInfo)
 	if e != nil {
 		return vo.ResponseErrorMsg(400, e.Error())
 	}
@@ -428,17 +426,17 @@ func (db *Sql) ArticleRecommend(dInfo string) string {
 ------------------------------------------------------
 */
 
-//保存消息
+// //保存消息
 
-func (db *Sql) ChatAddMsg(dInfo string) string {
+// func (db *Sql) ChatAddMsg(dInfo string) string {
 
-	e := AddChatMsg(db, dInfo)
-	if e != nil {
-		return vo.ResponseErrorMsg(400, e.Error())
-	}
+// 	e := AddChatMsg(db, dInfo)
+// 	if e != nil {
+// 		return vo.ResponseErrorMsg(400, e.Error())
+// 	}
 
-	return vo.ResponseSuccess()
-}
+// 	return vo.ResponseSuccess()
+// }
 
 //获取 消息 分页
 
@@ -463,16 +461,16 @@ func (db *Sql) ChatMsgDel(dInfo string) string {
 	return vo.ResponseSuccess()
 }
 
-// 消息记录 新增
+// // 消息记录 新增
 
-func (db *Sql) ChatRecordAdd(dInfo string) string {
+// func (db *Sql) ChatRecordAdd(dInfo string) string {
 
-	recordId, e := ChatRecordAdd(db, dInfo)
-	if e != nil {
-		return vo.ResponseErrorMsg(400, e.Error())
-	}
-	return vo.ResponseSuccess(recordId)
-}
+// 	recordId, e := ChatRecordAdd(db, dInfo)
+// 	if e != nil {
+// 		return vo.ResponseErrorMsg(400, e.Error())
+// 	}
+// 	return vo.ResponseSuccess(recordId)
+// }
 
 // 获取消息记录列表
 
@@ -496,28 +494,28 @@ func (db *Sql) ChatRecordDel(dInfo string) string {
 	return vo.ResponseSuccess()
 }
 
-//  撤回消息
+// //  撤回消息
 
-func (db *Sql) ChatMsgWithDraw(dInfo string) string {
+// func (db *Sql) ChatMsgWithDraw(dInfo string) string {
 
-	e := ChatWithDraw(db, dInfo)
-	if e != nil {
-		return vo.ResponseErrorMsg(400, e.Error())
-	}
-	return vo.ResponseSuccess()
-}
+// 	e := ChatWithDraw(db, dInfo)
+// 	if e != nil {
+// 		return vo.ResponseErrorMsg(400, e.Error())
+// 	}
+// 	return vo.ResponseSuccess()
+// }
 
-//  聊天记录
+// //  聊天记录
 
-func (db *Sql) AddChatRecord(dInfo string) string {
+// func (db *Sql) AddChatRecord(dInfo string) string {
 
-	e := AddChatRecord(db, dInfo)
-	if e != nil {
-		return vo.ResponseErrorMsg(400, e.Error())
-	}
+// 	e := AddChatRecord(db, dInfo)
+// 	if e != nil {
+// 		return vo.ResponseErrorMsg(400, e.Error())
+// 	}
 
-	return vo.ResponseSuccess()
-}
+// 	return vo.ResponseSuccess()
+// }
 
 // ChatCreateRecord  创建会话
 func (db *Sql) ChatCreateRecord(ipfsNode *ipfsCore.IpfsNode, msg string) string {
@@ -576,14 +574,10 @@ func (db *Sql) ChatListenMsg(ipfsNode *ipfsCore.IpfsNode, token string, clh vo.C
 func (db *Sql) SyncUser(dInfo string) error {
 
 	e := SyncUser(db, dInfo)
-	return  e
+	return e
 }
 
-
-
 //
-
-
 
 // 同步文章点赞    article_like表
 
@@ -597,6 +591,7 @@ func (db *Sql) SyncArticleCancelLike(dInfo string) string {
 	}
 	return vo.ResponseSuccess()
 }
+
 //----------------------------------------------------------
 
 //  同步 用户信息
@@ -604,7 +599,7 @@ func (db *Sql) SyncArticleCancelLike(dInfo string) string {
 func (db *Sql) SyncUserRegister(dInfo string) error {
 
 	e := SyncUserRegister(db, dInfo)
-   return e
+	return e
 }
 
 // 同步 article  表数据
@@ -627,24 +622,21 @@ func (db *Sql) SyncArticlePlay(dInfo string) error {
 
 func (db *Sql) SyncArticleShareAdd(dInfo string) error {
 	e := SyncArticleShareAdd(db, dInfo)
-	return  e
+	return e
 }
 
 //  同步数据
 
-func (db *Sql) SyncData(ipfsNode *ipfsCore.IpfsNode,dInfo string) string {
+func (db *Sql) SyncData(ipfsNode *ipfsCore.IpfsNode, dInfo string) string {
 	sugar.Log.Info("---- 开始 同步 消息 ------")
-	e := SyncTopicData(ipfsNode,db, dInfo)
+	e := SyncTopicData(ipfsNode, db, dInfo)
 	if e != nil {
 		return vo.ResponseErrorMsg(400, e.Error())
 	}
 	return vo.ResponseSuccess()
 }
 
-
-
 //---------------------------------------------
-
 
 /*
 ------------------------------------------------------
@@ -657,10 +649,6 @@ func (db *Sql) SyncData(ipfsNode *ipfsCore.IpfsNode,dInfo string) string {
 |                       Other                        |
 ------------------------------------------------------
 */
-
-
-
-
 
 //convert
 

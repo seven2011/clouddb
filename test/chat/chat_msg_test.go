@@ -3,10 +3,11 @@ package chat
 import (
 	"database/sql"
 	"fmt"
+	"testing"
+
 	"github.com/cosmopolitann/clouddb/mvc"
 	"github.com/cosmopolitann/clouddb/sugar"
 	_ "github.com/mattn/go-sqlite3"
-	"testing"
 )
 
 func TestChatMsg(t *testing.T) {
@@ -22,11 +23,11 @@ func TestChatMsg(t *testing.T) {
 	sugar.Log.Info("Db value is ", d)
 	e := d.Ping()
 	fmt.Println(" Ping is failed,err:=", e)
-	ss := Testdb(d)
-	value := `{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI0MDkzMzAyMDIxNjY5NTYwMzIiLCJleHAiOjE2MjU4ODk0NzZ9.OzEFVuB2FcRYurZiii1fpiAqX2KcesfS5arJfVJZQOI","id":"4324","contentType":2,"content":"20","fromId":"4101990412347023361","toId":"4093302021669560321","isWithdraw":2,"isRead":3,"recordId":"1101"}
-`
-	resp := ss.ChatAddMsg(value)
-	t.Log("获取返回的数据 :=  ", resp)
+	// 	ss := Testdb(d)
+	// 	value := `{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI0MDkzMzAyMDIxNjY5NTYwMzIiLCJleHAiOjE2MjU4ODk0NzZ9.OzEFVuB2FcRYurZiii1fpiAqX2KcesfS5arJfVJZQOI","id":"4324","contentType":2,"content":"20","fromId":"4101990412347023361","toId":"4093302021669560321","isWithdraw":2,"isRead":3,"recordId":"1101"}
+	// `
+	// 	resp := ss.ChatAddMsg(value)
+	// 	t.Log("获取返回的数据 :=  ", resp)
 
 }
 func Testdb(sq *sql.DB) mvc.Sql {

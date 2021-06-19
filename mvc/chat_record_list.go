@@ -2,6 +2,7 @@ package mvc
 
 import (
 	"encoding/json"
+
 	"github.com/cosmopolitann/clouddb/jwt"
 	"github.com/cosmopolitann/clouddb/sugar"
 	"github.com/cosmopolitann/clouddb/vo"
@@ -13,6 +14,9 @@ func ChatRecordList(db *Sql, value string) ([]vo.ChatRecordRespListParams, error
 	var link []vo.ChatRecordRespListParams
 
 	var result vo.ChatRecordListParams
+
+	sugar.Log.Debug("Request Param: ", value)
+
 	err := json.Unmarshal([]byte(value), &result)
 
 	if err != nil {
@@ -36,7 +40,7 @@ func ChatRecordList(db *Sql, value string) ([]vo.ChatRecordRespListParams, error
 	sugar.Log.Info("claim := ", claim)
 	//userId:=claim["UserId"]
 
-	rows, err := db.DB.Query("SELECT a.*,b.name as username,b.nickname,b.peer_id,b.phone,b.sex from chat_record as a LEFT JOIN sys_user as b on a.from_id=b.id where a.from_id=?", result.FromId)
+	rows, err := db.DB.Query("SELECT a.id, a.name, a.from_id, a.ptime, a.last_msg, a.to_id, b.name as username, b.nickname, b.peer_id, b.phone, b.sex, b.img from chat_record as a LEFT JOIN sys_user as b on a.from_id=b.id where a.from_id=?", result.FromId)
 	if err != nil {
 		sugar.Log.Error("Query data is failed.Err is ", err)
 		//	return arrfile, errors.New("查询下载列表信息失败")
@@ -50,7 +54,7 @@ func ChatRecordList(db *Sql, value string) ([]vo.ChatRecordRespListParams, error
 			Sex      int64  `json:"sex"
 		*/
 		var dl vo.ChatRecordInfo
-		err = rows.Scan(&dl.Id, &dl.Name, &dl.Img, &dl.FromId, &dl.Ptime, &dl.LastMsg, &dl.Toid, &dl.UserName, &dl.Phone, &dl.PeerId, &dl.NickName, &dl.Sex)
+		err = rows.Scan(&dl.Id, &dl.Name, &dl.FromId, &dl.Ptime, &dl.LastMsg, &dl.Toid, &dl.UserName, &dl.NickName, &dl.PeerId, &dl.Phone, &dl.Sex, &dl.Img)
 		if err != nil {
 			sugar.Log.Error("Query scan data is failed.The err is ", err)
 			return link, err
@@ -71,7 +75,7 @@ func ChatRecordList(db *Sql, value string) ([]vo.ChatRecordRespListParams, error
 	for _, v := range crd {
 		sugar.Log.Info("  查看  to  id 的信息 v ------ ", v)
 
-		rows, err := db.DB.Query("SELECT a.*,b.name as username,b.nickname,b.peer_id,b.phone,b.sex from chat_record as a LEFT JOIN sys_user as b on a.to_id=b.id where a.to_id=?", v.Toid)
+		rows, err := db.DB.Query("SELECT a.id, a.name, a.from_id, a.ptime, a.last_msg, a.to_id, b.name as username,b.nickname, b.peer_id, b.phone, b.sex, b.img from chat_record as a LEFT JOIN sys_user as b on a.to_id=b.id where a.from_id = ? and a.to_id=?", v.FromId, v.Toid)
 		if err != nil {
 			sugar.Log.Error("Query data is failed.Err is ", err)
 			//	return arrfile, errors.New("查询下载列表信息失败")
@@ -85,7 +89,7 @@ func ChatRecordList(db *Sql, value string) ([]vo.ChatRecordRespListParams, error
 				Sex      int64  `json:"sex"
 			*/
 			var dl vo.ChatRecordInfo
-			err = rows.Scan(&dl.Id, &dl.Name, &dl.Img, &dl.FromId, &dl.Ptime, &dl.LastMsg, &dl.Toid, &dl.UserName, &dl.Phone, &dl.PeerId, &dl.NickName, &dl.Sex)
+			err = rows.Scan(&dl.Id, &dl.Name, &dl.FromId, &dl.Ptime, &dl.LastMsg, &dl.Toid, &dl.UserName, &dl.Phone, &dl.PeerId, &dl.NickName, &dl.Sex, &dl.Img)
 			if err != nil {
 				sugar.Log.Error("Query scan data is failed.The err is ", err)
 				return link, err

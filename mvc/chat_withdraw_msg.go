@@ -15,7 +15,11 @@ import (
 
 func ChatWithdrawMsg(ipfsNode *ipfsCore.IpfsNode, db *Sql, value string) error {
 
+	// 接收参数
 	var msg vo.ChatWithdrawMsgParams
+
+	sugar.Log.Debug("Request Param:", value)
+
 	err := json.Unmarshal([]byte(value), &msg)
 	if err != nil {
 		sugar.Log.Error("Marshal is failed.Err is ", err)
@@ -29,23 +33,19 @@ func ChatWithdrawMsg(ipfsNode *ipfsCore.IpfsNode, db *Sql, value string) error {
 		return errors.New("token 失效")
 	}
 	sugar.Log.Info("claim := ", claim)
-	userid := claim["UserId"].(string)
+	userId := claim["UserId"].(string)
 
-	if userid != msg.FromId {
+	if userId != msg.FromId {
 		sugar.Log.Error("token is not msg.from_id")
 		return errors.New("token is not msg.from_id")
 	}
 
-	msg.Token = ""
-
 	// 查询会话是否存在
-	var recordID string
-	var toID string
 	var isWithdraw int64
 
-	err = db.DB.QueryRow("SELECT to_id, is_with_draw, record_id FROM chat_msg WHERE id = ? and from_id = ?", msg.MsgId, msg.FromId).Scan(&toID, &isWithdraw, &recordID)
+	err = db.DB.QueryRow("SELECT is_with_draw FROM chat_msg WHERE id = ? and from_id = ?", msg.MsgId, msg.FromId).Scan(&isWithdraw)
 	if err != nil {
-		sugar.Log.Error("SELECT id FROM chat_msg is failed.", err)
+		sugar.Log.Error("Query chat_msg is failed.", err)
 		return err
 	}
 
@@ -66,9 +66,16 @@ func ChatWithdrawMsg(ipfsNode *ipfsCore.IpfsNode, db *Sql, value string) error {
 		}
 	}
 
+	swapMsg := vo.ChatSwapWithdrawMsgParams{
+		MsgId:  msg.MsgId,
+		FromId: msg.FromId,
+		ToId:   msg.ToId,
+		Token:  "",
+	}
+
 	msgBytes, err := json.Marshal(map[string]interface{}{
 		"type": vo.MSG_TYPE_WITHDRAW,
-		"data": msg,
+		"data": swapMsg,
 	})
 	if err != nil {
 		sugar.Log.Error("marshal send msg failed.", err)
