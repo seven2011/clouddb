@@ -407,7 +407,10 @@ func SyncTopicData(ipfsNode *ipfsCore.IpfsNode, db *Sql, value string) error {
 		wayId:="12D3KooWDoBhdQwGT6oq2EG8rsduRCmyTZtHaBCowFZ7enwP4i8J"
 		sugar.Log.Info("----公共网关节点 id =---:", wayId)
 
-		if string(fromId)==wayId{
+		FromId:=msg.GetFrom()
+		log.Println("FromId ;",string(FromId))
+
+		if string(FromId)==wayId{
 				sugar.Log.Info("---- 因为 公共网关 节点id 等于 i8j 所以满足条件进来 ---:", peerId)
 
 				
